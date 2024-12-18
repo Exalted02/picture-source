@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CommonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
@@ -42,6 +43,10 @@ Route::get('clear-cache', function () {
 Route::get('db-migrate', function () {
     \Artisan::call('migrate');
     dd("Database migrated");
+});
+Route::get('db-seed', function () {
+    \Artisan::call('db:seed');
+    dd("Database seeded");
 });
 Route::get('/', [ProfileController::class, 'welcome']);
 
