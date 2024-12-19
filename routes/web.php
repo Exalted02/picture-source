@@ -15,6 +15,8 @@ use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,6 +58,8 @@ Route::get('lang/change', [LangController::class, 'change'])->name('changeLang')
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+	
+
 
 Route::middleware('auth')->group(function () {
 	//ChangePassword

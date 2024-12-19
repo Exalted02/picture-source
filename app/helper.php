@@ -129,6 +129,26 @@ use App\Models\Followup_remarks;
 		Config::set('mail', $config);	
     }	
 //send email template
+	function send_email_bck($data){
+		// toEmails = Receiver Email, bccEmails = Bcc Receiver, ccEmails = Cc Receiver, files = For attatchment files.
+		$data['body'] = str_replace(array("[SCREEN_NAME]", "[YEAR]"), array(config('app.site.name'),date('Y')), $data['body']);
+		
+        Mail::send('email.sendmail', $data, function($message)use($data) {
+            $message->to($data["toEmails"]);
+			if(isset($data['bccEmails']) && count($data['bccEmails']) > 0){
+				$message->bcc($data["bccEmails"]);
+			}
+			if(isset($data['ccEmails']) && count($data['ccEmails']) > 0){
+				$message->cc($data["ccEmails"]);
+			}
+            $message->subject($data["subject"]);
+			if(isset($data['files']) && count($data['files']) > 0){
+				foreach ($data['files'] as $file){
+					$message->attach($file);
+				}
+            }
+        });
+	}
 	function send_email($data){
 		// toEmails = Receiver Email, bccEmails = Bcc Receiver, ccEmails = Cc Receiver, files = For attatchment files.
 		$data['body'] = str_replace(array("[SCREEN_NAME]", "[YEAR]"), array(config('app.name', 'Laravel'),date('Y')), $data['body']);
