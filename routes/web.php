@@ -14,6 +14,7 @@ use App\Http\Controllers\EmailSettingsController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Api\RegisteredUserController;
 
 
 
@@ -96,7 +97,18 @@ Route::middleware('auth')->group(function () {
 // Email Management Routes
 	Route::get('email-management', [EmailManagementController::class,'index'])->name('email-management');
 	Route::get('/email-management-edit/{id}', [EmailManagementController::class, 'email_management_edit'])->name('email-management-edit');
-	Route::post('/email-management-edit-save',[EmailManagementController::class,'manage_email_management_process'])->name('email-management-edit-save');	
+	Route::post('/email-management-edit-save',[EmailManagementController::class,'manage_email_management_process'])->name('email-management-edit-save');
+	
+	// customer
+	Route::get('customer', [RegisteredUserController::class,'customer_list'])->name('customer');
+	Route::post('/customer-update-status',[RegisteredUserController::class,'update_status'])->name('customer-update-status'); 
+	Route::post('/getDeleteCustomer',[RegisteredUserController::class,'delete_customer'])->name('getDeleteCustomer');
+	Route::post('/deleteCustomerList',[RegisteredUserController::class,'delete_customer_list'])->name('deleteCustomerList');
+	// retailer
+	Route::get('retailer', [RegisteredUserController::class,'retailer_list'])->name('retailer');
+	Route::post('/retailer-update-status',[RegisteredUserController::class,'update_status'])->name('retailer-update-status'); 
+	Route::post('/getDeleteRetailer',[RegisteredUserController::class,'delete_customer'])->name('getDeleteRetailer');
+	Route::post('/deleteRetailerList',[RegisteredUserController::class,'delete_customer_list'])->name('deleteRetailerList');
 	
 });
 

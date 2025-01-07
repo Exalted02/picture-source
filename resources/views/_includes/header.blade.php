@@ -275,15 +275,15 @@
 			<a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
 				<span class="user-img"><img src="{{ asset('/front-assets/img/avatar/avatar-19.jpg') }}" class="mt-1" alt="img">
 				<span class="status online"></span></span>
-				<span>{{auth()->user()->name}}</span>
+				<span>
+					@if(auth()->check())
+						{{ auth()->user()->name }}
+					@endif
+				</span>
 			</a>
 			<div class="dropdown-menu">
-				@if(auth()->user()->user_type == 1)				
-				@php
-					$select_resource = \App\Models\Resource::where('user_table_id', auth()->user()->id)->first();
-				@endphp
-				<a class="dropdown-item" href="{{ route('my-profile', $select_resource->id) }}">{{ __('my_profile') }}</a>
-				@endif
+				
+				
 				<a class="dropdown-item" href="{{url('change-password')}}">{{ __('change_password') }}</a>
 				<a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
 			</div>

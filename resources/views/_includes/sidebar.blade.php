@@ -26,6 +26,12 @@
 				<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 					<a href="{{ route('dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
+				<li class="{{ request()->routeIs('customer') ? 'active' : '' }}">
+					<a href="{{ route('customer')}}"><i class="fa-solid fa-handshake"></i> <span> {{ __('customer') }} </span></a>
+				</li>
+				<li class="{{ request()->routeIs('retailer') ? 'active' : '' }}">
+					<a href="{{ route('retailer')}}"><i class="fa-solid fa-store"></i> <span> {{ __('retailer') }} </span></a>
+				</li>
 				<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('user.category','user.subcategory') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('masters') }}</span> <span class="menu-arrow"></span></a>
 					<ul style="{{ request()->routeIs('user.category','user.subcategory') ? 'display:block' : '' }}">

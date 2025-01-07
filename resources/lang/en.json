@@ -82,5 +82,12 @@
 	"preview": "Preview",
 	"delete": "Delete",
 	"action": "Action",
-	"edit":"Edit"
+	"edit":"Edit",
+	"customer":"Customer",
+	"retailer":"Retailer",
+	"city":"City",
+	"state":"State",
+	"zipcode":"Zipcode",
+	"email":"Email",
+	"phone":"Phone"
 }

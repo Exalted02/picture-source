@@ -31,6 +31,7 @@ class User extends Authenticatable
         'phone_number',
         'upload_tax_lisence',
         'otp',
+        'status',
     ];
 
     /**

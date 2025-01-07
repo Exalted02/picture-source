@@ -24,3 +24,4 @@ Route::post('store-retailer', [RegisteredUserController::class, 'store_retailer'
 Route::post('forgot-password', [RegisteredUserController::class, 'forgotPassword'])->name('forgot-password');
 Route::post('forgot-password-verify-otp', [RegisteredUserController::class, 'forget_password_verify_otp'])->name('forgot-password-verify-otp');
 Route::post('reset-password', [RegisteredUserController::class, 'resetpassword'])->name('reset-password');
+

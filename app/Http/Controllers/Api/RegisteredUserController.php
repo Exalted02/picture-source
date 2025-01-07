@@ -250,4 +250,50 @@ class RegisteredUserController extends Controller
 		$msg = 'Password updated successfully.';
 		return $this->authResponse($user, $msg);
     }
+	public function customer_list()
+	{
+		$dataArr = User::query();
+		$dataArr->where('user_type',1);
+		$dataArr->where('status','!=',2);
+		$dataArr->orderBy('name', 'ASC'); 
+		$customers = $dataArr->get();
+		$data['customers'] = $customers;
+		return view('customer/customer',$data);
+	}
+	public function retailer_list()
+	{
+		$dataArr = User::query();
+		$dataArr->where('user_type',2);
+		$dataArr->where('status','!=',2);
+		$dataArr->orderBy('name', 'ASC'); 
+		$customers = $dataArr->get();
+		$data['customers'] = $customers;
+		return view('retailer/retailer',$data);
+	}
+	public function delete_customer(Request $request)
+	{
+		$name = User::where('id', $request->id)->first()->name;
+		echo json_encode($name);
+	}
+	public function delete_customer_list(Request $request)
+	{
+		$check = User::where('id', $request->id)->exists();
+		if($check){
+			$del = User::where('id', $request->id)->update(['status'=>2]);
+			
+			$data['result'] ='success';
+		}else{
+			$data['result'] ='error';
+		}
+		echo json_encode($data);
+	}
+	public function update_status(Request $request)
+	{
+		$status = User::where('id', $request->id)->first()->status;
+		$change_status = $status == 1 ? 0 : 1;
+		$update = User::where('id', $request->id)->update(['status'=> $change_status]);
+		
+		$data['result'] = $change_status;
+		echo json_encode($data);
+	}
 }
