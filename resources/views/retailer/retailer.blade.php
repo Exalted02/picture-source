@@ -103,9 +103,6 @@
 						</thead>
 						<tbody>
 						@foreach($customers as $val)
-						
-						
-
 							<tr>
 								@if($customers->count() > 0)
 								<td>
