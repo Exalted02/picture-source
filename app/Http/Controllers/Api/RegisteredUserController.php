@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -26,14 +28,15 @@ class RegisteredUserController extends Controller
         $password = $request->input('password');
  
         $user = User::where('email',$email)->first();
+		//echo "<pre>";print_r($user);die;
         if($user){
 			if(!Hash::check($password, $user->password)){
-				$response['status']="400";
+				$response['status']=400;
 				$response['message']="Password are not matched";
 			}
 			else if($user->email_verified_at == null)
 			{
-				$response['status']="400";
+				$response['status']=400;
 				$response['message']="User is not verified";
 			}
 			else
@@ -42,16 +45,16 @@ class RegisteredUserController extends Controller
 				return $this->authResponse($user, $msg);
 			}
         }else{
-			$response['status']="400";
+			$response['status']=400;
 			$response['message']="User does not exist";
 		}
 		return $response;
     }
 	protected function authResponse($user, $msg){
         $token = $user->createToken('API Token')->plainTextToken;
-
+        //echo "<pre>";print_r($user);die;
         return response()->json([
-            'status' => '200',
+            'status' => 200,
             'message' => $msg,
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -73,7 +76,7 @@ class RegisteredUserController extends Controller
 		if ($validator->fails()) {
 			return response()->json([
 				'errors' => $validator->errors(),
-				'status' => '600',
+				'status' => 600,
 			]);
 		}
 		
@@ -90,10 +93,10 @@ class RegisteredUserController extends Controller
 		$model->user_type = 1 ?? null; // customer
 
 		if ($model->save()) {
-			$response['status'] = "200";
+			$response['status'] = 200;
 			$response['message'] = "Customer added successfully";
 		} else {
-			$response['status'] = "500";
+			$response['status'] = 500;
 			$response['message'] = "Failed to add customer";
 		}
 		
@@ -113,7 +116,7 @@ class RegisteredUserController extends Controller
 		if ($validator->fails()) {
 			return response()->json([
 				'errors' => $validator->errors(),
-				'status' => '600',
+				'status' => 600,
 			]);
 		}
 		
@@ -142,10 +145,10 @@ class RegisteredUserController extends Controller
 		
         //echo  "<pre>";print_r($request->all());die;
 		if ($model->save()) {
-			$response['status'] = "200";
+			$response['status'] = 200;
 			$response['message'] = "Retailer added successfully";
 		} else {
-			$response['status'] = "500";
+			$response['status'] = 500;
 			$response['message'] = "Failed to add retailer";
 		}
 
@@ -159,15 +162,14 @@ class RegisteredUserController extends Controller
 		if ($validator->fails()) {
 			return response()->json([
 				'errors' => $validator->errors(),
-				'status' => '600',
+				'status' => 600,
 			]);
 		}
-		
         $email = $request->input('email');
         $user = User::where('email', $email)->first();
 		
 		if (!$user) {
-            return response()->json(['status' => '400', 'message' => 'User not found'], 404);
+            return response()->json(['status' => 400, 'message' => 'User not found'], 404);
         }
 		
         $otp = mt_rand(1000, 9999); // Generating a 6-digit OTP
@@ -176,8 +178,35 @@ class RegisteredUserController extends Controller
 			$user->otp = $otp;
 			$user->save();
 			
+			$token = Str::random(64);
 			// Send email with OTP
-			$get_email = get_email(2);
+			
+			 try {
+					Mail::send('email.forgetPassword', ['token' => $token], function ($message) use ($request) {
+						$message->to($request->input('email'));
+						$message->subject('Reset Password');
+					});
+
+					// If no exception, return success response
+					return response()->json([
+						'status' => 200,
+						'message' => 'Password reset instructions sent to your email.',
+					]);
+				} catch (\Exception $e) {
+					
+					\Log::error('Mail send error: ' . $e->getMessage());
+
+					return response()->json([
+						'status' => 500,
+						'message' => 'Failed to send email. Please try again later.',
+					], 500);
+				}
+			
+			/*Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+                    $message->to($request->input('email'));
+                    $message->subject('Reset Password');
+                });*/
+			/*$get_email = get_email(2);
 			$data = [
 				'subject' => $get_email->message_subject,
 				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
@@ -186,10 +215,31 @@ class RegisteredUserController extends Controller
 				// 'ccEmails' => array('exaltedsol04@gmail.com'),
 				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
 			];
-			send_email($data);
-            return response()->json(['status' => '200', 'message' => 'Password reset instructions sent to your email.']);
+			send_email($data);*/
+            return response()->json(['status' => 200, 'message' => 'Password reset instructions sent to your email.']);
         }
     }
+	public function showResetPasswordForm($token) { 
+
+        return view('auth.forgetPasswordLink', ['token' => $token]);
+
+    }
+	public function submitResetPasswordForm(Request $request)
+     {
+         $request->validate([
+             'password' => 'required|string|min:6|confirmed',
+             'password_confirmation' => 'required'
+         ]);
+         
+         $updatePassword = DB::table('password_reset_tokens')->where(['token' => $request->token])->first();
+         if(!$updatePassword){
+             return back()->withInput()->with('error', 'Invalid token!');
+         }
+         $user = User::where('email', $updatePassword->email)->update(['password' => Hash::make($request->password)]);
+        // DB::table('password_reset_tokens')->where(['email'=> $updatePassword->email])->delete();
+         return view('auth.succee-message')->with('message', 'Your password has been changed!');
+
+     }
 	public function forget_password_verify_otp(Request $request){
 		$validator = Validator::make($request->all(), [
 			'email' => 'required|email',
@@ -199,7 +249,7 @@ class RegisteredUserController extends Controller
 		if ($validator->fails()) {
 			return response()->json([
 				'errors' => $validator->errors(),
-				'status' => '600',
+				'status' => 600,
 			]);
 		}
     
@@ -210,17 +260,17 @@ class RegisteredUserController extends Controller
         $user = User::where('email', $email)->first();
     
         if (!$user) {
-            return response()->json(['status' => '400', 'message' => 'User not found']);
+            return response()->json(['status' => 400, 'message' => 'User not found']);
         }
     
         // Check if the provided OTP matches the user's OTP
         if ($user->otp != $otp) {
-            return response()->json(['status' => '400', 'message' => 'Invalid OTP']);
+            return response()->json(['status' => 400, 'message' => 'Invalid OTP']);
         }
         $user->otp = null;
         $user->save();
     
-        return response()->json(['status' => '200', 'message' => 'OTP verified successfully']);
+        return response()->json(['status' => 200, 'message' => 'OTP verified successfully']);
     }
 	public function resetpassword(Request $request){
 		$validator = Validator::make($request->all(), [
@@ -232,7 +282,7 @@ class RegisteredUserController extends Controller
 		if ($validator->fails()) {
 			return response()->json([
 				'errors' => $validator->errors(),
-				'status' => '600',
+				'status' => 600,
 			]);
 		}
     
@@ -242,7 +292,7 @@ class RegisteredUserController extends Controller
         $user = User::where('email', $email)->first();
     
         if (!$user) {
-            return response()->json(['status' => '400', 'message' => 'User not found']);
+            return response()->json(['status' => 400, 'message' => 'User not found']);
         }
         $user->password = Hash::make($request->input('password'));
         $user->save();
@@ -294,6 +344,24 @@ class RegisteredUserController extends Controller
 		$update = User::where('id', $request->id)->update(['status'=> $change_status]);
 		
 		$data['result'] = $change_status;
+		echo json_encode($data);
+	}
+	
+	public function delete_retailer(Request $request)
+	{
+		$name = User::where('id', $request->id)->first()->name;
+		echo json_encode($name);
+	}
+	public function delete_retailer_list(Request $request)
+	{
+		$check = User::where('id', $request->id)->exists();
+		if($check){
+			$del = User::where('id', $request->id)->update(['status'=>2]);
+			
+			$data['result'] ='success';
+		}else{
+			$data['result'] ='error';
+		}
 		echo json_encode($data);
 	}
 }

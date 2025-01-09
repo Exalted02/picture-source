@@ -89,5 +89,7 @@
 	"state":"State",
 	"zipcode":"Zipcode",
 	"email":"Email",
-	"phone":"Phone"
+	"phone":"Phone",
+	"image_gallery_only": "Upload only",
+	"image_gallery_img_box": "Image By Click On Box"
 }

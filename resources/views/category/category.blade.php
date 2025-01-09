@@ -22,7 +22,7 @@
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
-						<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_prospect_stage"><i class="la la-plus-circle"></i> {{ __('add_category') }}</a>
+						<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_category"><i class="la la-plus-circle"></i> {{ __('add_category') }}</a>
 					</div>
 				</div>
 			</div>
@@ -161,5 +161,52 @@
 @endsection 
 @section('scripts')
 @include('_includes.footer')
+<script src="{{ url('front-assets/css/dropzone.css') }}"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
 <script src="{{ url('front-assets/js/page/category.js') }}"></script>
+
+<script>
+var remaining_upload = 5;
+ Dropzone.options.imageUpload = {
+        maxFiles: remaining_upload,
+        acceptedFiles: ".jpeg,.jpg,.png,.gif",
+        init: function() {
+            this.on("maxfilesexceeded", function(file) {
+                this.removeFile(file); // Remove the exceeded file
+                //alert("Maximum upload limit reached!");
+            });
+        }
+    };
+	
+	//var myDropzone = new Dropzone("#imageUpload", Dropzone.options.imageUpload);
+	
+	/*var maxFileLimit = 5;
+	var minImageWidth = 50, minImageHeight = 50;
+	Dropzone.options.imageUpload = {
+			maxFiles: 1,
+			// maxFilesize: 2,
+			acceptedFiles: ".jpeg,.jpg,.png,.gif",
+			init: function() {
+			  this.on("thumbnail", function(file) {
+				if (file.width < minImageWidth || file.height < minImageHeight) {
+				  file.rejectDimensions()
+				}
+				else {
+				  file.acceptDimensions();
+				}
+				if(file.size < 1024*50)
+				{
+					file.rejectsize();
+				}
+			  });
+			},
+			accept: function(file, done) {
+			  file.acceptDimensions = done;
+			  file.rejectDimensions = function() { done("{{ __('gallery_image_minumim_dimension') }}"); };
+			  file.rejectsize = function() { done("{{ __('gallery_image_min_max_size') }}"); };
+			}
+		};*/
+
+</script>
 @endsection

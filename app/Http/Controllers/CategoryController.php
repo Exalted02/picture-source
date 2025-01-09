@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Temp_media_galleries;
+use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use File;
 
 class CategoryController extends Controller
 {
@@ -45,11 +48,12 @@ class CategoryController extends Controller
 	public function save_category(Request $request)
 	{
 		
-		//echo "<pre>";print_r($request->all());die;
-		
 		$existingStage = Category::where('name', $request->post('name'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
-            $query->where('id', '!=', $request->post('id'));
+			if($request->post('id') !='')
+			{
+				$query->where('id', '!=', $request->post('id'));
+			}
         })
         ->first();
 		
@@ -65,12 +69,60 @@ class CategoryController extends Controller
 			$model= Category::find($request->post('id'));
 			$model->name		=	$request->post('name');
 			$model->save();
+			
+			//-------------------Picture move--------------------
+			$tempRecords = Temp_media_galleries::where('unique_id', $request->post('unique_number'))->get();
+			
+			foreach ($tempRecords as $tempRecord) {
+				$newRecord = new Media();
+				$newRecord->media_source_id = $request->post('id');
+				$newRecord->media_type = 1;
+				$newRecord->image = $tempRecord->name;
+				$newRecord->status = 1;
+				$newRecord->save();
+			}
+			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
+			
+			$sourceDirectory = public_path('uploads/').'/category/tmp/'.$request->post('unique_number').'/';
+			$destinationDirectory = public_path('uploads/').'/category/'.$request->post('id').'/';
+			// $sourceDirectory = '/source/directory';
+			// $destinationDirectory = '/destination/directory';
+			$this->copyDirectory($sourceDirectory, $destinationDirectory);
+			
+			$removeDirectory = public_path('uploads/category/tmp/');
+			if (File::exists($removeDirectory)) {
+				File::deleteDirectory($removeDirectory);
+			}
 		}
 		else{
 			$model=new Category();
 			$model->name		=	$request->post('name');
 			$model->status		=	1;
 			$model->save();
+			$lastId = $model->id;
+			//-------------------Picture move--------------------
+			$tempRecords = Temp_media_galleries::where('unique_id', $request->post('unique_number'))->get();
+			
+			foreach ($tempRecords as $tempRecord) {
+				$newRecord = new Media();
+				$newRecord->media_source_id = $lastId;
+				$newRecord->media_type = 1;
+				$newRecord->image = $tempRecord->name;
+				$newRecord->status = 1;
+				$newRecord->save();
+			}
+			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
+			
+			$sourceDirectory = public_path('uploads/').'/category/tmp/'.$request->post('unique_number').'/';
+			$destinationDirectory = public_path('uploads/').'/category/'.$lastId.'/';
+			// $sourceDirectory = '/source/directory';
+			// $destinationDirectory = '/destination/directory';
+			$this->copyDirectory($sourceDirectory, $destinationDirectory);
+			
+			$removeDirectory = public_path('uploads/category/tmp/');
+			if (File::exists($removeDirectory)) {
+				File::deleteDirectory($removeDirectory);
+			}
 		}
 		
 		return response()->json([
@@ -81,9 +133,13 @@ class CategoryController extends Controller
 	public function edit_category(Request $request)
 	{
 		$category = Category::where('id', $request->id)->first();
+		//$media = Media::where('media_source_id', $request->id)->get();
+		//echo "<pre>";print_r($media);die;
 		$data = array();
 		$data['id']  = $category->id ;
 		$data['name']  = $category->name ;
+		$data['medias']  = Media::where('media_source_id', $request->id)->get();
+		$data['app_url'] = env('APP_URL');
 		return $data;
 	}
 	public function delete_category(Request $request)
@@ -110,5 +166,88 @@ class CategoryController extends Controller
 		
 		$data['result'] = $change_status;
 		echo json_encode($data);
+	}
+	public function dropzone_store(Request $request)
+    {
+		
+        $image = $request->file('file');
+		//echo "<pre>";print_r($image);die;
+		$unique_number = $request->unique_number;
+	
+		$dest_path = public_path('uploads/').'category/tmp/'.$unique_number.'/gallery/';
+		$dest_thumb_path = public_path('uploads/').'category/tmp/'.$unique_number.'/gallery/thumbs/';
+		$details_path = public_path('uploads/').'category/tmp/'.$unique_number.'/details/';
+		
+		$width 				= '360';
+		$height  			= '270';
+		
+		$imageName = uploadResizeImage($details_path, $dest_path, $dest_thumb_path, $width, $height, $image);
+		
+		$galley = new Temp_media_galleries();
+		$galley->unique_id =  $unique_number;
+		$galley->name  = 	$imageName;
+		$galley->created_at		=	date('Y-m-d H:i:s');
+		$galley->save();
+        //return response()->json(['success'=>$imageName]);
+    }
+	
+	public function delete_media(Request $request)
+	{
+		$category_id = $request->category_id;
+		
+		$imageName = $request->image_name;
+		$imagePath = public_path('uploads/category/' . $request->category_id . '/gallery/' . $imageName);
+		
+		$imagePaththumbs = public_path('uploads/category/' . $request->category_id . '/gallery/thumbs/' . $imageName);
+		$imagedetails = public_path('uploads/category/' . $request->category_id . '/details/' . $imageName);
+
+   
+		if(file_exists($imagePath)) {
+			unlink($imagePath);
+		   /*if (unlink($imagePath)) {
+				return response()->json(['message' => 'Image deleted successfully.']);
+			} else {
+				return response()->json(['message' => 'Failed to delete image.'], 500);
+			}*/
+		} else {
+			return response()->json(['message' => 'Image not found.'], 404);
+		}
+		
+		if(file_exists($imagePaththumbs)) {
+			unlink($imagePaththumbs);
+		}
+		
+		if(file_exists($imagedetails)) {
+			unlink($imagedetails);
+		}
+		
+		//-------------------------------------
+		Media::where('id',$request->id)->delete();
+		$data['app_url'] = env('APP_URL');
+		$data['medias']  = Media::where('media_source_id',$category_id)->where('media_type',1)->get();
+		$vehicle_image_count = Media::where('media_source_id',$category_id)->where('media_source_id',1)->count();
+		
+		$data['category_remain']  = 12 - $vehicle_image_count;
+		return $data;
+	}
+	
+	function copyDirectory($source, $destination) {
+	   if (!is_dir($destination)) {
+		  mkdir($destination, 0755, true);
+	   }
+	   if(is_dir($source)){
+		   $files = scandir($source);
+		   foreach ($files as $file) {
+			  if ($file !== '.' && $file !== '..') {
+				 $sourceFile = $source . '/' . $file;
+				 $destinationFile = $destination . '/' . $file;
+				 if (is_dir($sourceFile)) {
+					$this->copyDirectory($sourceFile, $destinationFile);
+				 } else {
+					copy($sourceFile, $destinationFile);
+				 }
+			  }
+		   }
+	   }
 	}
 }

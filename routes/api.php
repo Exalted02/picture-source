@@ -25,3 +25,6 @@ Route::post('forgot-password', [RegisteredUserController::class, 'forgotPassword
 Route::post('forgot-password-verify-otp', [RegisteredUserController::class, 'forget_password_verify_otp'])->name('forgot-password-verify-otp');
 Route::post('reset-password', [RegisteredUserController::class, 'resetpassword'])->name('reset-password');
 
+Route::get('reset-password/{token}', [RegisteredUserController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('reset-password', [RegisteredUserController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+

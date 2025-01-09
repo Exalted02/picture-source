@@ -6,12 +6,13 @@ Version      : 4.0
 
 $(document).ready(function() {
 	
-	$(document).on('click','.save-product-code', function(){
-		let codeName = $('#name').val().trim();
+	$(document).on('click','.save-category', function(){
+		let category = $('#name').val().trim();
 		//let createdDate = $('#created_date').val().trim();
 		let isValid = true;
 		$('.invalid-feedback').hide();
-		$('.form-control').removeClass('is-invalid');if (codeName === '')
+		$('.form-control').removeClass('is-invalid');
+		if (category === '')
 		{
 			$('#name').addClass('is-invalid');
 			$('#name').next('.invalid-feedback').show();
@@ -55,13 +56,114 @@ $(document).on('click','.edit-product-code', function(){
 		success: function(response) {
 			//alert(response.state);
 			$('#id').val(response.id);
-			$('#edit_name').val(response.name);
-			$('#edit_product_code').modal('show');
+			$('#name').val(response.name);
+			
+			var galleriesHtml = ''; 
+			var app_url =  response.app_url;
+			var medianames = response.medias;
+			$.each(medianames, function (index, gallery) {
+				
+				if (index % 6 === 0) {
+					galleriesHtml += '<div class="row mb-3">'; 
+				}
+				
+				galleriesHtml += `
+						<div class="col-md-3 position-relative">
+							<!-- Cross Icon to delete image -->
+							<div class="position-absolute top-0 end-0 m-2">
+								<button type="button" 
+										data-img="${gallery.image}" 
+										data-id="${gallery.id}" data-category="${gallery.media_source_id}" data-imagename="${gallery.image}"  
+										class="btn removeImage bg-transparent">
+									<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red"></i>
+								</button>
+							</div>
+
+							<!-- Image -->
+							<img src="${app_url}/uploads/category/${gallery.media_source_id}/gallery/thumbs/${gallery.image}" 
+								 class="img-thumbnail" 
+								 alt="Gallery Image">
+						</div>
+					`;
+				if ((index % 6 === 5) || (index === medianames.length - 1)) {
+					galleriesHtml += '</div>'; // Close the row
+				}
+				
+				$('#galleries_data').html(galleriesHtml);
+				
+			});
+			
+			
+			$('#add_category').modal('show');
 			//alert(JSON.stringify(response));
 			
 		},
 	});
 }); 
+
+$(document).on("click",'.removeImage', function (event) {
+	var id = $(this).data('id');
+	var imagename = $(this).data('imagename');
+	var category_id = $(this).data('category');
+	var media_source_id = 1;
+	//alert(imagename);
+	var URL = $("#del-media-image").val();
+	$.ajax({
+		url: URL,
+		type: "POST",
+		data: {id:id, category_id:category_id, image_name:imagename,media_source_id:media_source_id, _token: csrfToken},
+		dataType: 'json',
+		success: function(response) {  
+			//alert(JSON.stringify(response));var galleriesHtml = '';  category_remain
+			var app_url =  response.app_url;
+			var galleriesHtml = ''; 
+			var medianames = response.medias;
+            //alert(vehicle_gallaries);
+			$('#text_show').html(response.category_remain);
+			
+			if (Dropzone.instances.length > 0) {
+					// Assuming the first Dropzone instance is the one you want to update
+					var dropzoneInstance = Dropzone.instances[0];
+					dropzoneInstance.options.maxFiles = response.category_remain;
+				} else {
+					initializeDropzone(response.category_remain);
+				}
+			
+			
+			$.each(medianames, function (index, gallery) {
+				
+				if (index % 6 === 0) {
+					galleriesHtml += '<div class="row mb-3">'; 
+				}
+				
+				galleriesHtml += `
+						<div class="col-md-3 position-relative">
+							<!-- Cross Icon to delete image -->
+							<div class="position-absolute top-0 end-0 m-2">
+								<button type="button" 
+										data-img="${gallery.image}" 
+										data-id="${gallery.id}" data-category="${gallery.media_source_id}" data-imagename="${gallery.image}"  
+										class="btn removeImage bg-transparent">
+									<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red"></i>
+								</button>
+							</div>
+
+							<!-- Image -->
+							<img src="${app_url}/uploads/category/${gallery.media_source_id}/gallery/thumbs/${gallery.image}" 
+								 class="img-thumbnail" 
+								 alt="Gallery Image">
+						</div>
+					`;
+				if ((index % 6 === 5) || (index === medianames.length - 1)) {
+					galleriesHtml += '</div>'; // Close the row
+				}
+			});
+			//alert(galleriesHtml);
+			$('#galleries_data').html(galleriesHtml);
+			
+		},
+	});
+});
 
 $(document).on('click','.update-product-code-form', function(){
 	

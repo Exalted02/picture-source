@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/email-settings', [EmailSettingsController::class, 'index'])->name('user.email-settings');
 	Route::post('/email-settings', [EmailSettingsController::class, 'save_data'])->name('email-settings-save');
 	
-	// product code 
+	// category 
 	Route::get('/category', [CategoryController::class, 'index'])->name('user.category');
 	Route::post('/save-category', [CategoryController::class, 'save_category'])->name('user.save-category');
 	Route::post('/category-update-status',[CategoryController::class,'update_status'])->name('category-update-status');
@@ -79,6 +79,9 @@ Route::middleware('auth')->group(function () {
 	Route::post('/getDeleteCategory',[CategoryController::class,'delete_category'])->name('getDeleteCategory');
 	Route::post('/deleteCategoryList',[CategoryController::class,'delete_category_list'])->name('deleteCategoryList');
 	Route::post('/category', [CategoryController::class, 'index'])->name('user.category');
+	
+	Route::post('/category-dropzone', [CategoryController::class, 'dropzone_store'])->name('category.dropzone.store');
+	Route::post('/delete-media', [CategoryController::class, 'delete_media'])->name('delete.media');
 	
 	// product group 
 	Route::get('/subcategory', [SubcategoryController::class, 'index'])->name('user.subcategory');
@@ -107,8 +110,8 @@ Route::middleware('auth')->group(function () {
 	// retailer
 	Route::get('retailer', [RegisteredUserController::class,'retailer_list'])->name('retailer');
 	Route::post('/retailer-update-status',[RegisteredUserController::class,'update_status'])->name('retailer-update-status'); 
-	Route::post('/getDeleteRetailer',[RegisteredUserController::class,'delete_customer'])->name('getDeleteRetailer');
-	Route::post('/deleteRetailerList',[RegisteredUserController::class,'delete_customer_list'])->name('deleteRetailerList');
+	Route::post('/getDeleteRetailer',[RegisteredUserController::class,'delete_retailer'])->name('getDeleteRetailer');
+	Route::post('/deleteRetailerList',[RegisteredUserController::class,'delete_retailer_list'])->name('deleteRetailerList');
 	
 });
 
