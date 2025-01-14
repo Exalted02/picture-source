@@ -91,5 +91,40 @@
 	"email":"Email",
 	"phone":"Phone",
 	"image_gallery_only": "Upload only",
-	"image_gallery_img_box": "Image By Click On Box"
+	"image_gallery_img_box": "Image By Click On Box",
+	"artist": "Artist",
+	"add_artist": "Add Artist",
+	"add_new_artist": "Add New Artist",
+	"edit_new_artist": "Edit New Artist",
+	"artist_created_successfully": "Artist Created Successfully",
+	"from_your_account": "from your Account",
+	
+	"size": "Size",
+	"add_size": "Add Size",
+	"add_new_size": "Add New Size",
+	"edit_new_size": "Edit New Size",
+	"size_created_successfully": "Size Created Successfully",
+	"from_your_account": "from your Account",
+	
+	"color": "Color",
+	"add_color": "Add Color",
+	"add_new_color": "Add New Color",
+	"edit_new_color": "Edit New Color",
+	"color_created_successfully": "Color Created Successfully",
+	"from_your_account": "from your Account",
+	
+	"product": "Product",
+	"product_code": "Product Code",
+	"product_name": "Product Name",
+	"product_image": "Image",
+	"product_desc": "Description",
+	"product_moulding": "Moulding",
+	"product_moulding_description": "Moulding Description",
+	"product_dimension": "Dimension",
+	"add_product": "Add Product",
+	"add_new_product": "Add New Product",
+	"edit_new_product": "Edit New Product",
+	"product_created_successfully": "Product Created Successfully",
+	"price": "Price"
+	
 }

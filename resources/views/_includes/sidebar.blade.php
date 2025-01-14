@@ -32,6 +32,18 @@
 				<li class="{{ request()->routeIs('retailer') ? 'active' : '' }}">
 					<a href="{{ route('retailer')}}"><i class="fa-solid fa-store"></i> <span> {{ __('retailer') }} </span></a>
 				</li>
+				<li class="{{ request()->routeIs('artists') ? 'active' : '' }}">
+					<a href="{{ route('artists')}}"><i class="fa-solid fa-pen-nib"></i> <span> {{ __('Artists') }} </span></a>
+				</li>
+				<li class="{{ request()->routeIs('size') ? 'active' : '' }}">
+					<a href="{{ route('size')}}"><i class="fa-solid fa-ruler"></i> <span> {{ __('size') }} </span></a>
+				</li>
+				<li class="{{ request()->routeIs('color') ? 'active' : '' }}">
+					<a href="{{ route('color')}}"><i class="fa-solid fa-palette"></i> <span> {{ __('color') }} </span></a>
+				</li>
+				<li class="{{ request()->routeIs('products') ? 'active' : '' }}">
+					<a href="{{ route('products')}}"><i class="fa-solid fa-store"></i> <span> {{ __('product') }} </span></a>
+				</li>
 				<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('user.category','user.subcategory') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('masters') }}</span> <span class="menu-arrow"></span></a>
 					<ul style="{{ request()->routeIs('user.category','user.subcategory') ? 'display:block' : '' }}">

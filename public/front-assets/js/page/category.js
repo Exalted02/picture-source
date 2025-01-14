@@ -55,43 +55,64 @@ $(document).on('click','.edit-product-code', function(){
 		dataType: 'json',
 		success: function(response) {
 			//alert(response.state);
+			var remaining_upload = parseInt(12) - parseInt(response.category_image_count)
+			if (Dropzone.instances.length > 0) {
+				// Assuming the first Dropzone instance is the one you want to update
+				var dropzoneInstance = Dropzone.instances[0];
+				dropzoneInstance.options.maxFiles = remaining_upload;
+			} else {
+				initializeDropzone(remaining_upload);
+			}
+			
+			$('#text_show').html(remaining_upload);
+			
+			
 			$('#id').val(response.id);
 			$('#name').val(response.name);
 			
 			var galleriesHtml = ''; 
 			var app_url =  response.app_url;
 			var medianames = response.medias;
-			$.each(medianames, function (index, gallery) {
-				
-				if (index % 6 === 0) {
-					galleriesHtml += '<div class="row mb-3">'; 
-				}
-				
-				galleriesHtml += `
-						<div class="col-md-3 position-relative">
-							<!-- Cross Icon to delete image -->
-							<div class="position-absolute top-0 end-0 m-2">
-								<button type="button" 
-										data-img="${gallery.image}" 
-										data-id="${gallery.id}" data-category="${gallery.media_source_id}" data-imagename="${gallery.image}"  
-										class="btn removeImage bg-transparent">
-									<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red"></i>
-								</button>
-							</div>
+			
 
-							<!-- Image -->
-							<img src="${app_url}/uploads/category/${gallery.media_source_id}/gallery/thumbs/${gallery.image}" 
-								 class="img-thumbnail" 
-								 alt="Gallery Image">
-						</div>
-					`;
-				if ((index % 6 === 5) || (index === medianames.length - 1)) {
-					galleriesHtml += '</div>'; // Close the row
+			$.each(medianames, function (index, gallery) {
+				// Open a new row every 4 items
+				if (index % 4 === 0) {
+					galleriesHtml += '<div class="row mb-3">';
 				}
-				
-				$('#galleries_data').html(galleriesHtml);
-				
+
+				// Add the image with a delete button
+				galleriesHtml += `
+					<div class="col-md-3 position-relative">
+						<!-- Cross Icon to delete image -->
+						<div class="position-absolute top-0 end-0 m-2">
+							<button type="button" 
+									data-img="${gallery.image}" 
+									data-id="${gallery.id}" 
+									data-category="${gallery.media_source_id}" 
+									data-imagename="${gallery.image}"  
+									class="btn removeImage bg-transparent">
+								<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red"></i>
+							</button>
+						</div>
+
+						<!-- Image -->
+						<img src="${app_url}/uploads/category/${gallery.media_source_id}/gallery/thumbs/${gallery.image}" 
+							 class="img-thumbnail" 
+							 alt="Gallery Image">
+					</div>
+				`;
+
+				// Close the row after every 4 items or at the last item
+				if ((index % 4 === 3) || (index === medianames.length - 1)) {
+					galleriesHtml += '</div>';
+				}
 			});
+
+			// Append the HTML to the container
+			$('#galleries_data').html(galleriesHtml);
+
+
 			
 			
 			$('#add_category').modal('show');
@@ -132,7 +153,7 @@ $(document).on("click",'.removeImage', function (event) {
 			
 			$.each(medianames, function (index, gallery) {
 				
-				if (index % 6 === 0) {
+				if (index % 4 === 0) {
 					galleriesHtml += '<div class="row mb-3">'; 
 				}
 				
@@ -154,7 +175,7 @@ $(document).on("click",'.removeImage', function (event) {
 								 alt="Gallery Image">
 						</div>
 					`;
-				if ((index % 6 === 5) || (index === medianames.length - 1)) {
+				if ((index % 4 === 3) || (index === medianames.length - 1)) {
 					galleriesHtml += '</div>'; // Close the row
 				}
 			});
@@ -260,6 +281,11 @@ $(document).on('click','.update-status', function(){
 		},
 	});
 });
+
+$(document).on('click','.add_category', function(){
+	$('#name').val('');
+	$('#galleries_data').html('');
+})
 
 $(document).on('click','.search-data', function(){
 	$('#search-product-code-frm').submit();

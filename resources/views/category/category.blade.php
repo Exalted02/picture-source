@@ -22,7 +22,7 @@
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
-						<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_category"><i class="la la-plus-circle"></i> {{ __('add_category') }}</a>
+						<a href="#" class="btn add-btn add_category" data-bs-toggle="modal" data-bs-target="#add_category"><i class="la la-plus-circle"></i> {{ __('add_category') }}</a>
 					</div>
 				</div>
 			</div>
@@ -167,7 +167,7 @@
 <script src="{{ url('front-assets/js/page/category.js') }}"></script>
 
 <script>
-var remaining_upload = 5;
+var remaining_upload = 12;
  Dropzone.options.imageUpload = {
         maxFiles: remaining_upload,
         acceptedFiles: ".jpeg,.jpg,.png,.gif",
@@ -180,33 +180,5 @@ var remaining_upload = 5;
     };
 	
 	//var myDropzone = new Dropzone("#imageUpload", Dropzone.options.imageUpload);
-	
-	/*var maxFileLimit = 5;
-	var minImageWidth = 50, minImageHeight = 50;
-	Dropzone.options.imageUpload = {
-			maxFiles: 1,
-			// maxFilesize: 2,
-			acceptedFiles: ".jpeg,.jpg,.png,.gif",
-			init: function() {
-			  this.on("thumbnail", function(file) {
-				if (file.width < minImageWidth || file.height < minImageHeight) {
-				  file.rejectDimensions()
-				}
-				else {
-				  file.acceptDimensions();
-				}
-				if(file.size < 1024*50)
-				{
-					file.rejectsize();
-				}
-			  });
-			},
-			accept: function(file, done) {
-			  file.acceptDimensions = done;
-			  file.rejectDimensions = function() { done("{{ __('gallery_image_minumim_dimension') }}"); };
-			  file.rejectsize = function() { done("{{ __('gallery_image_min_max_size') }}"); };
-			}
-		};*/
-
 </script>
 @endsection

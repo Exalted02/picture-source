@@ -20,7 +20,7 @@
 
 
 <!-- Add product code -->
-<div id="add_product_group" class="modal custom-modal fade" role="dialog">
+<div id="add_subcategory" class="modal custom-modal fade" role="dialog">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -31,6 +31,7 @@
 			</div>
 			<div class="modal-body">
 				<form id="frmproductgroup" action="{{ route('user.save-subcategory') }}">
+				<input type="hidden" id="id" name="id">
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="input-block mb-3">
@@ -54,7 +55,28 @@
 							</div>
 						</div>
 					</div>
-					
+					<div class="row">
+						<div class="col-md-12">
+							@php
+								$unique_number = \Illuminate\Support\Str::random(10);
+							@endphp
+							<input type="hidden" name="unique_number" value="{{ $unique_number }}">
+							<form></form>
+							<form action="{{ route('subcategory.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
+								@csrf
+								<input type="hidden" name="unique_number" value="{{ $unique_number }}">
+								<div>
+									<h3><span id="text_show">12</span>  {{ __('image_gallery_only') }},  {{ __('image_gallery_img_box') }}</h3>
+								</div>
+								
+							</form>
+						</div>
+						
+						<div class="col-md-12">
+							<div id="galleries_data"></div>
+						</div>
+						<input type="hidden" id="del-media-image" value="{{ route('delete.subcategory.media')}}">
+					</div>
 					<div class="submit-section">
 						<button class="btn btn-primary submit-btn save-product-group" type="button">Submit</button>
 					</div>
@@ -66,7 +88,7 @@
 <!-- /Add product code -->
 
 <!--- edit product code -->
-<div id="edit_product_group" class="modal custom-modal fade" role="dialog">
+{{--<div id="edit_product_group" class="modal custom-modal fade" role="dialog">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -108,7 +130,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div>--}}
 <!-- /Edit Contact -->
 
 <!-- Success Contact -->

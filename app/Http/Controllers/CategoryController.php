@@ -138,8 +138,10 @@ class CategoryController extends Controller
 		$data = array();
 		$data['id']  = $category->id ;
 		$data['name']  = $category->name ;
-		$data['medias']  = Media::where('media_source_id', $request->id)->get();
+		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',1)->get();
 		$data['app_url'] = env('APP_URL');
+		
+		$data['category_image_count'] = Media::where('media_source_id',$request->id)->where('media_type',1)->count();
 		return $data;
 	}
 	public function delete_category(Request $request)
@@ -149,6 +151,7 @@ class CategoryController extends Controller
 	}
 	public function delete_category_list(Request $request)
 	{
+		$check = Category::where('id', $request->id)->exists();
 		if($check){
 			$del = Category::where('id', $request->id)->update(['status'=>2]);
 			
@@ -225,9 +228,9 @@ class CategoryController extends Controller
 		Media::where('id',$request->id)->delete();
 		$data['app_url'] = env('APP_URL');
 		$data['medias']  = Media::where('media_source_id',$category_id)->where('media_type',1)->get();
-		$vehicle_image_count = Media::where('media_source_id',$category_id)->where('media_source_id',1)->count();
+		$category_image_count = Media::where('media_source_id',$category_id)->where('media_type',1)->count();
 		
-		$data['category_remain']  = 12 - $vehicle_image_count;
+		$data['category_remain']  = 12 - $category_image_count;
 		return $data;
 	}
 	

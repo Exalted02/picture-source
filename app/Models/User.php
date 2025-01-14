@@ -29,6 +29,8 @@ class User extends Authenticatable
         'state',
         'zipcode',
         'phone_number',
+        'dob',
+        'gender_id',
         'upload_tax_lisence',
         'otp',
         'status',

@@ -61,7 +61,7 @@
 						<div class="col-md-12">
 							<div id="galleries_data"></div>
 						</div>
-						<input type="hidden" id="del-media-image" value="{{ route('delete.media')}}">
+						<input type="hidden" id="del-media-image" value="{{ route('delete.category.media')}}">
 					</div>
 					<div class="submit-section">
 						<button class="btn btn-primary submit-btn save-category" type="button">Submit</button>

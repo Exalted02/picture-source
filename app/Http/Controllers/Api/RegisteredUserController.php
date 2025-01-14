@@ -86,6 +86,8 @@ class RegisteredUserController extends Controller
 		$model->last_name = $request->last_name ?? null;
 		$model->email = $request->email ?? null;
 		$model->password = Hash::make($request->password);
+		$model->company_name = $request->company_name ?? null;
+		$model->address = $request->address ?? null;
 		$model->city = $request->city ?? null;
 		$model->state = $request->state ?? null;
 		$model->zipcode = $request->zipcode ?? null;
@@ -136,6 +138,8 @@ class RegisteredUserController extends Controller
 		$model->last_name = $request->last_name ?? null;
 		$model->email = $request->email ?? null;
 		$model->password = Hash::make($request->password);
+		$model->company_name = $request->company_name ?? null;
+		$model->address = $request->address ?? null;
 		$model->city = $request->city ?? null;
 		$model->state = $request->state ?? null;
 		$model->zipcode = $request->zipcode ?? null;
@@ -181,7 +185,7 @@ class RegisteredUserController extends Controller
 			$token = Str::random(64);
 			// Send email with OTP
 			
-			 try {
+			 /*try {
 					Mail::send('email.forgetPassword', ['token' => $token], function ($message) use ($request) {
 						$message->to($request->input('email'));
 						$message->subject('Reset Password');
@@ -200,23 +204,27 @@ class RegisteredUserController extends Controller
 						'status' => 500,
 						'message' => 'Failed to send email. Please try again later.',
 					], 500);
-				}
-			
-			/*Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
-                    $message->to($request->input('email'));
-                    $message->subject('Reset Password');
-                });*/
-			/*$get_email = get_email(2);
-			$data = [
-				'subject' => $get_email->message_subject,
-				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
-				'toEmails' => array($email),
-				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
-				// 'ccEmails' => array('exaltedsol04@gmail.com'),
-				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
-			];
-			send_email($data);*/
-            return response()->json(['status' => 200, 'message' => 'Password reset instructions sent to your email.']);
+				}*/
+			try {
+    			$get_email = get_email(2);
+    			$data = [
+    				'subject' => $get_email->message_subject,
+    				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+    				'toEmails' => array($email),
+    				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+    				// 'ccEmails' => array('exaltedsol04@gmail.com'),
+    				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+    			];
+    			send_email($data);
+                return response()->json(['status' => 200, 'message' => 'Password reset instructions sent to your email.']);
+			} catch (\Exception $e) {
+		       \Log::error('Mail send error: ' . $e->getMessage());
+
+				return response()->json([
+					'status' => 500,
+					'message' => 'Failed to send email. Please try again later.',
+				], 500);
+			}
         }
     }
 	public function showResetPasswordForm($token) { 
