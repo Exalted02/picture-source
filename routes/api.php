@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\CountryStateController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/google/callback', [RegisteredUserController::class, 'googleLogin']);
 Route::post('login', [RegisteredUserController::class, 'login'])->name('login');
 Route::post('store-customer', [RegisteredUserController::class, 'store_customer'])->name('store-customer');
 Route::post('store-retailer', [RegisteredUserController::class, 'store_retailer'])->name('store-retailer');

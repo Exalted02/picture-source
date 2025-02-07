@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
           $table->string('status')->after('otp')->nullable();
+          $table->string('auth_provider')->after('status')->nullable();
+          $table->string('auth_provider_id')->after('auth_provider')->nullable();
         });
     }
 

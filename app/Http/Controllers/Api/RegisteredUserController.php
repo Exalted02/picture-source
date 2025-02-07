@@ -57,6 +57,85 @@ class RegisteredUserController extends Controller
 		}
 		return $response;
     }
+	public function googleLogin(Request $request){
+		//  \Log::info('Socialite user: ' . $request->user['displayName']);
+		$email =  $request->user['email'];
+		$name = $request->user['displayName'] ?? '';
+		$auth_provider_id = $request->user['id'] ?? '';
+		$request_usertype = $request->user['userType'];
+		$provider = $request->route('provider');
+		if($email) {
+			if($request_usertype == 1){
+				$chk_user = User::where('email',$email)->where('user_type', 2)->first();
+				if($chk_user){
+					$response['status']=400;
+					$response['message']='Same account already used in retailer.';
+					return $response;
+				}
+			}else if($request_usertype == 2){
+				$chk_user = User::where('email',$email)->where('user_type', 1)->first();
+				if($chk_user){
+					$response['status']=400;
+					$response['message']='Same account already used in consumer.';
+					return $response;
+				}
+			}
+			$user = User::where('email',$email)->first();
+			if($user){
+				$user->name = $name;
+				$user->save();
+				
+				$authUser = $user;
+			}else{
+				try {
+					$default_password = '12345678';
+					$model = new User();
+					$model->name = $name;
+					$model->first_name = $name;
+					// $model->last_name = $request->last_name ?? null;
+					$model->email = $email ?? null;
+					$model->password = Hash::make($default_password);
+					// $model->company_name = $request->company_name ?? null;
+					// $model->address = $request->address ?? null;
+					// $model->city = $request->city ?? null;
+					// $model->country = $request->country ?? null;
+					// $model->state = $request->state ?? null;
+					// $model->zipcode = $request->zipcode ?? null;
+					// $model->phone_number = $request->phone_number ?? null;
+					$model->status = 1;
+					$model->user_type = $request->user['userType'] ?? null;
+					$model->auth_provider = $provider;
+					$model->auth_provider_id = $auth_provider_id;
+					$model->email_verified_at = Now();
+					
+					if ($model->save()) {
+						$authUser = $model;
+						/*
+						//-----send mail ---
+							$get_email = get_email(6);
+							$data = [
+							'subject' => $get_email->message_subject,
+							'body' => str_replace(array("[USERNAME]", "[PASSWORD]"), array($email, $default_password), $get_email->message),
+							'toEmails' => array($request->email),
+						];
+						send_email($data);*/
+					}
+				} catch (\Exception $exception) {
+					// Redirect to homepage with error
+					//return redirect(route('home'))->with('error', $exception->getMessage());
+					$response['status']=500;
+					$response['message']=$exception->getMessage();
+					return $response;
+				}
+			}
+			$msg = 'Successfully logged in';
+			return $this->authResponse($authUser, $msg);
+		}else{
+			$response['status']=400;
+			$response['message']='Email not provided by Google.';
+			return $response;
+		}
+    }
 	protected function authResponse($user, $msg){
         $token = $user->createToken('API Token')->plainTextToken;
         //echo "<pre>";print_r($user);die;
