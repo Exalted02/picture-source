@@ -10,6 +10,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class RegisteredUserController extends Controller
 {
@@ -39,6 +41,11 @@ class RegisteredUserController extends Controller
 				$response['status']=400;
 				$response['message']="User is not verified";
 			}
+			else if($user->status != 1)
+			{
+				$response['status']=400;
+				$response['message']="User is inactive";
+			}
 			else
 			{
 				$msg = 'Successfully logged in';
@@ -53,6 +60,26 @@ class RegisteredUserController extends Controller
 	protected function authResponse($user, $msg){
         $token = $user->createToken('API Token')->plainTextToken;
         //echo "<pre>";print_r($user);die;
+		$APP_URL = env('APP_URL');
+		$upload_tax_lisence = null;
+		$profile_image = null;
+		if(!empty($user->upload_tax_lisence))
+		{
+			$upload_tax_lisence = $user->upload_tax_lisence;
+			$user->upload_tax_lisence = $upload_tax_lisence ? $APP_URL.'/uploads/retailer/'.$upload_tax_lisence : null;
+		}
+		
+		if(!empty($user->profile_image))
+		{
+			$profile_image = $user->profile_image;
+			$imagedata = $profile_image ? $APP_URL.'/uploads/profile/'.$user->id.'/'.$profile_image : null;
+			$user->profile_image = $profile_image ? $APP_URL.'/uploads/profile/'.$user->id.'/'.$profile_image : null;
+		}
+		
+		//echo $imagedata; die;
+		//echo "<pre>";print_r($user);die;
+		//'image' => $pimage ? $APP_URL.'/uploads/product/'. $items->product_id .'/gallery/thumbs/'.$pimage : null
+		
         return response()->json([
             'status' => 200,
             'message' => $msg,
@@ -89,12 +116,53 @@ class RegisteredUserController extends Controller
 		$model->company_name = $request->company_name ?? null;
 		$model->address = $request->address ?? null;
 		$model->city = $request->city ?? null;
+		$model->country = $request->country ?? null;
 		$model->state = $request->state ?? null;
 		$model->zipcode = $request->zipcode ?? null;
 		$model->phone_number = $request->phone_number ?? null;
+		$model->status = 1;
 		$model->user_type = 1 ?? null; // customer
 
 		if ($model->save()) {
+			$lastid = $model->id;
+			$otp = mt_rand(1000, 9999);
+			$muser = User::find($lastid);
+			$muser->otp = $otp;
+			$muser->save();
+			
+			//-----send mail ---
+				$get_email = get_email(3);
+				$data = [
+				'subject' => $get_email->message_subject,
+				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+				'toEmails' => array($request->email),
+				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+				// 'ccEmails' => array('exaltedsol04@gmail.com'),
+				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+			];
+			send_email($data);
+			/*try {
+    			$get_email = get_email(2);
+    			$data = [
+    				'subject' => $get_email->message_subject,
+    				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+    				'toEmails' => array($email),
+    				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+    				// 'ccEmails' => array('exaltedsol04@gmail.com'),
+    				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+    			];
+    			send_email($data);
+                return response()->json(['status' => 200, 'message' => 'Check to your email.']);
+			} catch (\Exception $e) {
+		       \Log::error('Mail send error: ' . $e->getMessage());
+
+				return response()->json([
+					'status' => 500,
+					'message' => 'Failed to send email. Please try again later.',
+				], 500);
+			}*/
+			
+			//-----
 			$response['status'] = 200;
 			$response['message'] = "Customer added successfully";
 		} else {
@@ -141,14 +209,34 @@ class RegisteredUserController extends Controller
 		$model->company_name = $request->company_name ?? null;
 		$model->address = $request->address ?? null;
 		$model->city = $request->city ?? null;
+		$model->country = $request->country ?? null;
 		$model->state = $request->state ?? null;
 		$model->zipcode = $request->zipcode ?? null;
 		$model->phone_number = $request->phone_number ?? null;
 		$model->user_type = 2 ?? null; // retailer
 		$model->upload_tax_lisence = $filename ?? null;
+		$model->status = 0;
 		
         //echo  "<pre>";print_r($request->all());die;
 		if ($model->save()) {
+			$lastid = $model->id;
+			$otp = mt_rand(1000, 9999);
+			$muser = User::find($lastid);
+			$muser->otp = $otp;
+			$muser->save();
+			
+			//-----send mail ---
+				$get_email = get_email(3);
+				$data = [
+				'subject' => $get_email->message_subject,
+				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+				'toEmails' => array($request->email),
+				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+				// 'ccEmails' => array('exaltedsol04@gmail.com'),
+				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+			];
+			send_email($data);
+			
 			$response['status'] = 200;
 			$response['message'] = "Retailer added successfully";
 		} else {
@@ -371,5 +459,217 @@ class RegisteredUserController extends Controller
 			$data['result'] ='error';
 		}
 		echo json_encode($data);
+	}
+	public function register_verify_otp(Request $request){
+		$validator = Validator::make($request->all(), [
+			'email' => 'required|email',
+            'otp' => 'required|numeric|digits:4',
+		]);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'errors' => $validator->errors(),
+				'status' => 600,
+			]);
+		}
+    
+        $email = $request->input('email');
+        $otp = $request->input('otp');
+        
+        // Retrieve the user by email
+        $user = User::where('email', $email)->first();
+    
+        if (!$user) {
+            return response()->json(['status' => 400, 'message' => 'User not found']);
+        }
+    
+        // Check if the provided OTP matches the user's OTP
+        if ($user->otp != $otp) {
+            return response()->json(['status' => 400, 'message' => 'Invalid OTP']);
+        }
+        $user->otp = null;
+        $user->email_verified_at = Now();
+        $user->save();
+    
+        return response()->json(['status' => 200, 'message' => 'OTP verified successfully']);
+    }
+	public function edit_customer_profile(Request $request)
+	{   
+		if(Auth::guard('sanctum')->check()) 
+		{
+			$user_id = Auth::guard('sanctum')->user()->id;
+			$validator = Validator::make($request->all(), [
+				'first_name' => ['required', 'string', 'max:255'],
+				'last_name' => ['required', 'string', 'max:255'],
+				'email' => ['required','email','unique:users,email,' . $user_id,
+				],
+			]);
+			
+			if ($validator->fails()) {
+				return response()->json([
+					'errors' => $validator->errors(),
+					'status' => 600,
+				]);
+			}
+			
+			$model = User::find($user_id);
+			$model->name = $request->first_name . ' ' . $request->last_name;
+			$model->first_name = $request->first_name ?? null;
+			$model->last_name = $request->last_name ?? null;
+			$model->email = $request->email ?? null;
+			//$model->password = Hash::make($request->password);
+			$model->company_name = $request->company_name ?? null;
+			$model->address = $request->address ?? null;
+			$model->city = $request->city ?? null;
+			$model->country = $request->country ?? null;
+			$model->state = $request->state ?? null;
+			$model->zipcode = $request->zipcode ?? null;
+			$model->phone_number = $request->phone_number ?? null;
+			$model->dob = date('Y-m-d', strtotime($request->dob)) ?? null;
+			$model->gender_id = $request->gender_id ?? null;
+			$model->user_type = 1 ?? null; // customer
+			$model->save();
+			
+			$response = [
+				'status' => 200,
+				'message' => 'Record updated successfully',
+				];
+		}
+		else
+		{
+			return response()->json(['message' => 'Please login'], 401);
+		}
+		
+		return $response;
+	}
+	public function edit_retailer_profile(Request $request)
+	{   
+		if(Auth::guard('sanctum')->check()) 
+		{
+			$user_id = Auth::guard('sanctum')->user()->id;
+			//echo $user_id; die;
+			$validator = Validator::make($request->all(), [
+				'first_name' => ['required', 'string', 'max:255'],
+				'last_name' => ['required', 'string', 'max:255'],
+				'email' => ['required','email','unique:users,email,' . $user_id,
+				],
+			]);
+			
+			if ($validator->fails()) {
+				return response()->json([
+					'errors' => $validator->errors(),
+					'status' => 600,
+				]);
+			}
+			
+			$model = User::find($user_id);
+			$model->name = $request->first_name . ' ' . $request->last_name;
+			$model->first_name = $request->first_name ?? null;
+			$model->last_name = $request->last_name ?? null;
+			$model->email = $request->email ?? null;
+			//$model->password = Hash::make($request->password);
+			$model->company_name = $request->company_name ?? null;
+			$model->address = $request->address ?? null;
+			$model->city = $request->city ?? null;
+			$model->country = $request->country ?? null;
+			$model->state = $request->state ?? null;
+			$model->zipcode = $request->zipcode ?? null;
+			$model->phone_number = $request->phone_number ?? null;
+			$model->dob = date('Y-m-d', strtotime($request->dob)) ?? null;
+			$model->gender_id = $request->gender_id ?? null;
+			$model->user_type = 2 ?? null; // customer
+			$model->save();
+	
+			$filename = '';
+			if ($request->hasFile('upload_tax_lisence')) {
+				$file = $request->file('upload_tax_lisence');
+				$filename = time().'_'.$file->getClientOriginalName();
+				//$ext = $file->getClientOriginalExtension();
+				$destinationPath =  public_path('uploads/retailer/');
+				
+				if (!File::exists($destinationPath)) {
+					File::makeDirectory($destinationPath, 0777, true);
+				}
+				
+				$file->move($destinationPath,$filename);
+				
+				$upload_tax_lisence = User::where('id', $user_id)->first()->upload_tax_lisence;
+
+				//echo $upload_tax_lisence; die;
+				if($upload_tax_lisence !=null)
+				{					
+					$path = public_path('uploads/retailer/'. $upload_tax_lisence);
+					if (file_exists($path)) {
+						unlink($path);
+					}
+				}
+				
+				$usermodel = User::find($user_id);
+				$usermodel->upload_tax_lisence = $filename;
+				$usermodel->save();
+			}
+			
+			$response = [
+				'status' => 200,
+				'message' => 'Record updated successfully',
+				];
+		}
+		else
+		{
+			return response()->json(['message' => 'Please login'], 401);
+		}
+		
+		return $response;
+	}
+	public function change_password(Request $request)
+	{
+		if(Auth::guard('sanctum')->check()) 
+		{
+			$user_id = Auth::guard('sanctum')->user()->id;
+			
+			$validator = Validator::make($request->all(), [
+				'old_password' => ['required'],
+				'new_password' => ['required', 'min:8'],
+				'confirm_password' => ['required', 'same:new_password'],
+			]);
+			
+			if ($validator->fails()) {
+				return response()->json([
+					'errors' => $validator->errors(),
+					'status' => 600,
+				]);
+			}
+			
+			$old_password = $request->old_password;
+			$user = User::where('id', $user_id)->first();
+			
+			if(Hash::check($old_password, $user->password))
+			{
+				$model = User::find($user_id);
+				$model->password = Hash::make($request->new_password);
+				$model->save();
+				
+				$response = [
+				'status' => 200,
+				'message' => 'Password change successfully',
+				];
+			}
+			else{
+				$response = [
+				'status' => 400,
+				'message' => 'Old password does not match',
+				];
+			}
+			
+			
+			
+		}
+		else
+		{
+			return response()->json(['message' => 'Please login'], 401);
+		}
+		
+		return $response;
+		
 	}
 }

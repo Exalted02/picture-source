@@ -8,4 +8,14 @@ return [
 
 //Email Management id
     'RESOURCE_REGISTRATION' => 1,
+// Api product list	interval
+	'API_PRODUCT_INTERVAL' => 5,
+// Api Home category list	interval
+	'API_HOME_CATEGORY_INTERVAL' => 6,
+// Api Home artist list	interval
+	'API_HOME_ARTIST_INTERVAL' => 6,
+// Api category list	interval
+	'API_CATEGORY_INTERVAL' => 6,
+// Api artist list	interval
+	'API_ARTIST_INTERVAL' => 6,
 ];

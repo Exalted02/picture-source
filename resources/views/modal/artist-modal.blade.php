@@ -30,7 +30,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form id="frmproductcode" action="{{ route('user.save-artist') }}">
+				<form id="frmproductcode" action="{{ route('user.save-artist') }}" enctype="multipart/form-data">
 				<input type="hidden" id="id" name="id">
 					<div class="row">
 						<div class="col-sm-12">
@@ -41,6 +41,28 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-block mb-3">
+								<label class="col-form-label">{{ __('product_image') }}<span class="text-danger">*</span></label>
+								<input 
+									class="form-control" 
+									type="file" 
+									name="image" 
+									id="image" 
+									accept="image/*" 
+									onchange="previewImage(event)">
+								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('image')}}.</div>
+							</div>
+							<!-- Preview Section -->
+							<div class="image-preview mt-3">
+								<img id="preview" src="#" alt="Image Preview" class="img-thumbnail" style="display: none; max-width: 300px; height: auto;">
+							</div>
+							<input type="hidden" id="del-artist-image" value="{{ route('del-artist-image') }}">
+							<input type="hidden" name="hid_image" id="hid_image">
+						</div>
+					</div>
+
 					
 					<div class="submit-section">
 						<button class="btn btn-primary submit-btn save-artist" type="button">Submit</button>

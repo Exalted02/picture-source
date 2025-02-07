@@ -10,6 +10,9 @@ use App\Models\Temp_media_galleries;
 use App\Models\Media;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\Color;
+use App\Models\Size;
+use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
@@ -51,6 +54,8 @@ class ProductController extends Controller
 		$data['categories'] = Category::where('status','!=', 2)->get();
 		$data['subcategories'] = Subcategory::where('status','!=', 2)->get();
 		$data['artists'] = Artists::where('status','!=', 2)->get();
+		$data['colors'] = Color::where('status','!=', 2)->get();
+		$data['sizes'] = Size::where('status','!=', 2)->get();
 		return view('product/product',$data);
     }
 	public function save_Product(Request $request)
@@ -77,11 +82,14 @@ class ProductController extends Controller
 			$model->product_code		=	$request->post('product_code') ?? '';
 			$model->artist_id			=	$request->post('artist_id') ?? '';
 			$model->category			=	$request->post('category') ?? null;
-			$model->subcategory			=	$request->post('artist_id') ?? null;
+			$model->subcategory			=	$request->post('subcategory') ?? null;
 			$model->name				=	$request->post('name') ?? '';
 			$model->image				=	 '';
 			$model->description			=	$request->post('description') ?? '';
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
+			$model->size		=	$request->post('size') ?? '';
+			$model->color		=	$request->post('color') ?? '';
+			$model->price		=	$request->post('price') ?? '';
 			$model->save();
 			
 			//-------------------Picture move--------------------
@@ -113,12 +121,15 @@ class ProductController extends Controller
 			$model->product_code		=	$request->post('product_code') ?? '';
 			$model->artist_id			=	$request->post('artist_id') ?? '';
 			$model->category			=	$request->post('category') ?? null;
-			$model->subcategory			=	$request->post('artist_id') ?? null;
+			$model->subcategory			=	$request->post('subcategory') ?? null;
 			$model->name				=	$request->post('name') ?? '';
 			$model->image				=	 '';
 			$model->description			=	$request->post('description') ?? '';
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
 			$model->status				=	1;
+			$model->size				=	$request->post('size') ?? '';
+			$model->color				=	$request->post('color') ?? '';
+			$model->price				=	$request->post('price') ?? '';
 			$model->save();
 			$lastId = $model->id;
 			//-------------------Picture move--------------------
@@ -166,6 +177,9 @@ class ProductController extends Controller
 		$data['subcategory']  = $Product->subcategory;
 		$data['description']  = $Product->description;
 		$data['moulding_description']  = $Product->moulding_description;
+		$data['size']  = $Product->size;
+		$data['color']  = $Product->color;
+		$data['price']  = $Product->price;
 		
 		
 		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',3)->get();
@@ -294,5 +308,12 @@ class ProductController extends Controller
 		
 		$data['category_remain']  = 12 - $category_image_count;
 		return $data;
+	}
+	public function view_product($id='')
+	{
+		$product_id = $id;
+		$data['reviews'] = Reviews::with('get_reviwer')->where('product_id', $product_id)->get();
+		//echo "<pre>";print_r($reviews); die;
+		return view('product/product_view',$data);
 	}
 }

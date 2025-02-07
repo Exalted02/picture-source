@@ -161,13 +161,13 @@
 @endsection 
 @section('scripts')
 @include('_includes.footer')
-<script src="{{ url('front-assets/css/dropzone.css') }}"></script>
+{{--<script src="{{ url('front-assets/css/dropzone.css') }}"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>--}}
 <script src="{{ url('front-assets/js/page/artist.js') }}"></script>
 
 <script>
-var remaining_upload = 12;
+/*var remaining_upload = 12;
  Dropzone.options.imageUpload = {
         maxFiles: remaining_upload,
         acceptedFiles: ".jpeg,.jpg,.png,.gif",
@@ -177,8 +177,42 @@ var remaining_upload = 12;
                 //alert("Maximum upload limit reached!");
             });
         }
-    };
+    };*/
 	
-	//var myDropzone = new Dropzone("#imageUpload", Dropzone.options.imageUpload);
+	
+/*function previewImage(event) {
+	//$('.image-preview').html('');
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block'; // Show the image
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none'; // Hide the image if no file selected
+    }
+}*/
+
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block'; // Show the image
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.style.display = 'none'; // Hide the image if no file selected
+    }
+}
+
 </script>
 @endsection

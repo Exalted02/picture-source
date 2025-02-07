@@ -26,10 +26,10 @@
 				<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 					<a href="{{ route('dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
-				<li class="{{ request()->routeIs('customer') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('customer','view-customer') ? 'active' : '' }}">
 					<a href="{{ route('customer')}}"><i class="fa-solid fa-handshake"></i> <span> {{ __('customer') }} </span></a>
 				</li>
-				<li class="{{ request()->routeIs('retailer') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('retailer','view-retailer') ? 'active' : '' }}">
 					<a href="{{ route('retailer')}}"><i class="fa-solid fa-store"></i> <span> {{ __('retailer') }} </span></a>
 				</li>
 				<li class="{{ request()->routeIs('artists') ? 'active' : '' }}">
@@ -41,15 +41,21 @@
 				<li class="{{ request()->routeIs('color') ? 'active' : '' }}">
 					<a href="{{ route('color')}}"><i class="fa-solid fa-palette"></i> <span> {{ __('color') }} </span></a>
 				</li>
-				<li class="{{ request()->routeIs('products') ? 'active' : '' }}">
+				<li class="{{ request()->routeIs('products','view-product') ? 'active' : '' }}">
 					<a href="{{ route('products')}}"><i class="fa-solid fa-store"></i> <span> {{ __('product') }} </span></a>
 				</li>
 				<li class="submenu">
 					<a href="javascript:void(0);" class="{{ request()->routeIs('user.category','user.subcategory') ? 'subdrop' : '' }}"><i class="fa-solid fa-brain"></i> <span>{{ __('masters') }}</span> <span class="menu-arrow"></span></a>
 					<ul style="{{ request()->routeIs('user.category','user.subcategory') ? 'display:block' : '' }}">
 						<li><a href="{{ route('user.category')}}" class="{{ request()->routeIs('user.category') ? 'menu-active' : '' }}"><span>{{ __('category') }}</span></a></li>
-						<li><a href="{{ route('user.subcategory')}}" class="{{ request()->routeIs('user.subcategory') ? 'menu-active' : '' }}"><span>{{ __('sub_category') }}</span></a></li>
+							{{--<li><a href="{{ route('user.subcategory')}}" class="{{ request()->routeIs('user.subcategory') ? 'menu-active' : '' }}"><span>{{ __('sub_category') }}</span></a></li>--}}
 					</ul>
+				</li>
+				<li class="{{ request()->routeIs('order','view-order') ? 'active' : '' }}">
+					<a href="{{ route('order')}}"><i class="fa fa-money-bill-wave"></i> <span> {{ __('order') }} </span></a>
+				</li>
+				<li class="{{ request()->routeIs('order-wistlist','view-order-wistlist') ? 'active' : '' }}">
+					<a href="{{ route('order-wistlist')}}"><i class="fa fa-box"></i> <span> {{ __('order_wistlist') }} </span></a>
 				</li>
 				<li class="{{ request()->routeIs('user.email-settings') ? 'active' : '' }}">
 					<a href="{{ route('user.email-settings') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_settings') }} </span></a>

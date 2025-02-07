@@ -10,6 +10,11 @@ class Category extends Model
     use HasFactory;
 	protected $fillable = [
         'name',
+        'is_feature',
         'status',
     ];
+	public function images()
+	{
+		return $this->hasMany(Media::class, 'media_source_id', 'id');
+	}
 }

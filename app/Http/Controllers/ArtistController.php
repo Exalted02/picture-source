@@ -47,6 +47,7 @@ class ArtistController extends Controller
     }
 	public function save_artist(Request $request)
 	{
+		//echo "<pre>";print_r($request->all());die;
 		$existingStage = Artists::where('name', $request->post('name'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
 			if($request->post('id') !='')
@@ -68,12 +69,57 @@ class ArtistController extends Controller
 			$model= Artists::find($request->post('id'));
 			$model->name		=	$request->post('name');
 			$model->save();
+			
+			if($request->hasFile('image')) {
+				$path = public_path('uploads/artist/' . $request->post('id') . '/');
+				
+				if (!file_exists($path)) {
+					mkdir($path, 0777, true);
+				}
+				$file = $request->file('image');
+				$filename = time() . '.' . $file->getClientOriginalExtension();
+				
+				$file->move($path, $filename);
+				
+				$modelimg = Artists::find($request->post('id'));
+				$modelimg->image = $filename;
+				$modelimg->save();
+				
+				// unlink image
+				if(!empty($request->hid_image) && $request->hid_image !='')
+				{					
+					$imagename = $request->hid_image;
+					$path = public_path('uploads/artist/' . $request->post('id') . '/' . $imagename);
+					if (file_exists($path)) {
+						unlink($path);
+					}
+				}
+			}
 		}
 		else{
 			$model=new Artists();
 			$model->name		=	$request->post('name');
 			$model->status		=	1;
 			$model->save();
+			$lastId = $model->id;
+			
+			if($request->hasFile('image')) {
+				$path = public_path('uploads/artist/' . $lastId . '/');
+				
+				if (!file_exists($path)) {
+					mkdir($path, 0777, true);
+				}
+				$file = $request->file('image');
+				$filename = time() . '.' . $file->getClientOriginalExtension();
+				
+				$file->move($path, $filename);
+				
+				$modelimg = Artists::find($lastId);
+				$modelimg->image = $filename;
+				$modelimg->save();
+			}
+			
+			
 		}
 		
 		return response()->json([
@@ -89,6 +135,8 @@ class ArtistController extends Controller
 		$data = array();
 		$data['id']  = $artist->id ;
 		$data['name']  = $artist->name ;
+		$data['photo']  = $artist->image ;
+		$data['app_url'] = env('APP_URL');
 		return $data;
 	}
 	public function delete_artist(Request $request)
@@ -115,6 +163,20 @@ class ArtistController extends Controller
 		$update = Artists::where('id', $request->id)->update(['status'=> $change_status]);
 		
 		$data['result'] = $change_status;
+		echo json_encode($data);
+	}
+	public function del_artist_image(Request $request)
+	{
+		$model = Artists::find($request->id);
+		$model->image = null;
+		$model->save();
+		$imagename = $request->imagename;
+		$path = public_path('uploads/artist/' . $request->id . '/' . $imagename);
+		if (file_exists($path)) {
+			unlink($path);
+		}
+		
+		$data['status'] = 200;
 		echo json_encode($data);
 	}
 }

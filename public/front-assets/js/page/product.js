@@ -16,39 +16,7 @@ $(document).ready(function() {
 				$(this).removeClass('is-invalid'); // Remove invalid class if valid
 			}
 		});
-		/*let name = $('#name').val().trim();
-		let product_code = $('#product_code').val().trim();
-		let category = $('#category').val();
-		//alert(category);
-		//let createdDate = $('#created_date').val().trim();
-		let isValid = true;
-		$('.invalid-feedback').hide();
-		$('.form-control').removeClass('is-invalid');
-		if (name === '')
-		{
-			$('#name').addClass('is-invalid');
-			$('#name').next('.invalid-feedback').show();
-			isValid = false;
-		}
 		
-		if (product_code === '')
-		{
-			$('#product_code').addClass('is-invalid');
-			$('#product_code').next('.invalid-feedback').show();
-			isValid = false;
-		}
-		
-		if (category === '') {
-			// Show error
-			$('#category').addClass('is-invalid'); // Add Bootstrap validation class
-			$('#category').next('.invalid-feedback').show(); // Show the feedback message
-			isValid = false;
-		} else {
-			// Hide error if the input is valid
-			$('#category').removeClass('is-invalid');
-			$('#category').next('.invalid-feedback').hide();
-			isValid = true;
-		}*/
 		
 		if (isValid) {
 			var form = $("#frmproductcode");
@@ -103,6 +71,9 @@ $(document).on('click','.edit-product', function(){
 			$('#product_code').val(response.product_code);
 			$('#artist_id').val(response.artist_id).trigger('change');
 			$('#category').val(response.category).trigger('change');
+			$('#size').val(response.size).trigger('change');
+			$('#color').val(response.color).trigger('change');
+			$('#price').val(response.price);
 			//$('#subcategory').val(response.subcategory).trigger('change');
 			$('#description').val(response.description);
 			//$('#moulding_description').val(response.moulding_description);
@@ -123,7 +94,7 @@ $(document).on('click','.edit-product', function(){
 
 			waitForDropdownToLoad('#category', response.category, function() {
 				waitForDropdownToLoad('#subcategory', response.subcategory, function() {
-					console.log('Category and subcategory loaded successfully.');
+					//console.log('Category and subcategory loaded successfully.');
 				});
 			});
 

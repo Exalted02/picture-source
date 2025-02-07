@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'company_name',
         'address',
+        'country',
         'city',
         'state',
         'zipcode',
@@ -33,6 +34,7 @@ class User extends Authenticatable
         'gender_id',
         'upload_tax_lisence',
         'otp',
+        'profile_image',
         'status',
     ];
 

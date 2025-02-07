@@ -21,12 +21,15 @@ $(document).ready(function() {
 		if (isValid) {
 			var form = $("#frmproductcode");
 			var URL = $('#frmproductcode').attr('action');
-			//alert(URL);
+			var formData = new FormData(form[0]);
+			formData.append('_token', csrfToken);
+			//alert(csrfToken);
 			$.ajax({
 				url: URL,
 				type: "POST",
-				data: form.serialize() + '&_token=' + csrfToken,
-				//dataType: 'json',
+				data: formData,
+				processData: false,
+				contentType: false, 
 				success: function(response) {
 					if (!response.success) {
 						$('#name').addClass('is-invalid');
@@ -57,6 +60,36 @@ $(document).on('click','.edit-artist', function(){
 			//alert(response.state);
 			$('#id').val(response.id);
 			$('#name').val(response.name);
+			
+			var galleriesHtml = ''; 
+			var app_url =  response.app_url;
+			var photo =  response.photo;
+			$('#hid_image').val(photo);
+			//alert(photo);
+			if(photo !=null)
+			{
+			galleriesHtml += `
+					<div class="col-md-3 position-relative">
+						<!-- Cross Icon to delete image -->
+						<div class="position-absolute top-0 end-0 m-2">
+							<button type="button" 
+									data-img="${photo.image}" 
+									data-id="${response.id}" 
+									data-imagename="${photo}"  
+									class="btn removeImage bg-transparent" style="position: relative; right: -10px;">
+								<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red;margin-top:38px;"></i>
+							</button>
+						</div>
+
+						<!-- Image -->
+						<img src="${app_url}/uploads/artist/${response.id}/${photo}" 
+							 class="img-thumbnail" 
+							 alt="Gallery Image">
+					</div>
+				`;
+			
+			$('.image-preview').html(galleriesHtml);
+			}
 			$('#add_artist').modal('show');
 			//alert(JSON.stringify(response));
 			
@@ -67,63 +100,24 @@ $(document).on('click','.edit-artist', function(){
 $(document).on("click",'.removeImage', function (event) {
 	var id = $(this).data('id');
 	var imagename = $(this).data('imagename');
-	var artist_id = $(this).data('artist');
-	var media_source_id = 1;
+	
 	//alert(imagename);
-	var URL = $("#del-media-image").val();
+	var URL = $("#del-artist-image").val();
+	//alert(URL);
 	$.ajax({
 		url: URL,
 		type: "POST",
-		data: {id:id, artist_id:artist_id, image_name:imagename,media_source_id:media_source_id, _token: csrfToken},
+		data: {id:id,imagename:imagename, _token: csrfToken},
 		dataType: 'json',
-		success: function(response) {  
-			//alert(JSON.stringify(response));var galleriesHtml = '';  artist_remain
-			var app_url =  response.app_url;
-			var galleriesHtml = ''; 
-			var medianames = response.medias;
-            //alert(vehicle_gallaries);
-			$('#text_show').html(response.artist_remain);
-			
-			if (Dropzone.instances.length > 0) {
-					// Assuming the first Dropzone instance is the one you want to update
-					var dropzoneInstance = Dropzone.instances[0];
-					dropzoneInstance.options.maxFiles = response.artist_remain;
-				} else {
-					initializeDropzone(response.artist_remain);
-				}
-			
-			
-			$.each(medianames, function (index, gallery) {
-				
-				if (index % 4 === 0) {
-					galleriesHtml += '<div class="row mb-3">'; 
-				}
-				
-				galleriesHtml += `
-						<div class="col-md-3 position-relative">
-							<!-- Cross Icon to delete image -->
-							<div class="position-absolute top-0 end-0 m-2">
-								<button type="button" 
-										data-img="${gallery.image}" 
-										data-id="${gallery.id}" data-artist="${gallery.media_source_id}" data-imagename="${gallery.image}"  
-										class="btn removeImage bg-transparent">
-									<i class="fa fa-times-circle custom_gallery_icon" style="font-size:20px;color:red"></i>
-								</button>
-							</div>
+		success: function(response) {
+			//alert(response.status);			
+			//$('.image-preview').html('');
+			 const preview = document.getElementById('preview');
+                preview.src = '#';
+                preview.style.display = 'none';
 
-							<!-- Image -->
-							<img src="${app_url}/uploads/artist/${gallery.media_source_id}/gallery/thumbs/${gallery.image}" 
-								 class="img-thumbnail" 
-								 alt="Gallery Image">
-						</div>
-					`;
-				if ((index % 4 === 3) || (index === medianames.length - 1)) {
-					galleriesHtml += '</div>'; // Close the row
-				}
-			});
-			//alert(galleriesHtml);
-			$('#galleries_data').html(galleriesHtml);
-			
+                // Optionally clear other images (if needed)
+                $('.image-preview .col-md-3').remove(); 
 		},
 	});
 });

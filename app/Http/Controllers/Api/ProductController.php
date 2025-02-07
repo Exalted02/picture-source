@@ -10,289 +10,330 @@ use App\Models\Temp_media_galleries;
 use App\Models\Media;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 use File;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
-    {
-		//--- search ---
-		$dataArr = Products::query();
-		if($request->search_name)
-		{
-			$dataArr->where('name', 'like', '%' . $request->search_name . '%');
-		}
-		
-		if($request->date_range_phone && $request->date_range_phone != 'MM/DD/YYYY - MM/DD/YYYY') {
-			// Explode the date range into start and end dates
-			$dates = explode(' - ', $request->date_range_phone);
-
-			// Convert the start date and end date to Y-m-d format
-			$start_date = \Carbon\Carbon::createFromFormat('m/d/Y', $dates[0])->startOfDay()->format('Y-m-d');
-			$end_date = \Carbon\Carbon::createFromFormat('m/d/Y', $dates[1])->endOfDay()->format('Y-m-d');
-			//$contactArr->whereBetween('address_since', [$start_date, $end_date]);
-			$dataArr->whereDate('created_at', '>=', $start_date)
-            ->whereDate('created_at', '<=', $end_date);
-		}
-		
-		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))
-		{
-			$dataArr->where('status', $request->search_status);
-		} else {
-			$dataArr->where('status', '!=', 2);
-		}
-		
-		$dataArr->orderBy('name', 'ASC'); 
-		
-		$Product = $dataArr->get();
-		$data['products'] = $Product;
-		$data['categories'] = Category::where('status','!=', 2)->get();
-		$data['subcategories'] = Subcategory::where('status','!=', 2)->get();
-		$data['artists'] = Artists::where('status','!=', 2)->get();
-		return view('Product/Product',$data);
-    }
-	public function save_Product(Request $request)
+    public function get_product_list(Request $request)
 	{
-		$existingStage = Products::where('name', $request->post('name'))->where('status', '!=', 2)
-        ->when($request->post('id'), function ($query) use ($request) {
-			if($request->post('id') !='')
-			{
-				$query->where('id', '!=', $request->post('id'));
-			}
-        })
-        ->first();
-		
-		if ($existingStage) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Products already exists.'
-			]);
-		}
-		
-		if($request->post('id')>0)
+		//echo "<pre>";print_r($request->all());die;
+		$APP_URL = env('APP_URL');
+		$data = [];
+
+		if($request->category_id !='' || $request->subcategory_id!='' || $request->artist_id !='')
 		{
-			$model= Products::find($request->post('id'));
-			$model->product_code		=	$request->post('product_code') ?? '';
-			$model->artist_id			=	$request->post('artist_id') ?? '';
-			$model->category			=	$request->post('category') ?? null;
-			$model->subcategory			=	$request->post('artist_id') ?? null;
-			$model->name				=	$request->post('name') ?? '';
-			$model->image				=	 '';
-			$model->description			=	$request->post('description') ?? '';
-			$model->moulding_description		=	$request->post('moulding_description') ?? '';
-			$model->save();
-			
-			//-------------------Picture move--------------------
-			$tempRecords = Temp_media_galleries::where('unique_id', $request->post('unique_number'))->get();
-			
-			foreach ($tempRecords as $tempRecord) {
-				$newRecord = new Media();
-				$newRecord->media_source_id = $request->post('id');
-				$newRecord->media_type = 3;
-				$newRecord->image = $tempRecord->name;
-				$newRecord->status = 1;
-				$newRecord->save();
+			$exists = Products::where('status', '=', 1)
+				->where(function ($query) use ($request) {
+					$query->when(!empty($request->category_id), function ($query) use ($request) {
+						$query->Where('category', $request->category_id);
+					})
+					->when(!empty($request->artist_id), function ($query) use ($request) {
+						$query->Where('artist_id', $request->artist_id);
+					})
+					->when(!empty($request->subcategory_id), function ($query) use ($request) {
+						$query->Where('subcategory', $request->subcategory_id);
+					});
+				})
+				->exists();
+
+
+
+			if($exists)
+			{
+				$products = Products::where('status', '=', 1)
+				->where(function ($query) use ($request) {
+					$query->when(!empty($request->category_id), function ($query) use ($request) {
+						$query->Where('category', $request->category_id);
+					})
+					->when(!empty($request->artist_id), function ($query) use ($request) {
+						$query->Where('artist_id', $request->artist_id);
+					})
+					->when(!empty($request->subcategory_id), function ($query) use ($request) {
+						$query->Where('subcategory', $request->subcategory_id);
+					});
+				})
+				->get();
+				
+				//echo "<pre>";print_r($products);die;
+				
+				foreach($products as $val) {
+					$media = Media::where('media_source_id', $val->id)
+						->where('media_type', 3)
+						->inRandomOrder()
+						->first();
+
+					$data[] = [
+						'product_id' => $val->id,
+						'category_id' => $val->get_category[0]->id,
+						'category_name' => $val->get_category[0]->name,
+						'subcategory_id' => $val->get_subcategory[0]->id,
+						'subcategory_name' => $val->get_subcategory[0]->sub_category_name,
+						'artist_id' => $val->get_artist[0]->id,
+						'artist_name' => $val->get_artist[0]->name,
+						'size_id' => $val->get_size[0]->id,
+						'size_name' => $val->get_size[0]->size,
+						'color_id' => $val->get_color[0]->id,
+						'color_name' => $val->get_color[0]->color,
+						'name' => $val->name,
+						'product_code' => $val->product_code,
+						'price' => $val->price,
+						'moulding_description' => strip_tags($val->moulding_description),
+						'image' => $media ? $APP_URL.'/uploads/product/'. $val->id .'/gallery/thumbs/'.$media->image : null,
+					];
+				}
+
+				$response = [
+					'data' => $data,
+					'status' => 200,
+				];
 			}
-			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
-			
-			$sourceDirectory = public_path('uploads/').'/product/tmp/'.$request->post('unique_number').'/';
-			$destinationDirectory = public_path('uploads/').'/product/'.$request->post('id').'/';
-			// $sourceDirectory = '/source/directory';
-			// $destinationDirectory = '/destination/directory';
-			$this->copyDirectory($sourceDirectory, $destinationDirectory);
-			
-			$removeDirectory = public_path('uploads/product/tmp/');
-			if (File::exists($removeDirectory)) {
-				File::deleteDirectory($removeDirectory);
+			else{
+				$response = [
+					'response' => 'No records found',
+					'status' => 400,
+				];
 			}
+		}
+		else
+		{
+			$response = [
+				'response' => 'No records found',
+				'status' => 400,
+			];
+		}
+
+		return $response;
+	}
+	public function get_single_product(Request $request)
+	{
+		$APP_URL = env('APP_URL');
+		$data = [];
+		$responseData = [];
+		//echo $request->input('product_id'); die;
+		//echo $request->product_id;die;
+		
+		$exists = Products::where('status', '=', 1)->where('id', $request->product_id)->exists();
+		if($exists)
+		{
+			$product = Products::where('status', '=', 1)->where('id', $request->product_id)->first();
+			
+			$medias = Media::where('media_source_id', $request->product_id)
+				->where('media_type', 3)->get();
+			$imageArr = array();
+			/*foreach($medias as $media)
+			{
+				$imageArr[] = $APP_URL.'/uploads/product/'. $request->product_id .'/gallery/thumbs/'.$media->image;
+			}*/
+			
+			foreach($medias as $media)
+			{
+				$imageArr[] = 
+				[
+					'id'    =>  (string) $media->id,
+					'file_path' => $APP_URL.'/uploads/product/'. $request->product_id .'/gallery/thumbs/'.$media->image,
+				];
+			}
+			
+			// total rating 
+			$total_rating = (int) Reviews::where('product_id', $request->product_id)->whereNotNull('rating')->sum('rating');
+			
+			//----total review-------
+			$count_reviews = (int) Reviews::where('product_id', $request->product_id)
+			->whereNotNull('comment')->count();
+			//-------total avg rating product------
+			$average_rating =  Reviews::where('product_id', $request->product_id)
+				->whereNotNull('rating')->avg('rating');
+				$average_rating = round($average_rating, 1);
+			/*if (($average_rating * 10) % 10 >= 5) {
+				$average_rating = ceil($average_rating);
+			}
+			else{
+				$average_rating = ceil($average_rating);
+			}*/
+			//----------------------
+			$existRatings = [];
+			$products = Reviews::select('product_id', 'rating', DB::raw('COUNT(*) as count'))
+			->where('product_id', $request->product_id)->groupBy('product_id', 'rating') // Group by product_id and rating
+			->get();
+            
+			// Prepare results with percentages
+				$result = [];
+			foreach ($products as $productVal) {
+				$totalRatings = Reviews::where('product_id', $productVal->product_id)
+				->count();
+
+				if ($totalRatings > 0) {
+					$percentage = round(($productVal->count / $totalRatings) * 100, 1);
+					
+					if (($percentage * 10) % 10 >= 5) {
+						$percentage = ceil($percentage);
+					}
+					
+					$result[$productVal->product_id][] = [
+						'rating' => $productVal->rating,
+						'percentage' => $percentage,
+					];
+				}
+				
+				$existRatings[] = $productVal->rating; // add for not exist rating
+			}
+			
+			
+			foreach ($result as $productId => $ratings) {
+				$ratingDetails = [];
+				foreach ($ratings as $rating) {
+					$percentage = $rating['percentage'];
+					if(!empty($rating['rating']))
+					{
+						$ratingDetails[] = [
+							'rating' => $rating['rating'],
+							'percentage' => (int)$percentage,
+						];
+					}
+				}
+			}
+			// rating are not present
+			$notexistRating = [];
+			for($i=1;$i<=5;$i++)
+			{
+				if(!in_array($i,$existRatings))
+				{
+					$ratingDetails[] = [
+							'rating' => $i,
+							'percentage' => 0,
+						];
+				}
+			}
+			
+			usort($ratingDetails, function ($a, $b) {
+				return $a['rating'] <=> $b['rating'];
+			});
+			
+			
+			//$percentage_rating_one = $ratingDetails[0]['percentage'] == 0 ? 0.00 :
+			
+            //----------------------
+			$data = [
+				'product_id' => $product->id,
+				'category_id' => $product->get_category[0]->id,
+				'category_name' => $product->get_category[0]->name,
+				'subcategory_id' => $product->get_subcategory[0]->id,
+				'subcategory_name' => $product->get_subcategory[0]->sub_category_name,
+				'artist_id' => $product->get_artist[0]->id,
+				'artist_name' => $product->get_artist[0]->name,
+				'size_id' => $product->get_size[0]->id,
+				'size_name' => $product->get_size[0]->size,
+				'color_id' => $product->get_color[0]->id,
+				'color_name' => $product->get_color[0]->color,
+				'name' => $product->name,
+				'product_code' => $product->product_code,
+				'price' => '$ '.$product->price,
+				'moulding_description' => strip_tags($product->moulding_description),
+				'total_rating' => $total_rating,
+				'total_reviews' => $count_reviews,
+				'average_rating' => (string) $average_rating,
+				//'percentage_rating' => $ratingDetails,
+				'percentage_rating_one' => $ratingDetails[0]['percentage'],
+				'percentage_rating_two' => $ratingDetails[1]['percentage'],
+				'percentage_rating_three' => $ratingDetails[2]['percentage'],
+				'percentage_rating_four' => $ratingDetails[3]['percentage'],
+				'percentage_rating_five' => $ratingDetails[4]['percentage'],
+				'files' => $imageArr,
+			];
+			
+
+			$response = [
+				'data' => $data,
+				'status' => 200,
+			];
 		}
 		else{
-			$model=new Products();
-			$model->product_code		=	$request->post('product_code') ?? '';
-			$model->artist_id			=	$request->post('artist_id') ?? '';
-			$model->category			=	$request->post('category') ?? null;
-			$model->subcategory			=	$request->post('artist_id') ?? null;
-			$model->name				=	$request->post('name') ?? '';
-			$model->image				=	 '';
-			$model->description			=	$request->post('description') ?? '';
-			$model->moulding_description		=	$request->post('moulding_description') ?? '';
-			$model->status				=	1;
-			$model->save();
-			$lastId = $model->id;
-			//-------------------Picture move--------------------
-			$tempRecords = Temp_media_galleries::where('unique_id', $request->post('unique_number'))->get();
-			
-			foreach ($tempRecords as $tempRecord) {
-				$newRecord = new Media();
-				$newRecord->media_source_id = $lastId;
-				$newRecord->media_type = 3;
-				$newRecord->image = $tempRecord->name;
-				$newRecord->status = 1;
-				$newRecord->save();
-			}
-			
-			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
-			
-			$sourceDirectory = public_path('uploads/').'/product/tmp/'.$request->post('unique_number').'/';
-			$destinationDirectory = public_path('uploads/').'/product/'.$lastId.'/';
-			// $sourceDirectory = '/source/directory';
-			// $destinationDirectory = '/destination/directory';
-			$this->copyDirectory($sourceDirectory, $destinationDirectory);
-			
-			$removeDirectory = public_path('uploads/product/tmp/');
-			if (File::exists($removeDirectory)) {
-				File::deleteDirectory($removeDirectory);
-			}
+			$response = [
+				'response' => 'No records found',
+				'status' => 400,
+			];
 		}
-		
-		return response()->json([
-			'success' => true,
-			'message' => 'Products saved successfully.'
-		]);
-	}
-	public function edit_Product(Request $request)
-	{
-		$Product = Products::where('id', $request->id)->first();
-		//$media = Media::where('media_source_id', $request->id)->get();
-		//echo "<pre>";print_r($media);die;
-		$data = array();
-		$data['id']  = $Product->id ;
-		$data['name']  = $Product->name ;
-		$data['product_code']  = $Product->product_code ;
-		$data['artist_id']  = $Product->artist_id ;
-		$data['category']  = $Product->category;
-		$data['subcategory']  = $Product->subcategory;
-		$data['description']  = $Product->description;
-		$data['moulding_description']  = $Product->moulding_description;
-		
-		
-		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',3)->get();
-		$data['app_url'] = env('APP_URL');
-		
-		$data['category_image_count'] = Media::where('media_source_id',$request->id)->where('media_type',3)->count();
-		return $data;
-	}
-	public function delete_Product(Request $request)
-	{
-		$name = Products::where('id', $request->id)->first()->name;
-		echo json_encode($name);
-	}
-	public function delete_Product_list(Request $request)
-	{
-		$check  = Products::where('id', $request->id)->exists();
-		if($check){
-			$del = Products::where('id', $request->id)->update(['status'=>2]);
-			
-			$data['result'] ='success';
-		}else{
-			$data['result'] ='error';
-		}
-		echo json_encode($data);
-	}
-	public function update_status(Request $request)
-	{
-		$status = Products::where('id', $request->id)->first()->status;
-		$change_status = $status == 1 ? 0 : 1;
-		$update = Products::where('id', $request->id)->update(['status'=> $change_status]);
-		
-		$data['result'] = $change_status;
-		echo json_encode($data);
-	}
-	public function dropzone_store(Request $request)
-    {
-		
-        $image = $request->file('file');
-		//echo "<pre>";print_r($image);die;
-		$unique_number = $request->unique_number;
-	
-		$dest_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/';
-		$dest_thumb_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/thumbs/';
-		$details_path = public_path('uploads/').'product/tmp/'.$unique_number.'/details/';
-		
-		$width 				= '360';
-		$height  			= '270';
-		
-		$imageName = uploadResizeImage($details_path, $dest_path, $dest_thumb_path, $width, $height, $image);
-		
-		$galley = new Temp_media_galleries();
-		$galley->unique_id =  $unique_number;
-		$galley->name  = 	$imageName;
-		$galley->created_at		=	date('Y-m-d H:i:s');
-		$galley->save();
-        //return response()->json(['success'=>$imageName]);
-    }
-	
-	function copyDirectory($source, $destination) {
-	   if (!is_dir($destination)) {
-		  mkdir($destination, 0755, true);
-	   }
-	   if(is_dir($source)){
-		   $files = scandir($source);
-		   foreach ($files as $file) {
-			  if ($file !== '.' && $file !== '..') {
-				 $sourceFile = $source . '/' . $file;
-				 $destinationFile = $destination . '/' . $file;
-				 if (is_dir($sourceFile)) {
-					$this->copyDirectory($sourceFile, $destinationFile);
-				 } else {
-					copy($sourceFile, $destinationFile);
-				 }
-			  }
-		   }
-	   }
-	}
-	public function get_subcategory(Request $request)
-	{
-		$category_id = $request->id;
-		$subArr = SubCategory::where('status','!=',2)->where('category_id', $category_id)->get();
-		$html = '<option value="">Please select</option>';
-		foreach($subArr as $val)
-		{
-			$html .='<option value="'.$val->id.'">'.$val->sub_category_name.'</option>';
-		}
-		
-		echo json_encode($html);
-		
-	}
-	public function delete_product_media(Request $request)
-	{
-		$product_id = $request->product_id;
-		
-		$imageName = $request->image_name;
-		$imagePath = public_path('uploads/product/' . $request->product_id . '/gallery/' . $imageName);
-		
-		$imagePaththumbs = public_path('uploads/product/' . $request->product_id . '/gallery/thumbs/' . $imageName);
-		$imagedetails = public_path('uploads/product/' . $request->product_id . '/details/' . $imageName);
 
-   
-		if(file_exists($imagePath)) {
-			unlink($imagePath);
-		   /*if (unlink($imagePath)) {
-				return response()->json(['message' => 'Image deleted successfully.']);
-			} else {
-				return response()->json(['message' => 'Failed to delete image.'], 500);
+		return $response;
+	}
+	public function get_product_search(Request $request)
+	{
+		$interval = config('custom.API_PRODUCT_INTERVAL');
+		$size_ids = $request->size_id != '' ? explode(',', $request->size_id) : [];
+		$color_ids = $request->color_id != '' ? explode(',', $request->color_id) : [];
+		
+		
+		$data = [];
+		$APP_URL = env('APP_URL');
+		//$paginate = $request->paginate !='' ? $request->paginate : 1;
+		$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
+		$dataArr = Products::query();
+		if($request->keyword)
+		{
+			$dataArr->where('name', 'like', '%' . $request->keyword . '%');
+		}
+		
+		if(!empty($size_ids))
+		{
+			$dataArr->whereIn('size', $size_ids);
+		}
+		
+		if(!empty($color_ids))
+		{
+			$dataArr->whereIn('color', $color_ids);
+		}
+		
+		$dataArr->where('status', '=', 1);
+		$dataArr->orderBy('name', 'ASC'); 
+		$productdata = $dataArr->skip($paginate)->take($interval)->get();
+		//$productdata = $dataArr->limit($paginate,$interval)->get();
+		//$productdata = $dataArr->get();
+		//echo "<pre>";print_r($productdata);die;
+		//$imageArr = array();
+		foreach($productdata as $product)
+		{
+			$imageArr = array();
+			$image_name  = '';
+			/*$medias = Media::where('media_source_id', $product->id)
+						->where('media_type', 3)->get();
+			foreach($medias as $media)
+			{
+				$imageArr[] = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$media->image;
 			}*/
-		} else {
-			return response()->json(['message' => 'Image not found.'], 404);
+			
+			$medias = Media::where('media_source_id', $product->id)
+						->where('media_type', 3)->inRandomOrder()
+					->first();
+			$image_name = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$medias->image;
+			
+			$data[] = [
+				'product_id' => $product->id,
+				//'category_id' => $product->get_category[0]->id,
+				//'category_name' => $product->get_category[0]->name,
+				//'subcategory_id' => $product->get_subcategory[0]->id,
+				//'subcategory_name' => $product->get_subcategory[0]->sub_category_name,
+				'artist_id' => $product->get_artist[0]->id,
+				'artist_name' => $product->get_artist[0]->name,
+				//'size_id' => $product->get_size[0]->id,
+				'size_name' => $product->get_size[0]->size,
+				//'color_id' => $product->get_color[0]->id,
+				'color_name' => $product->get_color[0]->color,
+				'name' => $product->name,
+				'product_code' => $product->product_code,
+				'price' => $product->price,
+				'moulding_description' => strip_tags($product->moulding_description),
+				'image' => $image_name,
+			];
 		}
 		
-		if(file_exists($imagePaththumbs)) {
-			unlink($imagePaththumbs);
-		}
-		
-		if(file_exists($imagedetails)) {
-			unlink($imagedetails);
-		}
-		
-		//-------------------------------------
-		Media::where('id',$request->id)->delete();
-		$data['app_url'] = env('APP_URL');
-		$data['medias']  = Media::where('media_source_id',$product_id)->where('media_type',3)->get();
-		$category_image_count = Media::where('media_source_id',$product_id)->where('media_type',3)->count();
-		
-		$data['category_remain']  = 12 - $category_image_count;
-		return $data;
+		$response = [
+				'data' => $data,
+				'status' => 200,
+			];
+		return $response;
 	}
 }

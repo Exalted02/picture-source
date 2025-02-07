@@ -17,7 +17,7 @@ return new class extends Migration
 			$table->string('company_name')->after('password')->nullable();
 			$table->string('address')->after('company_name')->nullable();
 			$table->string('city')->after('address')->nullable();
-			$table->string('state')->after('city')->nullable();
+			$table->integer('state')->after('city')->nullable();
 			$table->string('zipcode')->after('state')->nullable();
 			$table->string('phone_number')->after('zipcode')->nullable();
 			$table->string('upload_tax_lisence')->after('phone_number')->nullable();

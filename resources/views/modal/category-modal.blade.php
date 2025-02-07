@@ -43,6 +43,18 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
+													 <label class="col-form-label">{{ __('is_feature') }}</label>
+														
+													<div class="input-block mb-3">
+														<label class="custom_check is_feature">
+																			<input type="checkbox" checked name="is_feature" id="is_feature">													
+																			<span class="checkmark" style="margin-left: 6px;"></span>
+																	</label>
+													</div>
+												</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
 							@php
 								$unique_number = \Illuminate\Support\Str::random(10);
 							@endphp

@@ -69,6 +69,14 @@ $(document).on('click','.edit-product-code', function(){
 			
 			$('#id').val(response.id);
 			$('#name').val(response.name);
+			if(response.is_feature ==1)
+			{
+				$('#is_feature').prop('checked', true);
+			}
+			else if(response.is_feature ==0)
+			{
+				$('#is_feature').prop('checked', false);
+			}
 			
 			var galleriesHtml = ''; 
 			var app_url =  response.app_url;

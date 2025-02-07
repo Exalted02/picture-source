@@ -12,10 +12,34 @@ class Products extends Model
         'artist_id',
         'category',
         'subcategory',
+        'size',
+        'color',
 		'name',
+		'price',
         'image',
         'description',
         'moulding_description',
         'status',
     ];
+	
+	public function get_category()
+	{
+		return $this->hasMany(Category::class, 'id','category');
+	}
+	public function get_subcategory()
+	{
+		return $this->hasMany(Subcategory::class, 'id','subcategory');
+	}
+	public function get_artist()
+	{
+		return $this->hasMany(Artists::class, 'id','artist_id');
+	}
+	public function get_size()
+	{
+		return $this->hasMany(Size::class, 'id','size');
+	}
+	public function get_color()
+	{
+		return $this->hasMany(Color::class, 'id','color');
+	}
 }

@@ -15,10 +15,13 @@ use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Api\RegisteredUserController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\RetailerController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 
 
@@ -110,15 +113,19 @@ Route::middleware('auth')->group(function () {
 	Route::post('/email-management-edit-save',[EmailManagementController::class,'manage_email_management_process'])->name('email-management-edit-save');
 	
 	// customer
-	Route::get('customer', [RegisteredUserController::class,'customer_list'])->name('customer');
-	Route::post('/customer-update-status',[RegisteredUserController::class,'update_status'])->name('customer-update-status'); 
-	Route::post('/getDeleteCustomer',[RegisteredUserController::class,'delete_customer'])->name('getDeleteCustomer');
-	Route::post('/deleteCustomerList',[RegisteredUserController::class,'delete_customer_list'])->name('deleteCustomerList');
-	// retailer
-	Route::get('retailer', [RegisteredUserController::class,'retailer_list'])->name('retailer');
-	Route::post('/retailer-update-status',[RegisteredUserController::class,'update_status'])->name('retailer-update-status'); 
-	Route::post('/getDeleteRetailer',[RegisteredUserController::class,'delete_retailer'])->name('getDeleteRetailer');
-	Route::post('/deleteRetailerList',[RegisteredUserController::class,'delete_retailer_list'])->name('deleteRetailerList');
+	Route::get('customer', [CustomerController::class,'customer_list'])->name('customer');
+	Route::post('/customer-update-status',[CustomerController::class,'update_status'])->name('customer-update-status'); 
+	Route::post('/getDeleteCustomer',[CustomerController::class,'delete_customer'])->name('getDeleteCustomer');
+	Route::post('/deleteCustomerList',[CustomerController::class,'delete_customer_list'])->name('deleteCustomerList');
+	Route::get('/view-customer/{id}', [CustomerController::class, 'view_customer'])->name('view-customer');
+	
+	// retailer  view-retailer
+	Route::get('retailer', [RetailerController::class,'retailer_list'])->name('retailer');
+	Route::post('/retailer-update-status',[RetailerController::class,'update_status'])->name('retailer-update-status'); 
+	Route::post('/getDeleteRetailer',[RetailerController::class,'delete_retailer'])->name('getDeleteRetailer');
+	Route::post('/deleteRetailerList',[RetailerController::class,'delete_retailer_list'])->name('deleteRetailerList');
+	Route::get('/retailer-tax-download',[RetailerController::class,'retailer_tax_download'])->name('retailer-tax-download');
+	Route::get('/view-retailer/{id}', [RetailerController::class, 'view_retailer'])->name('view-retailer');
 	
 	// artists
 	Route::get('artists', [ArtistController::class,'index'])->name('artists');
@@ -128,6 +135,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/getDeleteArtist',[ArtistController::class,'delete_artist'])->name('getDeleteArtist');
 	Route::post('/deleteArtistList',[ArtistController::class,'delete_artist_list'])->name('deleteArtistList');
 	Route::post('/artist', [ArtistController::class, 'index'])->name('user.artist');
+	Route::post('/del-artist-image', [ArtistController::class, 'del_artist_image'])->name('del-artist-image');
 	
 	// size
 	Route::get('size', [SizeController::class,'index'])->name('size');
@@ -160,6 +168,17 @@ Route::middleware('auth')->group(function () {
 	Route::post('/get-subcategory', [ProductController::class, 'get_subcategory'])->name('get-subcategory');
 	
 	Route::post('/delete-product-media', [ProductController::class, 'delete_product_media'])->name('delete.product.media');
+	
+	Route::get('/view-product/{id}', [ProductController::class, 'view_product'])->name('view-product');
+	
+	// order
+	Route::get('order', [OrderController::class,'index'])->name('order');
+	Route::get('/view-order/{id}', [OrderController::class, 'view_order'])->name('view-order');
+	Route::post('change-order-status', [OrderController::class, 'change_order_status'])->name('change.order.status');
+	
+	// order wistlist
+	Route::get('order-wistlist', [OrderController::class,'order_wistlist_list'])->name('order-wistlist');
+	Route::get('/view-order-wistlist/{id}', [OrderController::class, 'view_order_wistlist'])->name('view-order-wistlist');
 	
 });
 

@@ -92,6 +92,7 @@
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('product_code') }}</th>
 								<th>{{ __('name') }}</th>
+								<th>{{ __('price') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
@@ -112,6 +113,7 @@
 								@endif
 								<td>{{ $val->product_code ?? ''}}</td>
 								<td>{{ $val->name ?? ''}}</td>
+								<td>Rs. {{ $val->price ?? ''}}</td>
 								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -144,6 +146,7 @@
 										<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 										<div class="dropdown-menu dropdown-menu-right">
 											<a class="dropdown-item edit-product" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url="{{ route('edit-product') }}"><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>
+											<a class="dropdown-item" href="{{ route('view-product', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
 											<a class="dropdown-item delete-product-code" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('getDeleteArtist') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>

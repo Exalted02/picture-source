@@ -154,6 +154,7 @@
 										
 										{{--<a class="dropdown-item" href="{{ route('view-dealer', ['id'=>$val->id]) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>--}}
 											{{--<a class="dropdown-item edit-customer" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url=""><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>--}}
+											<a class="dropdown-item" href="{{ route('view-customer', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
 											<a class="dropdown-item delete-customer" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('getDeleteCustomer') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>

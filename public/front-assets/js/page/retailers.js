@@ -313,6 +313,25 @@ $(document).on('click','.downloaddemo', function(){
 	}, 1000);
 });
 
+$(document).on('click','.retailer-tax-download', function(){
+	var id= $(this).data('id');
+	//var URL = $(this).data('url');
+	$('#retailer_id').val(id);
+	$('#frmtax').submit();
+	/*$.ajax({
+		url: URL,
+		type: "POST",
+		data: {id:id, _token: csrfToken},
+		dataType: 'json',
+		success: function(response) {
+			//alert(response);
+			setTimeout(() => {
+				window.location.reload();
+			}, "1000");
+		},
+	});*/
+})
+
 });
 
 function validateEmail(email) {

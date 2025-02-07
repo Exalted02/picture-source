@@ -47,7 +47,6 @@ class CategoryController extends Controller
     }
 	public function save_category(Request $request)
 	{
-		
 		$existingStage = Category::where('name', $request->post('name'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
 			if($request->post('id') !='')
@@ -63,11 +62,12 @@ class CategoryController extends Controller
 				'message' => 'Category already exists.'
 			]);
 		}
-		
+		//echo $request->post('id'); die;
 		if($request->post('id')>0)
 		{
 			$model= Category::find($request->post('id'));
 			$model->name		=	$request->post('name');
+			$model->is_feature		=	!empty($request->post('is_feature')) ? 1: 0;
 			$model->save();
 			
 			//-------------------Picture move--------------------
@@ -95,8 +95,10 @@ class CategoryController extends Controller
 			}
 		}
 		else{
+			//echo 'hello2';die;
 			$model=new Category();
 			$model->name		=	$request->post('name');
+			$model->is_feature		=	!empty($request->post('is_feature')) ? 1: 0;
 			$model->status		=	1;
 			$model->save();
 			$lastId = $model->id;
@@ -137,7 +139,8 @@ class CategoryController extends Controller
 		//echo "<pre>";print_r($media);die;
 		$data = array();
 		$data['id']  = $category->id ;
-		$data['name']  = $category->name ;
+		$data['name']  = $category->name;
+		$data['is_feature']  = $category->is_feature;
 		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',1)->get();
 		$data['app_url'] = env('APP_URL');
 		

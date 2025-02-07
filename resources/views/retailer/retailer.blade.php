@@ -96,6 +96,7 @@
 								<th>{{ __('city') }}</th>
 								<th>{{ __('state') }}</th>
 								<th>{{ __('zipcode') }}</th>
+								<th>{{ __('tax_download') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>
@@ -117,6 +118,7 @@
 								<td>{{ $val->city ?? ''}}</td>
 								<td>{{ $val->state ?? ''}}</td>
 								<td>{{ $val->zipcode ?? ''}}</td>
+								<td><i class="fa fa-download retailer-tax-download" data-bs-toggle="tooltip" data-bs-placement="top" title="Download File" style="font-size: 18px; cursor: pointer; color: #007bff;" data-id="{{ $val->id }}"></i></td>
 								<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
@@ -151,6 +153,7 @@
 										
 										{{--<a class="dropdown-item" href="{{ route('view-dealer', ['id'=>$val->id]) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>--}}
 											{{--<a class="dropdown-item edit-customer" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url=""><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>--}}
+											<a class="dropdown-item" href="{{ route('view-retailer', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
 											<a class="dropdown-item delete-retailer" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('getDeleteRetailer') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>
@@ -159,6 +162,9 @@
 							@endforeach
 						</tbody>
 					</table>
+					<form name="frmtax" id="frmtax" action="{{ route('retailer-tax-download') }}">
+					 <input type="hidden" id="retailer_id" name="retailer_id">
+					</form>
 				</div>
 			</div>
 		</div>

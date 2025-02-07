@@ -33,7 +33,7 @@
 				<form id="frmproductcode" action="{{ route('user.save-product') }}">
 				<input type="hidden" id="id" name="id">
 				<div class="row">
-						<div class="col-sm-6">
+						<div class="col-sm-12">
 							<div class="input-block mb-3">
 								<label class="col-form-label">{{ __('category') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="category" id="category" data-url="{{ route('get-subcategory')}}" required>
@@ -42,11 +42,11 @@
 										<option value="{{ $val->id }}">{{ $val->name ?? ''}}</option>
 									@endforeach
 								</select>
-								<div class="invalid-feedback" style="display: none;">{{ __('please_select') }} {{ __('category')}}.</div>
+								<div class="invalid-feedback">{{ __('please_select') }} {{ __('category')}}.</div>
 							</div>
 						</div>
 					
-						<div class="col-sm-6">
+					{{--<div class="col-sm-6">
 							<div class="input-block mb-3">
 								<label class="col-form-label">{{ __('sub_category') }}</label>
 								<select class="select form-control" name="subcategory" id="subcategory">
@@ -54,7 +54,7 @@
 									
 								</select>
 							</div>
-						</div>
+						</div>--}}
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
@@ -76,8 +76,8 @@
 								<label class="col-form-label">{{ __('size') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="size" id="size" data-url="{{ route('get-subcategory')}}" required>
 									<option value="">{{ __('please_select') }}</option>
-									@foreach($categories as $val)
-										<option value="{{ $val->id }}">{{ $val->name ?? ''}}</option>
+									@foreach($sizes as $val)
+										<option value="{{ $val->id }}">{{ $val->size ?? ''}}</option>
 									@endforeach
 								</select>
 								<div class="invalid-feedback">{{ __('please_select') }} {{ __('size')}}.</div>
@@ -86,11 +86,14 @@
 					
 						<div class="col-sm-6">
 							<div class="input-block mb-3">
-								<label class="col-form-label">{{ __('color') }}</label>
+								<label class="col-form-label">{{ __('color') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="color" id="color" required>
 									<option value="">{{ __('please_select') }}</option>
+									@foreach($colors as $val)
+										<option value="{{ $val->id }}">{{ $val->color ?? ''}}</option>
+									@endforeach
 								</select>
-								<div class="invalid-feedback">{{ __('please_select') }} {{ __('size')}}.</div>
+								<div class="invalid-feedback">{{ __('please_select') }} {{ __('color')}}.</div>
 							</div>
 						</div>
 					</div>

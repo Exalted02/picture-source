@@ -10,6 +10,7 @@ class Artists extends Model
     use HasFactory;
 	protected $fillable = [
         'name',
+        'image',
         'status',
     ];
 }
