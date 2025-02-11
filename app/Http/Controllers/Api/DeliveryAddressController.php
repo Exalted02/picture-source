@@ -23,6 +23,7 @@ class DeliveryAddressController extends Controller
 		{
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$listing = Delivery_address::where('user_id', $user_id)->get();
+			$data = [];
 			foreach($listing as $list)
 			{
 				$data[] = [
@@ -134,7 +135,7 @@ class DeliveryAddressController extends Controller
 			else{
 				$response = [
 					'status' => 401,
-					'data' => 'Record not found',
+					'message' => 'Record not found',
 				];
 			}
 			
@@ -159,9 +160,9 @@ class DeliveryAddressController extends Controller
 			{
 				Delivery_address::where('id',$id)->delete();
 				$response = [
-						'status' => 401,
-						'data' => 'Record deleted successfully',
-					];
+					'status' => 200,
+					'data' => 'Record deleted successfully',
+				];
 			}
 			else{
 				$response = [

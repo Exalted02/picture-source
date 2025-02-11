@@ -209,6 +209,33 @@ class ProfileController extends Controller
 		];
 		return $response;
     }
+	public function profile_verified(Request $request)
+    {
+		if(Auth::guard('sanctum')->check()) 
+		{
+			
+			$user_id = Auth::guard('sanctum')->user()->id;
+			
+			$model = User::find($user_id);
+			$model->profile_verified = 1;
+			$model->stripe_paymethod_id = $request->payment_method;
+			$model->save();
+			
+			$response = [
+				'status' => 200,
+				'data' => 'Profile verified successfully',
+			];
+		}
+		else 
+		{
+			$response = [
+				'status' => 400,
+				'message' => 'Please login',
+			];
+			
+		}
+		return $response;
+    }
 	
 	
 }

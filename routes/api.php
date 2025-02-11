@@ -44,7 +44,7 @@ Route::post('category-list',[CategoryController::class, 'getCategories']);
 Route::post('get-subcategory-list',[CategoryController::class, 'get_subcategory_list']);
 Route::post('get-product-list',[ProductController::class, 'get_product_list']);
 Route::post('get-artist-list',[ArtistController::class, 'get_artist_list']);
-Route::get('single-product',[ProductController::class, 'get_single_product']);
+Route::post('single-product',[ProductController::class, 'get_single_product']);
 Route::post('product-search',[ProductController::class, 'get_product_search']);
 
 Route::get('home-category-list',[HomeController::class, 'category_list']);
@@ -81,6 +81,10 @@ Route::post('/my-wistlist-order-details',[OrderController::class, 'my_wistlist_o
 Route::get('/country_list',[CountryStateController::class, 'country_list']);
 Route::post('/state_list',[CountryStateController::class, 'state_list']);
 Route::post('/city_list',[CountryStateController::class, 'city_list']);
+
+Route::post('/profile-verified',[ProfileController::class, 'profile_verified']);
+
+
 
 Route::get('/gender_list',[ProfileController::class, 'gender_list']);
 
