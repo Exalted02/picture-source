@@ -21,6 +21,7 @@ return new class extends Migration
 			$table->double('price', 10, 2)->nullable();
 			$table->integer('color_id')->nullable();
 			$table->integer('size_id')->nullable();
+			$table->integer('image_url')->nullable();
             $table->timestamps();
         });
     }

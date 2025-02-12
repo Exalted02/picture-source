@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 //use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 use Illuminate\Validation\Rules;
 use File;
@@ -34,61 +35,78 @@ class OrderController extends Controller
 		}
 		$retailer_id = $userAddressData[0]->id;*/
 		//echo "<pre>";print_r($userAddressData);die;
+		/*$data = $request->all();
+		\Log::info(json_encode($data)); 
+		dd($data);*/
 		
 		if(Auth::guard('sanctum')->check()) 
 		{
 			$user_id = Auth::guard('sanctum')->user()->id;
-			$total_amt = 0;
-			//echo $user_id."</br>";
-			//echo $request->order_type."</br>";
-			//echo $request->delivery_address_id."</br>";
-			//echo $request->final_total."</br>";
-			$products = $request->products;
-			//echo "<pre>";print_r($products);die;
+			
+			$delivery_address = Delivery_address::where('id',$request->address_id)->first();
+			$retailer = User::where('user_type',2)->select('*', 
+						DB::raw("
+							ROUND( ( 6371 * acos( cos( radians($delivery_address->latitude) ) 
+							* cos( radians( latitude ) ) 
+							* cos( radians( longitude ) - radians($delivery_address->longitude) ) 
+							+ sin( radians($delivery_address->latitude) ) 
+							* sin( radians( latitude ) ) ) ), 1 ) AS distance
+						"),
+					)
+					->havingNotNull('distance')
+					->orderBy('distance', 'asc') // Sort by closest distance
+					->get();
+			if ($retailer->isEmpty()) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No retailer found for this order',
+                ]);
+            }		
+			// \Log::info($retailer[0]->id); 		
+			//dd($retailer);
 			
 			$ordermodel = new Orders();
 			$ordermodel->user_id = $user_id ?? null;
-			$ordermodel->retailer_id = $retailer_id ?? null;
-			$ordermodel->delivery_address_id = $request->delivery_address_id ?? null;
-			$ordermodel->discount_amount = $request->discount_amount ?? null;
-			$ordermodel->coupon_discount = $request->coupon_discount  ?? null;
-			$ordermodel->shipping_charge = $request->shipping_charge  ?? null;
-			$ordermodel->order_total = $request->final_total  ?? null;
-			$ordermodel->final_amount = $request->final_total  ?? null;
-			$ordermodel->order_type = $request->order_type  ?? 0;
+			$ordermodel->retailer_id = $retailer[0]->id ?? null;
+			$ordermodel->delivery_address_id = $request->address_id ?? null;
+			$ordermodel->discount_amount = null;
+			$ordermodel->coupon_discount = null;
+			$ordermodel->shipping_charge = null;
+			$ordermodel->order_total = $request->total_amount  ?? null;
+			$ordermodel->final_amount = $request->total_amount  ?? null;
+			$ordermodel->order_type = 0;
 			$ordermodel->status = 1; // default pending
 			$ordermodel->created_at = now();
 			$ordermodel->save();
 			$order_id = $ordermodel->id;
 			
-			foreach ($products as $product) {
+			foreach ($request->cart_items as $product) {
 				$productId = $product['product_id'];
-				$quantity = $product['quantity'];
 				
 				$productExist = Products::where('id', $productId)->exists();
 				if($productExist)
 				{
-					$productData = Products::where('id', $productId)->first();
+					// $productData = Products::where('id', $productId)->first();
 					$orderItemModel = new Order_items();
 					$orderItemModel->order_id = $order_id ?? null;
 					$orderItemModel->product_id = $productId ?? null;
-					$orderItemModel->product_name = $productData->name ?? null;
-					$orderItemModel->product_code = $productData->product_code ?? null;
-					$orderItemModel->quantity = $quantity ?? null;
-					$orderItemModel->price = $productData->price ?? null;
-					$orderItemModel->color_id = $productData->color ?? null;
-					$orderItemModel->size_id = $productData->size ?? null;
+					$orderItemModel->product_name = $product['product_name'] ?? null;
+					$orderItemModel->product_code = null;
+					$orderItemModel->quantity = $product['quantity'] ?? null;
+					$orderItemModel->price = $product['price'] ?? null;
+					$orderItemModel->color_id = null;
+					$orderItemModel->size_id = null;
+					$orderItemModel->image_url = $product['image_url'] ?? null;
 					$orderItemModel->created_at = now();
 					$orderItemModel->save();
-					
-					$total_amt = $total_amt + ($productData->price * $quantity);
 				}
 			}
 			
 			//$total_amt calulate the quantity * price
 			$response = [
 				'status' => 200,
-				'data' => 'Record inserted successfully',
+				'order_id' => $order_id,
+				'data' => 'Order placed successfully',
 			];
 		}
 		else 
