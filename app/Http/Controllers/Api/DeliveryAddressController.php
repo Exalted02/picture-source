@@ -30,6 +30,8 @@ class DeliveryAddressController extends Controller
 					'id' => $list->id,
 					'address_type' => $list->address_type,
 					'phone_number' => $list->phone_number,
+					'latitude' => $list->latitude,
+					'longitude' => $list->longitude,
 					'address' => $list->address,
 				];
 			}
@@ -59,6 +61,8 @@ class DeliveryAddressController extends Controller
 				'address_type' => 'required',
 				'phone_number' => 'required|numeric|digits:10',
 				'address' => 'required',
+				'latitude' => 'required',
+				'longitude' => 'required',
 			], [
 				'phone_number.required' => 'The phone number field is required.',
 				'phone_number.numeric' => 'The phone number must be a valid number.',
@@ -75,6 +79,8 @@ class DeliveryAddressController extends Controller
 			$model->user_id = $user_id;
 			$model->address_type = $request->address_type;
 			$model->phone_number = $request->phone_number;
+			$model->latitude = $request->latitude;
+			$model->longitude = $request->longitude;
 			$model->address = $request->address;
 			$model->save();
 			
@@ -104,6 +110,8 @@ class DeliveryAddressController extends Controller
 				'address_type' => 'required',
 				'phone_number' => 'required|numeric|digits:10',
 				'address' => 'required',
+				'latitude' => 'required',
+				'longitude' => 'required',
 			], [
 				'phone_number.required' => 'The phone number field is required.',
 				'phone_number.numeric' => 'The phone number must be a valid number.',
@@ -124,6 +132,8 @@ class DeliveryAddressController extends Controller
 				//$model->user_id = $user_id;
 				$model->address_type = $request->address_type;
 				$model->phone_number = $request->phone_number;
+				$model->latitude = $request->latitude;
+				$model->longitude = $request->longitude;
 				$model->address = $request->address;
 				$model->save();
 				

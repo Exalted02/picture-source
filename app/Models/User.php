@@ -35,6 +35,8 @@ class User extends Authenticatable
         'upload_tax_lisence',
         'otp',
         'profile_image',
+        'latitude',
+        'longitude',
         'status',
     ];
 

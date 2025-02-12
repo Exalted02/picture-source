@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('delivery_addresses', function (Blueprint $table) {
             $table->id();
 			$table->integer('user_id')->nullable();
-			$table->text('address_type')->nullable();
-			$table->text('phone_number')->nullable();
+			$table->string('address_type')->nullable();
+			$table->string('phone_number')->nullable();
 			$table->text('address')->nullable();
+			$table->string('latitude')->nullable();
+			$table->string('longitude')->nullable();
             $table->timestamps();
         });
     }

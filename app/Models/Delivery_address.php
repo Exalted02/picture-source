@@ -12,6 +12,8 @@ class Delivery_address extends Model
         'user_id',
         'address_type',
         'phone_number',
+        'latitude',
+        'longitude',
         'address',
     ];
 }

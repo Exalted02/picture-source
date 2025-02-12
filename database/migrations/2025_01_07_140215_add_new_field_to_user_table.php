@@ -17,6 +17,8 @@ return new class extends Migration
           $table->string('auth_provider_id')->after('auth_provider')->nullable();
           $table->tinyInteger('profile_verified')->after('auth_provider_id')->default(0)->comment('0 = Not verified, 1 = Verified');
           $table->string('stripe_paymethod_id')->after('profile_verified')->nullable();
+		  $table->string('latitude')->after('stripe_paymethod_id')->nullable();
+		  $table->string('longitude')->after('latitude')->nullable();
         });
     }
 

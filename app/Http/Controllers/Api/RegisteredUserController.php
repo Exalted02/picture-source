@@ -602,6 +602,8 @@ class RegisteredUserController extends Controller
 			$model->city = $request->city ?? null;
 			$model->country = $request->country ?? null;
 			$model->state = $request->state ?? null;
+			$model->latitude = $request->latitude ?? null;
+			$model->longitude = $request->longitude ?? null;
 			$model->zipcode = $request->zipcode ?? null;
 			$model->phone_number = $request->phone_number ?? null;
 			$model->dob = date('Y-m-d', strtotime($request->dob)) ?? null;
@@ -652,6 +654,8 @@ class RegisteredUserController extends Controller
 			$model->city = $request->city ?? null;
 			$model->country = $request->country ?? null;
 			$model->state = $request->state ?? null;
+			$model->latitude = $request->latitude ?? null;
+			$model->longitude = $request->longitude ?? null;
 			$model->zipcode = $request->zipcode ?? null;
 			$model->phone_number = $request->phone_number ?? null;
 			$model->dob = date('Y-m-d', strtotime($request->dob)) ?? null;
