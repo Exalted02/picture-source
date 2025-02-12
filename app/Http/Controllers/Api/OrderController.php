@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Orders;
 use App\Models\Order_items;
 use App\Models\Delivery_address;
+use App\Models\Notifications;
 use App\Models\Products;
 use App\Models\Media;
 use App\Models\Wistlists;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 //use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Carbon\Carbon;
 
 use Illuminate\Validation\Rules;
 use File;
@@ -26,19 +28,6 @@ class OrderController extends Controller
 {
 	public function place_order(Request $request)
 	{
-		/*$retailer_id = '';
-		$delivery_address = Delivery_address::where('id',$request->delivery_address_id)->first()->address;
-		if ($delivery_address) {
-			$userAddressData = User::where('user_type',2)->where('address', 'LIKE', '%' . $delivery_address . '%')->get();
-		} else {
-			$userAddressData = collect();
-		}
-		$retailer_id = $userAddressData[0]->id;*/
-		//echo "<pre>";print_r($userAddressData);die;
-		/*$data = $request->all();
-		\Log::info(json_encode($data)); 
-		dd($data);*/
-		
 		if(Auth::guard('sanctum')->check()) 
 		{
 			$user_id = Auth::guard('sanctum')->user()->id;
@@ -101,6 +90,26 @@ class OrderController extends Controller
 					$orderItemModel->save();
 				}
 			}
+			
+			$consumer_name = Auth::guard('sanctum')->user()->name;
+			$order_date = Carbon::now()->format('d-m-Y');
+			
+			$notification = new Notifications();
+			$notification->order_id = $order_id ?? null;
+			$notification->customer_id = $user_id ?? null;
+			$notification->retailer_id = $retailer[0]->id ?? null;
+			$notification->wishlist_email = null;
+			$notification->message = '# '.$order_id.' order placed by '.$consumer_name.' on '.$order_date;
+			$notification->save();
+			
+			//-----send mail ---
+			$get_email = get_email(7);
+			$data = [
+				'subject' => $get_email->message_subject,
+				'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
+				'toEmails' => array($retailer[0]->email),
+			];
+			send_email($data);
 			
 			//$total_amt calulate the quantity * price
 			$response = [
