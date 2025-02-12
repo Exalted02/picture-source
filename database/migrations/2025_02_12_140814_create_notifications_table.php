@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('order_id')->nullable;
-            $table->bigInteger('customer_id')->nullable;
-            $table->bigInteger('retailer_id')->nullable;
-            $table->string('wishlist_email')->nullable;
-            $table->longText('message')->nullable;
-            $table->tinyInteger('status')->default(0)->comment('0=unread, 1=read')->nullable;
+            $table->bigInteger('order_id')->nullable();
+            $table->bigInteger('customer_id')->nullable();
+            $table->bigInteger('retailer_id')->nullable();
+            $table->string('wishlist_email')->nullable();
+            $table->longText('message')->nullable();
+            $table->tinyInteger('status')->default(0)->comment('0=unread, 1=read')->nullable();
             $table->timestamps();
         });
     }

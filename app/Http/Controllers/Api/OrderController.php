@@ -99,17 +99,29 @@ class OrderController extends Controller
 			$notification->customer_id = $user_id ?? null;
 			$notification->retailer_id = $retailer[0]->id ?? null;
 			$notification->wishlist_email = null;
-			$notification->message = '# '.$order_id.' order placed by '.$consumer_name.' on '.$order_date;
+			$notification->message = '#'.$order_id.' order placed by '.$consumer_name.' on '.$order_date;
 			$notification->save();
 			
+			/*
 			//-----send mail ---
-			$get_email = get_email(7);
-			$data = [
-				'subject' => $get_email->message_subject,
-				'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
-				'toEmails' => array($retailer[0]->email),
-			];
-			send_email($data);
+				//Retailer email
+				$get_email = get_email(7);
+				$data = [
+					'subject' => $get_email->message_subject,
+					'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
+					'toEmails' => array($retailer[0]->email),
+				];
+				send_email($data);
+				
+				//Consumer email
+				$get_email = get_email(8);
+				$data = [
+					'subject' => $get_email->message_subject,
+					'body' => str_replace(array("[ORDER_ID]"), array($order_id), $get_email->message),
+					'toEmails' => array($retailer[0]->email),
+				];
+				send_email($data);
+			*/
 			
 			//$total_amt calulate the quantity * price
 			$response = [
