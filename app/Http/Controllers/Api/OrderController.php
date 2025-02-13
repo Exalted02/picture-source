@@ -123,7 +123,6 @@ class OrderController extends Controller
 				send_email($data);
 			*/
 			
-			//$total_amt calulate the quantity * price
 			$response = [
 				'status' => 200,
 				'order_id' => $order_id,

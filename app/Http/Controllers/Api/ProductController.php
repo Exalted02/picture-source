@@ -266,7 +266,8 @@ class ProductController extends Controller
 		$size_ids = $request->size_id != '' ? explode(',', $request->size_id) : [];
 		$color_ids = $request->color_id != '' ? explode(',', $request->color_id) : [];
 		
-		
+		//\Log::info(json_encode($request->all())); 
+			
 		$data = [];
 		$APP_URL = env('APP_URL');
 		//$paginate = $request->paginate !='' ? $request->paginate : 1;
@@ -275,6 +276,14 @@ class ProductController extends Controller
 		if($request->keyword)
 		{
 			$dataArr->where('name', 'like', '%' . $request->keyword . '%');
+		}
+		if($request->category_id)
+		{
+			$dataArr->where('category', $request->category_id);
+		}
+		if($request->artist_id)
+		{
+			$dataArr->where('artist_id', $request->artist_id);
 		}
 		
 		if(!empty($size_ids))
@@ -308,7 +317,11 @@ class ProductController extends Controller
 			$medias = Media::where('media_source_id', $product->id)
 						->where('media_type', 3)->inRandomOrder()
 					->first();
-			$image_name = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$medias->image;
+			if(isset($medias->image) && $medias->image != null){
+				$image_name = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$medias->image;
+			}else{
+				$image_name = $APP_URL.'/noimage.png';
+			}
 			
 			$data[] = [
 				'product_id' => $product->id,
