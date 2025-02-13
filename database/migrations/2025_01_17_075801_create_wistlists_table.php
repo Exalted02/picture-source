@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('wistlists', function (Blueprint $table) {
             $table->id();
 			$table->integer('user_id')->nullable();
-			$table->integer('order_id')->nullable();
+			$table->double('discount_amount', 10, 2)->nullable();
+			$table->double('coupon_discount', 10, 2)->nullable();
+			$table->double('shipping_charge', 10, 2)->nullable();
+			$table->double('order_total', 10, 2)->nullable();
+			$table->double('final_amount', 10, 2)->nullable();
+			$table->tinyInteger('order_type')->comment('0=normal order,1=wistlist')->nullable();
 			$table->string('email_address')->nullable();
 			$table->string('relationship')->nullable();
 			$table->date('birthdate')->nullable();

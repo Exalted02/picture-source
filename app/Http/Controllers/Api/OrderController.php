@@ -92,6 +92,7 @@ class OrderController extends Controller
 			}
 			
 			$consumer_name = Auth::guard('sanctum')->user()->name;
+			$consumer_email = Auth::guard('sanctum')->user()->email;
 			$order_date = Carbon::now()->format('d-m-Y');
 			
 			$notification = new Notifications();
@@ -118,7 +119,7 @@ class OrderController extends Controller
 				$data = [
 					'subject' => $get_email->message_subject,
 					'body' => str_replace(array("[ORDER_ID]"), array($order_id), $get_email->message),
-					'toEmails' => array($retailer[0]->email),
+					'toEmails' => array($consumer_email),
 				];
 				send_email($data);
 			*/
