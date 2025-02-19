@@ -17,4 +17,9 @@ class Wistlists extends Model
         'aniversary',
         'status',
     ];
+	
+	public function wishlist_details()
+	{
+		return $this->hasMany(Wishlist_items::class, 'wishlist_id', 'id');
+	}
 }

@@ -57,10 +57,17 @@ class ReviewController extends Controller
 						$model->updated_at = now();
 						$model->save();
 						
-						$response = [
-							'status' => 200,
-							'message' => 'Data inserted successfully',
-						];
+                      	if($request->rating){
+                          $response = [
+                              'status' => 200,
+                              'message' => 'You rated successfully',
+                          ];
+                        }else{
+                          $response = [
+                              'status' => 200,
+                              'message' => 'You have successfully submitted your review',
+                          ];
+                        }
 					}
 					else{
 						$response = [
@@ -73,7 +80,7 @@ class ReviewController extends Controller
 				else{
 					if($request->rating <=5)
 					{
-						$model = New Reviews();
+						$model = new Reviews();
 						$model->user_id = $user_id;
 						$model->product_id = $request->product_id;
 						$model->rating = $request->rating ?? null;
@@ -81,10 +88,17 @@ class ReviewController extends Controller
 						$model->created_at = now();
 						$model->save();
 						
-						$response = [
-							'status' => 200,
-							'message' => 'Data inserted successfully',
-						];
+						if($request->rating){
+                          $response = [
+                              'status' => 200,
+                              'message' => 'You rated successfully',
+                          ];
+                        }else{
+                          $response = [
+                              'status' => 200,
+                              'message' => 'You have successfully submitted your review',
+                          ];
+                        }
 					}
 					else{
 						$response = [

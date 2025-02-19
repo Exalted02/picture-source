@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\DeliveryAddressController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WistlistController;
 use App\Http\Controllers\Api\CountryStateController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,7 @@ Route::post('/edit-delivery-address',[DeliveryAddressController::class, 'edit'])
 Route::get('/list-delivery-address',[DeliveryAddressController::class, 'delivery_address_list']);
 Route::post('/delete-delivery-address',[DeliveryAddressController::class, 'delete']);
 Route::post('/place-order',[OrderController::class, 'place_order']);
+Route::post('/place-wishlist-order',[OrderController::class, 'place_wishlist_order']);
 Route::post('/create-wistlist',[WistlistController::class, 'create_wistlist']);
 
 Route::get('/my-order',[OrderController::class, 'my_order']);
@@ -87,6 +89,12 @@ Route::post('/profile-verified',[ProfileController::class, 'profile_verified']);
 
 
 Route::get('/gender_list',[ProfileController::class, 'gender_list']);
+
+Route::post('/notifications',[NotificationController::class, 'get_notifications']);
+
+Route::post('/view-order',[OrderController::class, 'view_order']);
+Route::post('/view-wishlist',[WistlistController::class, 'view_wishlist']);
+Route::get('/view-profile-orders-wishlist',[OrderController::class, 'view_profile_orders_wishlist']);
 
 //Route::get('reset-password/{token}', [RegisteredUserController::class, 'showResetPasswordForm'])->name('reset.password.get');
 //Route::post('reset-password', [RegisteredUserController::class, 'submitResetPasswordForm'])->name('reset.password.post');

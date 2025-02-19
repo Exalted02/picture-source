@@ -127,7 +127,7 @@ class WistlistController extends Controller
 	
 	public function view_wishlist(Request $request)
 	{
-		//\Log::info(json_encode($request->all()));
+		\Log::info(json_encode($request->all()));
 		if(Auth::guard('sanctum')->check()) 
 		{
 			$data = [];
@@ -136,10 +136,10 @@ class WistlistController extends Controller
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$wishlist_id = $request->wishlist_id;
-			$wishlistExists  = Wistlists::where('id', $wishlist_id)->exists();
+			$wishlistExists  = Wistlists::where('user_id',$user_id)->where('id', $wishlist_id)->exists();
 			if($wishlistExists)
 			{
-				$wistlists = Wistlists::with('wishlist_details.order_color', 'wishlist_details.order_size')->where('id',$wishlist_id)->first();
+				$wistlists = Wistlists::with('wishlist_details.order_color', 'wishlist_details.order_size')->where('user_id',$user_id)->where('id',$wishlist_id)->first();
 				
 				
 				// customer details 

@@ -16,17 +16,18 @@ class ArtistController extends Controller
 		$interval = config('custom.API_ARTIST_INTERVAL');
 		$APP_URL = env('APP_URL');
 		$data = [];
-		$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
+		$page = $request->page ?? 1;
+      	$offset = ($page - 1) * $interval;
 		
 		$exists = Artists::where('status', '=', 1)->exists();
 		if($exists)
 		{
-			$artists = Artists::where('status', '=', 1)->skip($paginate)->take($interval)->get();
+			$artists = Artists::where('status', '=', 1)->skip($offset)->take($interval)->get();
 			foreach ($artists as $val) {
 				$data[] = [
 						'artist_id' => $val->id,
 						'name' => $val->name,
-						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : null,
+						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : $APP_URL.'/noimage.png',
 					];
 				}
 

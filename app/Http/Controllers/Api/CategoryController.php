@@ -26,17 +26,20 @@ class CategoryController extends Controller
 			'status' => 200,
 		];
 		return $response;*/ 
-		
+      
 		$interval = config('custom.API_CATEGORY_INTERVAL');
 		$APP_URL = env('APP_URL');
-		$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
+		//$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
+      	$page = $request->page ?? 1;
+      	$offset = ($page - 1) * $interval;
 		$data = [];
-
+      
 		//$categories = Category::where('status', '=', 1)->get();
 		$exists = Category::where('status', '=', 1)->exists();
 		if($exists)
 		{
-			$categories = Category::where('status', '=', 1)->skip($paginate)->take($interval)->get();
+			$categories = Category::where('status', '=', 1)->skip($offset)->take($interval)->get();
+          
 			foreach ($categories as $val) {
 				// Retrieve a random media associated with the current category
 				$media = Media::where('media_source_id', $val->id)
@@ -48,7 +51,7 @@ class CategoryController extends Controller
 					'id' => $val->id,
 					'name' => $val->name,
 					'featured' => $val->is_feature==1 ? true : false,
-					'image' => $media ? $APP_URL.'/uploads/category/'. $val->id .'/gallery/thumbs/'.$media->image : null, // Handle cases where no media is found
+					'image' => $media ? $APP_URL.'/uploads/category/'. $val->id .'/gallery/thumbs/'.$media->image : $APP_URL.'/noimage.png', // Handle cases where no media is found
 				];
 			}
 
@@ -90,7 +93,7 @@ class CategoryController extends Controller
 						'category_id' => $category_id,
 						'subcategory_id' => $val->id,
 						'subcategory_name' => $val->sub_category_name,
-						'image' => $media ? $APP_URL.'/uploads/subcategory/'. $val->id .'/gallery/thumbs/'.$media->image : null,
+						'image' => $media ? $APP_URL.'/uploads/subcategory/'. $val->id .'/gallery/thumbs/'.$media->image : $APP_URL.'/noimage.png',
 					];
 				}
 				

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Models\Notifications;
 
 class RegisteredUserController extends Controller
 {
@@ -48,6 +49,18 @@ class RegisteredUserController extends Controller
 			}
 			else
 			{
+				$exists = Notifications::where('wishlist_email',$email)->exists();
+				if($exists)
+				{
+					$hasRetialerId = Notifications::where('wishlist_email',$email)->first();
+					if(isset($hasRetialerId) && $hasRetialerId->retailer_id==null)
+					{
+						Notifications::where('wishlist_email',$email)->update(['retailer_id'=>$user->id]);
+						/*$model = Notifications::find($hasRetialerId->id);
+						$model->retailer_id = $user->id;
+						$model->save();*/
+					}
+				}
 				$msg = 'Successfully logged in';
 				return $this->authResponse($user, $msg);
 			}
@@ -128,6 +141,22 @@ class RegisteredUserController extends Controller
 					return $response;
 				}
 			}
+			
+			$exists = Notifications::where('wishlist_email',$email)->exists();
+			if($exists)
+			{
+				$hasRetialerId = Notifications::where('wishlist_email',$email)->first();
+				if(isset($hasRetialerId) && $hasRetialerId->retailer_id==null)
+				{
+					Notifications::where('wishlist_email',$email)->update(['retailer_id'=>$user->id]);
+					
+					/*$model = Notifications::find($hasRetialerId->id);
+					$model->retailer_id = $user->id;
+					$model->save();*/
+				}
+			}
+			
+			
 			$msg = 'Successfully logged in';
 			return $this->authResponse($authUser, $msg);
 		}else{

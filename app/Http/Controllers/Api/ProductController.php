@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
 use File;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -217,6 +218,13 @@ class ProductController extends Controller
 			//$percentage_rating_one = $ratingDetails[0]['percentage'] == 0 ? 0.00 :
 			
             //----------------------
+          	$my_rating = $my_review = '';
+          	if(Auth::guard('sanctum')->check()) {
+              $my_login_id = Auth::guard('sanctum')->user()->id;
+              $my_review_details = Reviews::where('product_id', $request->product_id)->where('user_id', $my_login_id)->first();
+              $my_rating = $my_review_details->rating ?? 0;
+              $my_review = $my_review_details->comment ?? '';
+            }
 			$data = [
 				'product_id' => $product->id,
 				'category_id' => $product->get_category[0]->id,
@@ -242,6 +250,8 @@ class ProductController extends Controller
 				'percentage_rating_three' => $ratingDetails[2]['percentage'],
 				'percentage_rating_four' => $ratingDetails[3]['percentage'],
 				'percentage_rating_five' => $ratingDetails[4]['percentage'],
+              	'my_rating' => (int) $my_rating,
+              	'my_review' => $my_review,
 				'files' => $imageArr,
 			];
 			
@@ -263,15 +273,15 @@ class ProductController extends Controller
 	public function get_product_search(Request $request)
 	{
 		$interval = config('custom.API_PRODUCT_INTERVAL');
-		$size_ids = $request->size_id != '' ? explode(',', $request->size_id) : [];
-		$color_ids = $request->color_id != '' ? explode(',', $request->color_id) : [];
+		$size_ids = $request->sizes != '' ? explode(',', $request->sizes) : [];
+		$color_ids = $request->colors != '' ? explode(',', $request->colors) : [];
 		
 		//\Log::info(json_encode($request->all())); 
 			
 		$data = [];
 		$APP_URL = env('APP_URL');
-		//$paginate = $request->paginate !='' ? $request->paginate : 1;
-		$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
+		$page = $request->page ?? 1;
+      	$offset = ($page - 1) * $interval;
 		$dataArr = Products::query();
 		if($request->keyword)
 		{
@@ -298,7 +308,7 @@ class ProductController extends Controller
 		
 		$dataArr->where('status', '=', 1);
 		$dataArr->orderBy('name', 'ASC'); 
-		$productdata = $dataArr->skip($paginate)->take($interval)->get();
+		$productdata = $dataArr->skip($offset)->take($interval)->get();
 		//$productdata = $dataArr->limit($paginate,$interval)->get();
 		//$productdata = $dataArr->get();
 		//echo "<pre>";print_r($productdata);die;

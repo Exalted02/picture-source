@@ -131,16 +131,17 @@ class ProfileController extends Controller
 	public function profile_image_upload(Request $request)
 	{
 		$APP_URL = env('APP_URL');
+      	\Log::info($APP_URL);
 		
 		if (Auth::guard('sanctum')->check()) {
 			$user_id = Auth::guard('sanctum')->user()->id;
-			if($request->hasFile('profile_image')) {
+			if($request->hasFile('file')) {
 				$path = public_path('uploads/profile/' . $user_id . '/');
 				
 				if (!file_exists($path)) {
 					mkdir($path, 0777, true);
 				}
-				$file = $request->file('profile_image');
+				$file = $request->file('file');
 				$filename = time() . '.' . $file->getClientOriginalExtension();
 				//echo $filename;die;
 				$file->move($path, $filename);

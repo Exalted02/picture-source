@@ -27,127 +27,6 @@ use File;
 
 class OrderController extends Controller
 {
-  	public function place_wishlist_order(Request $request)
-	{
-      if(Auth::guard('sanctum')->check()) 
-		{
-			$user_id = Auth::guard('sanctum')->user()->id;
-			
-			$delivery_address = Delivery_address::where('id',$request->address_id)->first();
-			$retailer = User::where('user_type',2)->select('*', 
-						DB::raw("
-							ROUND( ( 6371 * acos( cos( radians($delivery_address->latitude) ) 
-							* cos( radians( latitude ) ) 
-							* cos( radians( longitude ) - radians($delivery_address->longitude) ) 
-							+ sin( radians($delivery_address->latitude) ) 
-							* sin( radians( latitude ) ) ) ), 1 ) AS distance
-						"),
-					)
-					->havingNotNull('distance')
-					->orderBy('distance', 'asc') // Sort by closest distance
-					->get();
-			if ($retailer->isEmpty()) {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'No retailer found for this order',
-                ]);
-            }		
-			// \Log::info($retailer[0]->id); 		
-			//dd($retailer);
-        	
-        	$wishlist = Wistlists::with(['wishlist_details'])->where('id', $request->wishlist_id)->first();
-			
-			$ordermodel = new Orders();
-			$ordermodel->user_id = $user_id ?? null;
-			$ordermodel->retailer_id = $retailer[0]->id ?? null;
-			$ordermodel->delivery_address_id = $request->address_id ?? null;
-			$ordermodel->discount_amount = null;
-			$ordermodel->coupon_discount = null;
-			$ordermodel->shipping_charge = null;
-			$ordermodel->order_total = $wishlist->order_total  ?? null;
-			$ordermodel->final_amount = $wishlist->final_amount  ?? null;
-			$ordermodel->order_type = 0;
-			$ordermodel->status = 1; // default pending
-			$ordermodel->created_at = now();
-			$ordermodel->save();
-			$order_id = $ordermodel->id;
-			
-			foreach ($wishlist->wishlist_details as $wList) {
-				$productId = $wList->product_id;
-				
-				$productExist = Products::where('id', $productId)->exists();
-				if($productExist)
-				{
-					// $productData = Products::where('id', $productId)->first();
-					$orderItemModel = new Order_items();
-					$orderItemModel->order_id = $order_id ?? null;
-					$orderItemModel->product_id = $productId ?? null;
-					$orderItemModel->product_name = $wList->product_name ?? null;
-					$orderItemModel->product_code = null;
-					$orderItemModel->quantity = $wList->quantity ?? null;
-					$orderItemModel->price = $wList->price ?? null;
-					$orderItemModel->color_id = null;
-					$orderItemModel->size_id = null;
-					$orderItemModel->image_url = $wList->image_url ?? null;
-					$orderItemModel->created_at = now();
-					$orderItemModel->save();
-				}
-			}
-			
-			$consumer_name = Auth::guard('sanctum')->user()->name;
-			$consumer_email = Auth::guard('sanctum')->user()->email;
-			$order_date = Carbon::now()->format('d-m-Y');
-			
-			$notification = new Notifications();
-			$notification->order_id = $order_id ?? null;
-			$notification->customer_id = $user_id ?? null;
-			$notification->retailer_id = $retailer[0]->id ?? null;
-			$notification->wishlist_email = null;
-			$notification->message = '#'.$order_id.' order placed by '.$consumer_name.' on '.$order_date;
-			$notification->save();
-        
-        	//Update wiahlist data as placed
-			$up_wistlists = Wistlists::find($request->wishlist_id);
-      		$up_wistlists->status = 2;
-			$up_wistlists->save();
-			
-			/*
-			//-----send mail ---
-				//Retailer email
-				$get_email = get_email(7);
-				$data = [
-					'subject' => $get_email->message_subject,
-					'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
-					'toEmails' => array($retailer[0]->email),
-				];
-				send_email($data);
-				
-				//Consumer email
-				$get_email = get_email(8);
-				$data = [
-					'subject' => $get_email->message_subject,
-					'body' => str_replace(array("[ORDER_ID]"), array($order_id), $get_email->message),
-					'toEmails' => array($consumer_email),
-				];
-				send_email($data);
-			*/
-			
-			$response = [
-				'status' => 200,
-				'order_id' => $order_id,
-				'data' => 'Order placed successfully',
-			];
-		}
-		else 
-		{
-			$response = [
-				'status' => 400,
-				'message' => 'Please login',
-			];
-			
-		}
-		return $response;
-    }
 	public function place_order(Request $request)
 	{
 		if(Auth::guard('sanctum')->check()) 
@@ -275,7 +154,7 @@ class OrderController extends Controller
 			$OrderExists  = Orders::where('user_id',$user_id)->where('order_type',0)->exists();
 			if($OrderExists)
 			{
-				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('order_type',0)->orderBy('created_at', 'desc')->get();
+				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('order_type',0)->get();
 				//echo "<pre>";print_r($orders);die;
 				foreach($orders as $order)
 				{
@@ -291,7 +170,6 @@ class OrderController extends Controller
 						//$image = 
 					}
 					$myOrder[] = [
-						'order_id' => $order->id,
 						'final_amount' => $order->final_amount,
 						'order_date' => $order->created_at->diffForHumans(),
 						'image' => $pimage ? $APP_URL.'/uploads/product/'. $order->order_details[0]->product_id .'/gallery/thumbs/'.$pimage : null,
@@ -381,32 +259,26 @@ class OrderController extends Controller
 			$APP_URL = env('APP_URL');
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
-			$user_email_id = Auth::guard('sanctum')->user()->email;
-          
-			$OrderExists  = Wistlists::where('email_address',$user_email_id)->where('order_type',1)->where('status', 1)->exists();
+			
+			$OrderExists  = Orders::where('user_id',$user_id)->where('order_type',1)->exists();
 			if($OrderExists)
 			{
-				$orders = Wistlists::with('wishlist_details.order_color', 'wishlist_details.order_size')->where('email_address',$user_email_id)->where('order_type',1)->where('status', 1)->orderBy('created_at', 'desc')->get();
+				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('order_type',1)->get();
 				//echo "<pre>";print_r($orders);die;
-              	//dd($orders);
 				foreach($orders as $order)
 				{
-					//$existsMedia = Media::where('media_source_id',$order->order_details[0]->product_id)->where('media_type',3)->exists();
-                  	$pimage = $APP_URL.'/noimage.png';
-					foreach($order->wishlist_details as $img_val)
+					$existsMedia = Media::where('media_source_id',$order->order_details[0]->product_id)->where('media_type',3)->exists();
+					if($existsMedia)
 					{
-						if(isset($img_val->image_url) && $img_val->image_url != null){
-                          $pimage = $img_val->image_url;
-                          break;
-                        }
+						//echo $order->order_details[0]->product_id;die;
+						$pimage = Media::where('media_source_id',$order->order_details[0]->product_id)->where('media_type',3)->first()->image;
+						//$image = 
 					}
 					$myOrder[] = [
-						'order_id' => $order->id,
 						'final_amount' => $order->final_amount,
-						'order_date' => $order->created_at->diffForHumans(),
+						'order_date' => date('d/m/Y',strtotime($order->created_at)),
 						
-						//'image' => $pimage ? $APP_URL.'/uploads/product/'. $order->order_details[0]->product_id .'/gallery/thumbs/'.$pimage : null,
-                      	'image' => $pimage,
+						'image' => $pimage ? $APP_URL.'/uploads/product/'. $order->order_details[0]->product_id .'/gallery/thumbs/'.$pimage : null,
 					];
 				}
 			}
@@ -501,7 +373,7 @@ class OrderController extends Controller
 	}
 	public function view_order(Request $request)
 	{
-		//\Log::info(json_encode($request->all()));
+		\Log::info(json_encode($request->all()));
 		if(Auth::guard('sanctum')->check()) 
 		{
 			$data = [];
@@ -510,10 +382,10 @@ class OrderController extends Controller
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$order_id = $request->order_id;
-			$OrderExists  = Orders::where('id', $order_id)->exists();
+			$OrderExists  = Orders::where('user_id',$user_id)->where('id', $order_id)->exists();
 			if($OrderExists)
 			{
-				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('id',$order_id)->first();
+				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('id',$order_id)->first();
 				
 				//-- delivery address --
 				
@@ -689,7 +561,9 @@ class OrderController extends Controller
 				$countOrder = Orders::where('user_id',$user_id)->count();
 				$myordercount = $countOrder;
 				
-				$orders = Orders::with(['order_details'])->where('user_id', $user_id)->orderBy('created_at', 'desc')->limit(5)->get();
+				$orders = Orders::with(['order_details' => function ($query) {
+					$query->orderBy('created_at', 'desc')->limit(5);
+				}])->where('user_id', $user_id)->get();
 				foreach($orders as $order)
 				{
 					foreach($order->order_details as $item)
@@ -697,7 +571,6 @@ class OrderController extends Controller
 						if(!empty($item->image_url))
 						{
 							$orderImage[] = [$item->image_url];
-                          	break;
 						}
 					}
 				}
@@ -710,14 +583,15 @@ class OrderController extends Controller
 			
 			
 			//-- my wishlist
-          	$user_email_id = Auth::guard('sanctum')->user()->email;
-			$wishlistexists = Wistlists::where('email_address',$user_email_id)->where('status', 1)->exists();
+			$wishlistexists = Wistlists::where('user_id',$user_id)->exists();
 			if($wishlistexists)
 			{
-				$countWishlist = Wistlists::where('email_address',$user_email_id)->where('status', 1)->count();
+				$countWishlist = Wistlists::where('user_id',$user_id)->count();
 				$myWishlistcount = $countWishlist;
 				
-				$wishlists = Wistlists::with(['wishlist_details'])->where('email_address',$user_email_id)->where('status', 1)->orderBy('created_at', 'desc')->limit(5)->get();
+				$wishlists = Wistlists::with(['wishlist_details' => function ($query) {
+					$query->orderBy('created_at', 'desc')->limit(5);
+				}])->where('user_id', $user_id)->get();
 				foreach($wishlists as $wishlist)
 				{
 					foreach($wishlist->wishlist_details as $wList)
@@ -725,7 +599,6 @@ class OrderController extends Controller
 						if(!empty($wList->image_url))
 						{
 							$wishlistImage[] = [$wList->image_url];
-                          	break;
 						}
 					}
 				}
