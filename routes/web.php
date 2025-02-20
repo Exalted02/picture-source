@@ -118,6 +118,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/getDeleteCustomer',[CustomerController::class,'delete_customer'])->name('getDeleteCustomer');
 	Route::post('/deleteCustomerList',[CustomerController::class,'delete_customer_list'])->name('deleteCustomerList');
 	Route::get('/view-customer/{id}', [CustomerController::class, 'view_customer'])->name('view-customer');
+	Route::get('/view-customer-order-details/{id}', [CustomerController::class, 'view_customer_order_details'])->name('view-customer-order-details');
 	
 	// retailer  view-retailer
 	Route::get('retailer', [RetailerController::class,'retailer_list'])->name('retailer');
@@ -126,6 +127,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/deleteRetailerList',[RetailerController::class,'delete_retailer_list'])->name('deleteRetailerList');
 	Route::get('/retailer-tax-download',[RetailerController::class,'retailer_tax_download'])->name('retailer-tax-download');
 	Route::get('/view-retailer/{id}', [RetailerController::class, 'view_retailer'])->name('view-retailer');
+	Route::get('/view-retailer-list/{id}', [RetailerController::class, 'view_retailer_list'])->name('view-retailer-list');
 	
 	// artists
 	Route::get('artists', [ArtistController::class,'index'])->name('artists');
@@ -157,6 +159,7 @@ Route::middleware('auth')->group(function () {
 	
 	// products  
 	Route::get('products', [ProductController::class,'index'])->name('products');
+	//Route::post('products', [ProductController::class,'index'])->name('user.products');
 	Route::post('/save-product', [ProductController::class, 'save_product'])->name('user.save-product');
 	Route::post('/product-update-status',[ProductController::class,'update_status'])->name('product-update-status');
 	Route::post('/edit-product',[ProductController::class,'edit_product'])->name('edit-product');
@@ -173,13 +176,26 @@ Route::middleware('auth')->group(function () {
 	
 	// order
 	Route::get('order', [OrderController::class,'index'])->name('order');
+	Route::post('order', [OrderController::class,'index'])->name('order');
 	Route::get('/view-order/{id}', [OrderController::class, 'view_order'])->name('view-order');
 	Route::post('change-order-status', [OrderController::class, 'change_order_status'])->name('change.order.status');
 	
 	// order wistlist
 	Route::get('order-wistlist', [OrderController::class,'order_wistlist_list'])->name('order-wistlist');
+	Route::post('order-wistlist', [OrderController::class,'order_wistlist_list'])->name('order-wistlist');
 	Route::get('/view-order-wistlist/{id}', [OrderController::class, 'view_order_wistlist'])->name('view-order-wistlist');
+	Route::post('change-wishlist-status', [OrderController::class, 'change_wishlist_status'])->name('change.wishlist.status');
+	
+	// account- remove 
+	Route::get('account-remove', [CommonController::class,'account_remove'])->name('account-remove');
+	Route::post('account-remove', [CommonController::class,'save_account_remove'])->name('account-remove');
+	
+	// notification 
+	Route::get('notifications', [CommonController::class,'notifications'])->name('notifications');
+	Route::get('notification-view/{id}', [CommonController::class,'notification_view'])->name('notification-view');
 	
 });
+
+
 
 require __DIR__.'/auth.php';

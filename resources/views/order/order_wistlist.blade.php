@@ -18,50 +18,47 @@
 						<li class="breadcrumb-item active">{{ __('order') }}</li>
 					</ul>
 				</div>
-				{{--<div class="col-md-8 float-end ms-auto">
+				<div class="col-md-8 float-end ms-auto">
 					<div class="d-flex title-head">
 						<div class="view-icons">
 							<a href="#" class="grid-view btn btn-link"><i class="las la-redo-alt"></i></a>
 							<a href="#" class="list-view btn btn-link" id="collapse-header"><i class="las la-expand-arrows-alt"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
-						<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_edit_model"><i class="la la-plus-circle"></i> {{ __('add_customer') }}</a>
+						{{--<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_edit_model"><i class="la la-plus-circle"></i> {{ __('add_customer') }}</a>--}}
 					</div>
-				</div>--}}
+				</div>
 			</div>
 		</div>
 		<!-- /Page Header -->
 		
 		<!-- Search Filter -->
-		{{--<div class="filter-filelds" id="filter_inputs">
-		<form name="search-frm" method="post" action="{{ route('user.category')}}" id="search-product-code-frm">
+		<div class="filter-filelds" id="filter_inputs">
+		<form name="search-frm" method="post" action="{{ route('order-wistlist')}}" id="search-order-wishlist-frm">
 		@csrf
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						 <input type="text" class="form-control floating" name="search_name" placeholder="{{ __('category')}}">
-					 </div>
-				</div>
-				<div class="col-xl-3">  
-					 <div class="input-block">
-						<input type="text" class="form-control  date-range bookingrange" name="date_range_phone" placeholder="{{ __('from_to_date')}}">
+						<input type="text" class="form-control date-range" name="order_wishlist_search_daterange" id="order_wishlist_search_daterange" placeholder="{{ __('from_to_date')}}" value="{{ old('order_wishlist_search_daterange', request('order_wishlist_search_daterange')) }}">
 					 </div>
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select class="select" name="search_status">
 							<option value="">{{ __('please_select') }}</option>
-							<option value="1">{{ __('active') }}</option>
-							<option value="0">{{ __('inactive') }}</option>
+							<option value="1" {{ old('search_status', request('search_status')) == "1" ? 'selected' : '' }}>{{ __('pending') }}</option>
+							<option value="2" {{ old('search_status', request('search_status')) == "2" ? 'selected' : '' }}>{{ __('shipped') }}</option>
+							<option value="3" {{ old('search_status', request('search_status')) == "3" ? 'selected' : '' }}>{{ __('cancel') }}</option>
+							<option value="4" {{ old('search_status', request('search_status')) == "4" ? 'selected' : '' }}>{{ __('deliver') }}</option>
 						</select>
 					 </div>
 				</div>
 				<div class="col-xl-3">  
-				<a href="javascript:void(0);" class="btn btn-success w-100 search-data"><i class="fa-solid fa-magnifying-glass"></i> {{ __('search') }} </a> 
+				<a href="javascript:void(0);" class="btn btn-success w-100 order-wishlist-search-data"><i class="fa-solid fa-magnifying-glass"></i> {{ __('search') }} </a> 
 				</div>
 			</div>
 			</form>
-		</div>--}}
+		</div>
 		 <hr>
 		 <!-- /Search Filter -->
 		 <div class="row">
@@ -92,11 +89,11 @@
 									</label>
 								</th>
 							@endif
-								{{--<th>{{ __('sl_no') }}</th>--}}
+								<th>{{ __('order_id') }}</th>
 								<th>{{ __('customer') }}</th>
-								<th>{{ __('discount_amount') }}</th>
-								<th>{{ __('coupon_discount') }}</th>
-								<th>{{ __('shipping_charge') }}</th>
+								{{--<th>{{ __('discount_amount') }}</th>--}}
+								{{--<th>{{ __('coupon_discount') }}</th>--}}
+								{{--<th>{{ __('shipping_charge') }}</th>--}}
 								<th>{{ __('final_amount') }}</th>
 								<th>{{ __('order_date') }}</th>
 								<th>{{ __('status') }}</th>
@@ -116,35 +113,36 @@
 									</label>
 								</td>
 								@endif
+								<td>{{ $val->id ?? 'N/A'}}</td>
 								<td>{{ $val->user_details->name ?? 'N/A'}}</td>
-								<td>{{ $val->discount_amount ?? 'N/A'}}</td>
-								<td>{{ $val->coupon_discount ?? 'N/A'}}</td>
-								<td>{{ $val->shipping_charge ?? 'N/A'}}</td>
+									{{--<td>{{ $val->discount_amount ?? 'N/A'}}</td>--}}
+										{{--<td>{{ $val->coupon_discount ?? 'N/A'}}</td>--}}
+											{{--<td>{{ $val->shipping_charge ?? 'N/A'}}</td>--}}
 								<td>{{ $val->final_amount ?? 'N/A'}}</td>
 								<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
 									<div class="dropdown action-label">
-										<a class="btn btn-white btn-sm badge-outline-success dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('pending') }}
+										<a class="btn btn-white btn-sm badge-outline-warning dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+											<i class="fa-regular fa-circle-dot text-warning"></i> {{ __('pending') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('pending') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('shipped') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-warning"></i> {{ __('pending') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-info"></i> {{ __('shipped') }}</a>
 											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="3" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('cancel') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('deliver') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('deliver') }}</a>
 										</div>
 									</div>
 								@elseif($val->status ==2)
 								<div class="dropdown action-label">
 										<a class="btn btn-white btn-sm badge-outline-success dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('shipped') }}
+											<i class="fa-regular fa-circle-dot text-info"></i> {{ __('shipped') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('pending') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('shipped') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-warning"></i> {{ __('pending') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-info"></i> {{ __('shipped') }}</a>
 											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="3" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('cancel') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('deliver') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('deliver') }}</a>
 										</div>
 									</div>
 								@elseif($val->status ==3)
@@ -153,10 +151,10 @@
 											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('cancel') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('pending') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('shipped') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-warning"></i> {{ __('pending') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-info"></i> {{ __('shipped') }}</a>
 											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="3" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('cancel') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('deliver') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('deliver') }}</a>
 										</div>
 									</div>
 								@elseif($val->status ==4)
@@ -165,8 +163,8 @@
 											<i class="fa-regular fa-circle-dot text-success"></i> {{ __('deliver') }}
 										</a>
 										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('pending') }}</a>
-											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('shipped') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="1" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-warning"></i> {{ __('pending') }}</a>
+											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="2" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-info"></i> {{ __('shipped') }}</a>
 											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="3" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-danger"></i> {{ __('cancel') }}</a>
 											<a class="dropdown-item update-order-status" href="javascript:void(0);" data-status="4" data-id="{{ $val->id }}" data-url="{{ route('change.order.status') }}"><i class="fa-regular fa-circle-dot text-success"></i> {{ __('deliver') }}</a>
 										</div>
@@ -202,9 +200,16 @@
 @endsection 
 @section('scripts')
 @include('_includes.footer')
-{{--<script src="{{ url('front-assets/js/page/customers.js') }}"></script>--}}
+<script src="{{ url('front-assets/js/page/order.js') }}"></script>
+<script src="{{ url('front-assets/js/filter-search-calender.js') }}"></script>
 <script>
 $(document).ready(function() {
+	
+	const has_search = @json($has_search);
+	if(has_search==1)
+	{
+		$('#filter_search').click();
+	}
 
 	$(document).on('click', '.update-order-status', function () {
 		var status = $(this).data('status');

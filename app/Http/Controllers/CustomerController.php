@@ -60,12 +60,65 @@ class CustomerController extends Controller
 		$data['result'] = $change_status;
 		echo json_encode($data);
 	}
-	public function view_customer($id='')
+	public function view_customer_old($id='')
 	{
-		$data['order_dtls'] = Orders::with('order_details')->where('user_id', $id)->get();
-		$data['delivery_address'] = Delivery_address::where('user_id', $id)->get();
+		//$data['order_dtls'] = Orders::with('order_details')->where('user_id', $id)->get();
+		$data['order_dtls'] = Orders::with('order_details')->where('id', $id)->get();
+		$order_delivery_addr = Orders::where('id', $id)->first();
+		
+		$data['delivery_address'] = '';
+		if(isset($order_delivery_addr->delivery_address_id))
+		{
+			$data['delivery_address'] = Delivery_address::where('id', $order_delivery_addr->delivery_address_id)->get();
+		}
+		//echo "<pre>";print_r($order_dtls);die;
+		
 		$data['wistlists'] = Wistlists::where('user_id', $id)->get();
 		//echo "<pre>";print_r($reviews); die;
 		return view('customer/customer_view',$data);
+	}
+	public function view_customer($id='')
+	{
+		//echo 'hello';die;
+		$data['order_dtls'] = Orders::with('order_details')->where('user_id', $id)->get();
+		
+		$order_delivery_addr = Orders::where('user_id', $id)->first();
+		
+		$data['delivery_address'] = '';
+		if(isset($order_delivery_addr->delivery_address_id))
+		{
+			$data['delivery_address'] = Delivery_address::where('id', $order_delivery_addr->delivery_address_id)->where('user_id', $id)->get();
+		}
+		else{
+			$data['delivery_address'] = Delivery_address::where('user_id', $id)->get();
+		}
+		$data['wistlists'] = Wistlists::where('user_id', $id)->get();
+		$data['customer_id'] = $id;
+		//echo "<pre>";print_r($reviews); die;
+		return view('customer/customer_view',$data);
+	}
+	public function view_customer_order_details($id='')
+	{
+		$data['order_dtls'] = array();
+		$exists = Orders::where('id', $id)->exists();
+		if($exists)
+		{
+			$data['order_dtls'] = Orders::with('order_details','delivery_address')->where('id', $id)->get();
+			
+			$order_delivery_addr = Orders::where('id', $id)->first();
+			if(isset($order_delivery_addr->delivery_address_id))
+			{
+				$delivery_address_id = $order_delivery_addr->delivery_address_id;
+			}
+			else
+			{
+				$delivery_address_id = Orders::where('retailer_id', $id)->first()->delivery_address_id;
+			}
+			$data['delivery_address'] = Delivery_address::where('id',$delivery_address_id)->first();
+		}
+		$data['retailer_id'] = $order_delivery_addr->retailer_id;
+		$data['customer_id'] = $order_delivery_addr->user_id;
+		//$data['']
+		return view('customer/customer_order_details_view',$data);
 	}
 }

@@ -154,12 +154,23 @@
 	"phone_number": "Phone number",
 	"address": "Address",
 	"date": "Date",
-	"wistlist": "Wistlist",
+	"wistlist": "Wistlists",
 	"customer_view": "Customer view",
 	"retailer_view": "Retailer view",
 	"retailer_name": "Retailer name",
 	"discount_amount": "Discount amount",
 	"coupon_discount": "Coupon amount",
-	"shipping_charge": "Shipping charge"
+	"shipping_charge": "Shipping charge",
+	"order_amount": "Order amount",
+	"customer_name": "Customer name",
+	"order_id": "Order id",
+	"order_date": "Order date",
+	"customer_details": "Customer details",
+	"details": "Details",
+	"order_details": "Order details",
+	"retailer_view": "Retailer view",
+	"notification": "Notifications",
+	"order_type": "Order type",
+	"message": "Message"
 	
 }

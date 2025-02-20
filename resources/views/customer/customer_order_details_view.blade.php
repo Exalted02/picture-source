@@ -137,7 +137,7 @@ if(!empty($customer_details->city))
 									@endif
 									
 									@if(!empty($customer_details))
-										<div class="rowline"></div>
+									{{--<div class="rowline"></div>
 								        <div class="row col-md-12 mt-4"><h4><strong>{{ __('customer_details') }}</strong></h4></div>
 										<div class="row col-md-12">
 											<div class="col-md-3 mt-3">
@@ -185,7 +185,7 @@ if(!empty($customer_details->city))
 												  <div>{{ $customer_details->zipcode ?? 'N/A' }}</div>
 											</div>
 											@endif
-										</div>
+										</div>--}}
 									@endif
 								</div>
 								

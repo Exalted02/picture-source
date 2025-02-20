@@ -22,4 +22,8 @@ class Wistlists extends Model
 	{
 		return $this->hasMany(Wishlist_items::class, 'wishlist_id', 'id');
 	}
+	public function user_details()
+	{
+		return $this->belongsTo(User::class, 'user_id', 'id');
+	}
 }

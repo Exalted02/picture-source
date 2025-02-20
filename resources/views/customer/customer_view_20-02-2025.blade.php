@@ -2,28 +2,6 @@
 @section('content')
 @php
 //echo "<pre>";print_r($order_dtls);die;
-//$retailer_name = App\Models\User::where('id', $retailer_id)->first()->name;
-$customer_details = App\Models\User::where('id', $customer_id)->first();
-
-$country = '';
-$state = '';
-$city = '';
-if(!empty($customer_details->country))
-{
-	$country = App\Models\Countries::where('id',$customer_details->country)->first()->name;
-}
-
-if(!empty($customer_details->state))
-{
-	$state = App\Models\States::where('id',$customer_details->state)->first()->name;
-}
-
-if(!empty($customer_details->city))
-{
-	$city = App\Models\Cities::where('id',$customer_details->city)->first()->name;
-}
-
-$delivery_address = App\Models\Delivery_address::where('user_id', $customer_id)->get();
 @endphp
 
 <!-- Page Wrapper -->
@@ -68,109 +46,84 @@ $delivery_address = App\Models\Delivery_address::where('user_id', $customer_id)-
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane show active" id="all_details">
-					@if(!empty($customer_details))
-						<div class="rowline"></div>
-						<div class="row col-md-12 mt-4"><h4><strong>{{ __('customer_details') }}</strong></h4></div>
-						<div class="row col-md-12">
-							<div class="col-md-3 mt-3">
-								<strong>{{ __('customer_name') }}</strong>
-								<div>{{ $customer_details->name ?? 'N/A' }}</div>
-							</div>
-							
-							<div class="col-md-3 mt-3">
-								<strong>{{ __('email') }}</strong>
-								<div>{{ $customer_details->email ?? 'N/A' }}</div>
-							</div>
-							
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('phone_number') }}</strong>
-								  <div>{{ $customer_details->phone_number ?? 'N/A' }}</div>
-							</div>
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('address') }}</strong>
-								  <div>{{ $customer_details->address ?? 'N/A' }}</div>
-							</div>
-							@if(!empty($country))
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('country') }}</strong>
-								  <div>{{ $country ?? 'N/A' }}</div>
-							</div>
-							@endif
-							
-							@if(!empty($state))
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('state') }}</strong>
-								  <div>{{ $state ?? 'N/A' }}</div>
-							</div>
-							@endif
-							
-							@if(!empty($city))
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('city') }}</strong>
-								  <div>{{ $city ?? 'N/A' }}</div>
-							</div>
-							@endif
-							
-							@if(!empty($customer_details->zipcode))
-							<div class="col-md-3 mt-3">
-								  <strong>{{ __('pincode') }}</strong>
-								  <div>{{ $customer_details->zipcode ?? 'N/A' }}</div>
-							</div>
-							@endif
-						</div>
-					@endif
+					 dsdsdsdsd
 					</div>
-					<div class="tab-pane show" id="all_orders">
+					<div class="tab-pane show active" id="all_orders">
 						<div class="contact-tab-wrap">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="table-responsive">
-										<table class="table table-striped custom-table datatable">
-											<thead>
-												<tr>
-												
-													{{--<th>{{ __('sl_no') }}</th>--}}
-													<th>{{ __('order_id') }}</th>
-													<th>{{ __('order_amount') }}</th>
-													<th>{{ __('final_amount') }}</th>
-													<th>{{ __('status') }}</th>
-													<th>{{ __('created_date') }}</th>
-													<th>Action</th>
-												</tr>
-											</thead>
-											<tbody>
-											@foreach($order_dtls as $val)
-											@php 
-												$order_status = $val->status==1 ? 'pending' :($val->status==2 ? 'shipped' : ($val->status==3 ? 'cancel' : 'deliver' ));
-											@endphp
-												<tr>
-													
-													<td>{{ $val->id ?? ''}}</td>
-													<td>{{ $val->order_total ?? ''}}</td>
-													<td>{{ $val->final_amount ?? ''}}</td>
-													<td>{{ $order_status ?? ''}}</td>
-													
-													<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
-													
-													<td>
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-															
-																<a class="dropdown-item" href="{{ route('view-customer-order-details', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
-																
-															</div>
-														</div>
-													</td>
-												</tr>
-												@endforeach
-											</tbody>
-										</table>
-										
+							@if($order_dtls->count() > 0)
+								@foreach($order_dtls as $details)
+								<div class="multiadd d-flex flex-wrap">
+									<div class="col-md-9 mt-3">
+										  <strong>{{ __('final_amount') }}</strong>
+										  <div>{{$details->final_amount ?? '' }}</div>
 									</div>
+									{{--<div class="col-md-3 mt-3">
+										 <strong>{{ __('order_status') }}</strong>
+											<select class="select form-control order-status" id="order_status" style="height:40px;" data-id="{{ $details->id }}" data-url="{{ route('change.order.status')}}">
+												<option value="">{{ __('please_select') }}</option>
+												<option value="1" {{ $details->status ==1 ? 'selected' : ''; }}>{{ __('pending') }}</option>
+												<option value="2" {{ $details->status ==2 ? 'selected' : ''; }}>{{ __('shipped') }}</option>
+												<option value="3" {{ $details->status ==3 ? 'selected' : ''; }}>{{ __('cancel') }}</option>
+												<option value="4" {{ $details->status ==4 ? 'selected' : ''; }}>{{ __('deliver') }}</option>
+											</select>
+										 
+									</div>--}}
+									<div class="rowline"></div>
+									@foreach($details->order_details as $key=>$val)
+									
+									@php 
+									$color = '';
+									$size = '';
+									$existscolor = 	App\Models\Color::where('id',$val->color_id)->exists();
+									if($existscolor)
+									{
+										$color = 	App\Models\Color::where('id',$val->color_id)->first()->color;
+									}
+									
+									$existssize =  App\Models\Size::where('id',$val->size_id)->exists();
+									if($existssize)
+									{
+									$size = 	App\Models\Size::where('id',$val->size_id)->first()->size;
+									}
+									
+									@endphp
+									<div class="row col-md-12">
+										<div class="col-md-3 mt-3">
+											<strong>{{ __('product_name') }}</strong>
+											<div>{{ $val->product_name ?? '' }}</div>
+										</div>
+										
+										<div class="col-md-3 mt-3">
+											  <strong>{{ __('product_code') }}</strong>
+											  <div>{{ $val->product_code ?? '' }}</div>
+										</div>
+										<div class="col-md-3 mt-3">
+											  <strong>{{ __('quantity') }}</strong>
+											  <div>{{ $val->quantity ?? '' }}</div>
+										</div>
+										<div class="col-md-3 mt-3">
+											  <strong>{{ __('price') }}</strong>
+											  <div>{{ $val->price ?? '' }}</div>
+										</div>
+										<div class="col-md-3 mt-3">
+											  <strong>{{ __('color') }}</strong>
+											  <div>{{ $color ?? '' }}</div>
+										</div>
+										<div class="col-md-3 mt-3">
+											  <strong>{{ __('size') }}</strong>
+											  <div>{{ $size ?? '' }}</div>
+										</div>
+									</div>
+									@if($key < count($details->order_details)-1)
+									<div class="rowline"></div>
+									@endif
+									@endforeach
+									
 								</div>
+								
+								@endforeach
+							@endif
 							</div>
-						</div>
 					</div>
 					<div class="tab-pane" id="delivery_address">
 						<div class="contact-tab-wrap">

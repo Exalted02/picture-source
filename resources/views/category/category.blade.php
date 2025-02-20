@@ -110,7 +110,7 @@
 								</td>
 								@endif
 								<td>{{ $val->name ?? ''}}</td>
-								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
+								<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
 									<div class="dropdown action-label">

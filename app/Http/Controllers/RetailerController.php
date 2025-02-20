@@ -83,7 +83,46 @@ class RetailerController extends Controller
 				return response()->json(['error' => 'File not found.'], 404);
 			}
 	}
+	public function view_retailer_list($id='')
+	{
+		$data['order_dtls'] = array();
+		$exists = Orders::where('retailer_id', $id)->exists();
+		if($exists)
+		{
+			$data['order_dtls'] = Orders::where('retailer_id', $id)->get();
+			
+			$delivery_address_id = Orders::where('retailer_id', $id)->first()->delivery_address_id;
+			$data['delivery_address'] = Delivery_address::where('id',$delivery_address_id)->first();
+		}
+		$data['retailer_id'] = $id;
+		return view('retailer/retailer_view_list',$data);
+		//return view('retailer/retailer_view',$data);
+	}
 	public function view_retailer($id='')
+	{
+		$data['order_dtls'] = array();
+		$exists = Orders::where('id', $id)->exists();
+		if($exists)
+		{
+			$data['order_dtls'] = Orders::with('order_details','delivery_address')->where('id', $id)->get();
+			
+			$order_delivery_addr = Orders::where('id', $id)->first();
+			if(isset($order_delivery_addr->delivery_address_id))
+			{
+				$delivery_address_id = $order_delivery_addr->delivery_address_id;
+			}
+			else
+			{
+				$delivery_address_id = Orders::where('retailer_id', $id)->first()->delivery_address_id;
+			}
+			$data['delivery_address'] = Delivery_address::where('id',$delivery_address_id)->first();
+		}
+		$data['retailer_id'] = $order_delivery_addr->retailer_id;
+		$data['customer_id'] = $order_delivery_addr->user_id;
+		//$data['']
+		return view('retailer/retailer_view',$data);
+	}
+	public function view_retailer_old($id='')
 	{
 		$data['order_dtls'] = array();
 		$exists = Orders::where('retailer_id', $id)->exists();

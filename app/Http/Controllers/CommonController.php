@@ -13,6 +13,8 @@ use App\Models\Outsources;
 use App\Models\ReferralCategory;
 use App\Models\States;
 use App\Models\Cities;
+use App\Models\Request_account_remove;
+use App\Models\Notifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -175,5 +177,47 @@ class CommonController extends Controller
 		$html .='<option value='.$val->id.'>'.$val->name.'</option>';
 		}
 		echo json_encode($html);
+	}
+	public function account_remove()
+	{
+		return view('account-remove');
+	}
+	public function save_account_remove(Request $request)
+	{
+		$validatedData = $request->validate([
+        'email'  => 'required|email',
+        'region' => 'required'
+		], [
+			'email.required'  => 'The email field is required.',
+			'email.email'     => 'Please enter a valid email address.',
+			'region.required' => 'The region field is required.',
+		]);
+		
+		$model = new Request_account_remove();
+		$model->email = $request->email;
+		$model->region = $request->region;
+		$model->status = 2;
+		$model->save();
+		
+		return redirect()->back()->with('success', 'Account removal request saved successfully.');
+	}
+	public function notifications()
+	{
+		$data = [];
+		$data['notifications'] = Notifications::all();
+		return view('notifications',$data);
+	}
+	public function notification_view($id='')
+	{
+		$wishlistData = Notifications::where('id',$id)->first();
+		if($wishlistData->wishlist_email!='')
+		{
+			$order_id = $wishlistData->order_id;
+			return redirect('view-order-wistlist/' .$order_id);
+		}
+		else{
+			$order_id = $wishlistData->order_id;
+			return redirect('view-order/' .$order_id);
+		}
 	}
 }

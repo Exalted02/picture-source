@@ -36,7 +36,7 @@
 			<div class="row filter-row">
 				<div class="col-xl-3">  
 					 <div class="input-block">
-						 <input type="text" class="form-control floating" name="search_name" placeholder="{{ __('product')}}">
+						 <input type="text" class="form-control floating" name="search_name" value="{{ old('search_name', request('search_name'))}}" placeholder="{{ __('product')}}">
 					 </div>
 				</div>
 				<div class="col-xl-3">  
@@ -46,10 +46,50 @@
 				</div>
 				<div class="col-xl-3">  
 					 <div class="input-block">
+						<select class="select form-control" name="search_artist">
+						<option value="">{{ __('please_select') }} {{ __('artist') }}</option>
+						@foreach($artists as $artist)
+							<option value="{{ $artist->id }}" {{ old('search_artist', request('search_artist')) == (string) $artist->id ? 'selected' : '' }}>{{ $artist->name }}</option>
+						@endforeach
+						</select>
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						<select class="select form-control" name="search_category">
+						<option value="">{{ __('please_select') }} {{ __('category') }}</option>
+						@foreach($categories as $category)
+							<option value="{{ $category->id }}" {{ old('search_category', request('search_category')) == (string) $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+						@endforeach
+						</select>
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						<select class="select form-control" name="search_size">
+						<option value="">{{ __('please_select') }} {{ __('size') }}</option>
+						@foreach($sizes as $size)
+							<option value="{{ $size->id }}" {{ old('search_size', request('search_size')) == (string) $size->id ? 'selected' : '' }}>{{ $size->size }}</option>
+						@endforeach
+						</select>
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						<select class="select form-control" name="search_color">
+						<option value="">{{ __('please_select') }} {{ __('color') }}</option>
+						@foreach($colors as $color)
+							<option value="{{ $color->id }}" {{ old('search_color', request('search_color')) == (string) $color->id ? 'selected' : '' }}>{{ $color->color }}</option>
+						@endforeach
+						</select>
+					 </div>
+				</div>
+				<div class="col-xl-3">  
+					 <div class="input-block">
 						 <select class="select" name="search_status">
-							<option value="">{{ __('please_select') }}</option>
-							<option value="1">{{ __('active') }}</option>
-							<option value="0">{{ __('inactive') }}</option>
+							<option value="">{{ __('please_select') }} {{ __('status') }}</option>
+							<option value="1" {{ old('search_status', request('search_status')) == "1" ? 'selected' : '' }}>{{ __('active') }}</option>
+							<option value="0" {{ old('search_status', request('search_status')) == "0" ? 'selected' : '' }}>{{ __('inactive') }}</option>
 						</select>
 					 </div>
 				</div>
@@ -114,7 +154,7 @@
 								<td>{{ $val->product_code ?? ''}}</td>
 								<td>{{ $val->name ?? ''}}</td>
 								<td>Rs. {{ $val->price ?? ''}}</td>
-								<td>{{ date('d-m-Y', strtotime($val->created_at)) ?? ''}}</td>
+								<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
 								<td>
 								@if($val->status ==1)
 									<div class="dropdown action-label">
@@ -175,7 +215,13 @@
 
 <script>
 
-
+$(document).ready(function() {
+		const has_search = @json($has_search);
+		if(has_search==1)
+		{
+			$('#filter_search').click();
+		}
+	});
 
 </script>
 @endsection
