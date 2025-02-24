@@ -14,6 +14,7 @@ use App\Models\ReferralCategory;
 use App\Models\States;
 use App\Models\Cities;
 use App\Models\Request_account_remove;
+use App\Models\User;
 use App\Models\Notifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -219,5 +220,47 @@ class CommonController extends Controller
 			$order_id = $wishlistData->order_id;
 			return redirect('view-order/' .$order_id);
 		}
+	}
+	public function account_remove_list()
+	{
+		$data = [];
+		$data['lists'] = Request_account_remove::all();
+		return view('account_remove_list',$data);
+	}
+	public function account_remove_update_status(Request $request)
+	{
+		$account_email = Request_account_remove::where('id', $request->id)->first()->email;
+		
+		$emailExists = User::where('email',$account_email)->exists();
+		if($emailExists)
+		{
+			$userstatus = User::where('email',$account_email)->first()->status;
+			//$user_change_status = $userstatus == 1 ? 2 : 1;
+			if($userstatus==1)
+			{
+				$user_change_status = 2;
+			}
+			else if($userstatus==2)
+			{
+				$user_change_status = 1;
+			}
+			$update = User::where('email',$account_email)->update(['status'=> $user_change_status]);
+			
+			User::where('email',$account_email)->update(['status'=>2]);
+			
+			$status = Request_account_remove::where('id', $request->id)->first()->status;
+			$change_status = $status == 1 ? 2 : 1;
+			$update = Request_account_remove::where('id', $request->id)->update(['status'=> $change_status]);
+		}
+		
+		
+		$data['result'] = $change_status;
+		echo json_encode($data);
+	}
+	public function remove_account_delete(Request $request)
+	{
+		Request_account_remove::where('id', $request->id)->delete();
+		$data['result'] = 'delete';
+		echo json_encode($data);
 	}
 }

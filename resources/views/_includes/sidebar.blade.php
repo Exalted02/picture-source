@@ -75,6 +75,9 @@
 				<li class="{{ request()->routeIs('notifications') ? 'active' : '' }}">
 					<a href="{{ route('notifications')}}"><i class="fa-regular fa-bell"></i> <span> {{ __('notification') }} </span></a>
 				</li>
+				<li class="{{ request()->routeIs('account-remove-list') ? 'active' : '' }}">
+					<a href="{{ route('account-remove-list')}}"><i class="fa-regular fa-bell"></i> <span> {{ __('account_remove') }} </span></a>
+				</li>
 				<li class="{{ request()->routeIs('email-management','email-management-edit') ? 'active' : '' }}">
 					<a href="{{ route('email-management') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_management') }} </span></a>
 				</li>

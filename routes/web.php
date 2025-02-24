@@ -189,6 +189,9 @@ Route::middleware('auth')->group(function () {
 	// account- remove 
 	Route::get('account-remove', [CommonController::class,'account_remove'])->name('account-remove');
 	Route::post('account-remove', [CommonController::class,'save_account_remove'])->name('account-remove');
+	Route::get('account-remove-list', [CommonController::class,'account_remove_list'])->name('account-remove-list');
+	Route::post('remove-account-update-status', [CommonController::class,'account_remove_update_status'])->name('remove-account-update-status');
+	Route::post('remove-account-delete', [CommonController::class,'remove_account_delete'])->name('remove-account-delete');
 	
 	// notification 
 	Route::get('notifications', [CommonController::class,'notifications'])->name('notifications');

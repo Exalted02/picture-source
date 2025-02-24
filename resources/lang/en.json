@@ -171,6 +171,8 @@
 	"retailer_view": "Retailer view",
 	"notification": "Notifications",
 	"order_type": "Order type",
-	"message": "Message"
+	"message": "Message",
+	"account_remove": "Account remove",
+	"region": "Region"
 	
 }
