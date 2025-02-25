@@ -18,7 +18,7 @@ class NotificationController extends Controller
 	{
 		//\Log::info(json_encode($request->all()));
 		
-		$interval = config('custom.API_ARTIST_INTERVAL');
+		$interval = config('custom.API_NOTIFICATION_INTERVAL');
 		$APP_URL = env('APP_URL');
 		$data = [];
 		$allData  = [];
@@ -27,7 +27,9 @@ class NotificationController extends Controller
 		$all 	= $request->all==1 ? 1 : '';
 		$unread = $request->unread==1 ? 1 : '';
 		$read 	= $request->read==1 ? 1 : '';
-		
+      	
+      	$page = $request->page ?? 1;
+		$offset = ($page - 1) * $interval;
 		
 		$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
 		if(Auth::guard('sanctum')->check()) 
@@ -39,7 +41,7 @@ class NotificationController extends Controller
 				$retailer_id = Auth::guard('sanctum')->user()->id;
 				if($all==1)
 				{
-					$notifications = Notifications::where('retailer_id',$retailer_id)->skip($paginate)->take($interval)->get();
+					$notifications = Notifications::where('retailer_id',$retailer_id)->skip($offset)->take($interval)->get();
 					
 					foreach ($notifications as $val) {
 						
@@ -73,7 +75,7 @@ class NotificationController extends Controller
 				
 				if($unread==1)
 				{
-					$notifications = Notifications::where('retailer_id',$retailer_id)->where('status',0)->skip($paginate)->take($interval)->get();
+					$notifications = Notifications::where('retailer_id',$retailer_id)->where('status',0)->skip($offset)->take($interval)->get();
 					foreach ($notifications as $val) {
 						
 						$image_url = null;
@@ -106,7 +108,7 @@ class NotificationController extends Controller
 				
 				if($read==1)
 				{
-					$notifications = Notifications::where('retailer_id',$retailer_id)->where('status',1)->skip($paginate)->take($interval)->get();
+					$notifications = Notifications::where('retailer_id',$retailer_id)->where('status',1)->skip($offset)->take($interval)->get();
 					foreach ($notifications as $val) {
 						
 						$image_url = null;

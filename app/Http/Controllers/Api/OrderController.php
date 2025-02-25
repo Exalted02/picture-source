@@ -262,10 +262,16 @@ class OrderController extends Controller
 		}
 		return $response;
 	}
-    public function my_order()
+    public function my_order(Request $request)
 	{
+		//\Log::info(json_encode($request->all()));
+		
 		if(Auth::guard('sanctum')->check()) 
 		{
+			$interval = config('custom.API_ORDER_INTERVAL');
+			$page = $request->page ?? 1;
+			$offset = ($page - 1) * $interval;
+		
 			$myOrder = [];
 			$APP_URL = env('APP_URL');
 			$pimage = '';
@@ -275,7 +281,7 @@ class OrderController extends Controller
 			$OrderExists  = Orders::where('user_id',$user_id)->where('order_type',0)->exists();
 			if($OrderExists)
 			{
-				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('order_type',0)->orderBy('created_at', 'desc')->get();
+				$orders = Orders::with('order_details.order_color', 'order_details.order_size')->where('user_id',$user_id)->where('order_type',0)->orderBy('created_at', 'desc')->skip($offset)->take($interval)->get();
 				//echo "<pre>";print_r($orders);die;
 				foreach($orders as $order)
 				{
@@ -294,7 +300,7 @@ class OrderController extends Controller
 						'order_id' => $order->id,
 						'final_amount' => $order->final_amount,
 						'order_date' => $order->created_at->diffForHumans(),
-						'image' => $pimage ? $APP_URL.'/uploads/product/'. $order->order_details[0]->product_id .'/gallery/thumbs/'.$pimage : null,
+						'image' => $pimage ? $APP_URL.'/uploads/product/'. $order->order_details[0]->product_id .'/gallery/thumbs/'.$pimage : $APP_URL.'/noimage.png',
 					];
 				}
 			}
@@ -373,10 +379,14 @@ class OrderController extends Controller
 		}
 		return $response;
 	}
-	public function my_wistlist()
+	public function my_wistlist(Request $request)
 	{
 		if(Auth::guard('sanctum')->check()) 
 		{
+			$interval = config('custom.API_WISHLIST_INTERVAL');
+			$page = $request->page ?? 1;
+			$offset = ($page - 1) * $interval;
+			
 			$myOrder = [];
 			$APP_URL = env('APP_URL');
 			
@@ -386,7 +396,7 @@ class OrderController extends Controller
 			$OrderExists  = Wistlists::where('email_address',$user_email_id)->where('order_type',1)->where('status', 1)->exists();
 			if($OrderExists)
 			{
-				$orders = Wistlists::with('wishlist_details.order_color', 'wishlist_details.order_size')->where('email_address',$user_email_id)->where('order_type',1)->where('status', 1)->orderBy('created_at', 'desc')->get();
+				$orders = Wistlists::with('wishlist_details.order_color', 'wishlist_details.order_size')->where('email_address',$user_email_id)->where('order_type',1)->where('status', 1)->orderBy('created_at', 'desc')->skip($offset)->take($interval)->get();
 				//echo "<pre>";print_r($orders);die;
               	//dd($orders);
 				foreach($orders as $order)
@@ -476,7 +486,7 @@ class OrderController extends Controller
 						'price_per_quantity' => $items->price,
 						'color' => $items->order_color->color,
 						'size' => $items->order_size->size,
-						'image' => $pimage ? $APP_URL.'/uploads/product/'. $items->product_id .'/gallery/thumbs/'.$pimage : null,
+						'image' => $pimage ? $APP_URL.'/uploads/product/'. $items->product_id .'/gallery/thumbs/'.$pimage : $APP_URL.'/noimage.png',
 					
 					];
 				}

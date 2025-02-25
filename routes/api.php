@@ -75,9 +75,9 @@ Route::post('/place-order',[OrderController::class, 'place_order']);
 Route::post('/place-wishlist-order',[OrderController::class, 'place_wishlist_order']);
 Route::post('/create-wistlist',[WistlistController::class, 'create_wistlist']);
 
-Route::get('/my-order',[OrderController::class, 'my_order']);
+Route::post('/my-order',[OrderController::class, 'my_order']);
 Route::post('/my-order-details',[OrderController::class, 'my_order_details']);
-Route::get('/my-wistlist',[OrderController::class, 'my_wistlist']);
+Route::post('/my-wistlist',[OrderController::class, 'my_wistlist']);
 Route::post('/my-wistlist-order-details',[OrderController::class, 'my_wistlist_order_details']);
 
 Route::get('/country_list',[CountryStateController::class, 'country_list']);

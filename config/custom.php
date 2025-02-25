@@ -18,4 +18,10 @@ return [
 	'API_CATEGORY_INTERVAL' => 6,
 // Api artist list	interval
 	'API_ARTIST_INTERVAL' => 6,
+// Api notification	interval
+	'API_NOTIFICATION_INTERVAL' => 6,
+// Api order interval
+	'API_ORDER_INTERVAL' => 9,
+// Api wishlist interval
+	'API_WISHLIST_INTERVAL' => 6,
 ];
