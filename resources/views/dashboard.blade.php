@@ -40,9 +40,10 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa-solid fa-chart-line"></i></span>
+						{{--<span class="dash-widget-icon"><i class="fa-solid fa-chart-line"></i></span>--}}
+                            <span class="dash-widget-icon"><i class="fa-solid fa-handshake"></i></span>
                             <div class="dash-widget-info">
-                                <h3>6</h3>
+                                <h3>{{ $tot_costomers ?? 0}}</h3>
                                 <span>Consumer</span>
                             </div>
                         </div>
@@ -51,9 +52,10 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa-regular fa-user"></i></span>
+						{{--<span class="dash-widget-icon"><i class="fa-regular fa-user"></i></span>--}}
+                            <span class="dash-widget-icon"><i class="fa-solid fa-store"></i></span>
                             <div class="dash-widget-info">
-                                <h3>5</h3>
+                                <h3>{{ $tot_retailers ?? 0}}</h3>
                                 <span>Retailer</span>
                             </div>
                         </div>
@@ -62,9 +64,10 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa-solid fa-person-shelter"></i></span>
+						{{--<span class="dash-widget-icon"><i class="fa-solid fa-person-shelter"></i></span>--}}
+                            <span class="dash-widget-icon"><i class="fa fa-money-bill-wave"></i></span>
                             <div class="dash-widget-info">
-                                <h3>4</h3>
+                                <h3>{{ $tot_orders ?? 0}}</h3>
                                 <span>Order</span>
                             </div>
                         </div>
@@ -77,6 +80,28 @@
                             <div class="dash-widget-info">
                                 <h3>3</h3>
                                 <span>Review</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="fa fa-box"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>{{ $tot_wishlist ?? 0 }}</h3>
+                                <span>Wishlist</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="fa-solid fa-store"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>{{ $tot_products ?? 0 }}</h3>
+                                <span>Products</span>
                             </div>
                         </div>
                     </div>

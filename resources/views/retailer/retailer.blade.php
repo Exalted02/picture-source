@@ -9,10 +9,10 @@
 		<div class="page-header">
 			<div class="row align-items-center">
 				<div class="col-md-4">
-					<h3 class="page-title">{{ __('customer') }}</h3>
+					<h3 class="page-title">{{ __('retailer') }}</h3>
 					<ul class="breadcrumb">
 						<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('dashboard') }}</a></li>
-						<li class="breadcrumb-item active">{{ __('customer') }}</li>
+						<li class="breadcrumb-item active">{{ __('retailer') }}</li>
 					</ul>
 				</div>
 				{{--<div class="col-md-8 float-end ms-auto">
@@ -153,7 +153,7 @@
 										
 										{{--<a class="dropdown-item" href="{{ route('view-dealer', ['id'=>$val->id]) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>--}}
 											{{--<a class="dropdown-item edit-customer" href="javascript:void(0);" data-id="{{ $val->id ??''}}" data-url=""><i class="fa-solid fa-pencil m-r-5"></i> {{ __('edit') }}</a>--}}
-											<a class="dropdown-item" href="{{ route('view-retailer', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
+											<a class="dropdown-item" href="{{ route('view-retailer-list', $val->id) }}"><i class="fa-regular fa-eye m-r-5"></i> {{ __('view') }}</a>
 											<a class="dropdown-item delete-retailer" href="javascript:void(0);" data-id="{{ $val->id ?? '' }}" data-url="{{ route('getDeleteRetailer') }}"><i class="fa-regular fa-trash-can m-r-5"></i> {{ __('delete') }}</a>
 										</div>
 									</div>

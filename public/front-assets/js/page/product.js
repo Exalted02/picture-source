@@ -8,6 +8,7 @@ $(document).ready(function() {
 	
 	$(document).on('click','.save-product', function(){
 		var isValid = true;
+		
 		$('#frmproductcode [required]').each(function () {
 			if ($(this).val().trim() === '') {
 				isValid = false;
@@ -16,6 +17,18 @@ $(document).ready(function() {
 				$(this).removeClass('is-invalid'); // Remove invalid class if valid
 			}
 		});
+		
+		var priceValue = $('#price').val().trim();
+		var priceRegex = /^\d+(\.\d+)?$/;  // This regex matches numbers with an optional decimal portion
+		if (!priceRegex.test(priceValue)) {
+			isValid = false;
+			$('#price').addClass('is-invalid');
+			// Optionally, you can also show a custom message, e.g.:
+			$('#price').siblings('.invalid-feedback').text('Please enter a valid price (numbers and an optional decimal point only).');
+		} else {
+			$('#price').removeClass('is-invalid');
+		}
+		
 		
 		
 		if (isValid) {

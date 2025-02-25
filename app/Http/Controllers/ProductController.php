@@ -21,6 +21,13 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
+		//----------------
+		$has_search  = 0;
+		if($request->all() && count($request->all()) > 0)
+		{
+			$has_search  = 1;
+		}
+		$data['has_search'] = $has_search;
 		//--- search ---
 		$dataArr = Products::query();
 		if($request->search_name)
@@ -38,6 +45,26 @@ class ProductController extends Controller
 			//$contactArr->whereBetween('address_since', [$start_date, $end_date]);
 			$dataArr->whereDate('created_at', '>=', $start_date)
             ->whereDate('created_at', '<=', $end_date);
+		}
+		
+		if($request->search_artist)
+		{
+			$dataArr->where('artist_id', 'like', '%' . $request->search_artist . '%');
+		}
+		
+		if($request->search_category)
+		{
+			$dataArr->where('category', 'like', '%' . $request->search_category . '%');
+		}
+		
+		if($request->search_size)
+		{
+			$dataArr->where('size', 'like', '%' . $request->search_size . '%');
+		}
+		
+		if($request->search_color)
+		{
+			$dataArr->where('color', 'like', '%' . $request->search_color . '%');
 		}
 		
 		if($request->has('search_status') && $request->search_status !== '' && isset($request->search_status))

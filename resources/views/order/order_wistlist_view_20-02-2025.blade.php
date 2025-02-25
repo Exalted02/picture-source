@@ -51,7 +51,7 @@
 								</div>
 								<div class="col-md-3 mt-3">
 									 <strong>{{ __('order_status') }}</strong>
-										<select class="select form-control order-status" id="order_status" style="height:40px;" data-id="{{ $details->id }}" data-url="{{ route('change.wishlist.status')}}">
+										<select class="select form-control order-status" id="order_status" style="height:40px;" data-id="{{ $details->id }}" data-url="{{ route('change.order.status')}}">
 											<option value="">{{ __('please_select') }}</option>
 											<option value="1" {{ $details->status ==1 ? 'selected' : ''; }}>{{ __('pending') }}</option>
 											<option value="2" {{ $details->status ==2 ? 'selected' : ''; }}>{{ __('shipped') }}</option>
@@ -110,7 +110,34 @@
 								@endif
 								@endforeach
 								
-								
+								@if($wistlists->count() > 0)
+								<div class="rowline"></div>
+								<div class="row col-md-12 mt-4"><h4><strong>Wistlist</strong></h4></div>
+								@foreach($wistlists as $key=>$val)
+								<div class="row col-md-12">
+									<div class="col-md-3 mt-3">
+										<strong>{{ __('email_address') }}</strong>
+										<div>{{ $val->email_address ?? '' }}</div>
+									</div>
+									
+									<div class="col-md-3 mt-3">
+										  <strong>{{ __('relationship') }}</strong>
+										  <div>{{ $val->relationship ?? '' }}</div>
+									</div>
+									<div class="col-md-3 mt-3">
+										  <strong>{{ __('birthdate') }}</strong>
+										  <div>{{ date('d/m/Y', strtotime($val->birthdate)) }}</div>
+									</div>
+									<div class="col-md-3 mt-3">
+										  <strong>{{ __('aniversary') }}</strong>
+										  <div>{{ date('d/m/Y', strtotime($val->aniversary)) }}</div>
+									</div>
+								</div>
+								@if($key < count($wistlists)-1)
+								<div class="rowline"></div>
+								@endif
+								@endforeach
+								@endif
 								
 							</div>
 							@endforeach
