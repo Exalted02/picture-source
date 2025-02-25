@@ -111,7 +111,7 @@ class OrderController extends Controller
       		$up_wistlists->status = 2;
 			$up_wistlists->save();
 			
-			/*
+			
 			//-----send mail ---
 				//Retailer email
 				$get_email = get_email(7);
@@ -130,7 +130,7 @@ class OrderController extends Controller
 					'toEmails' => array($consumer_email),
 				];
 				send_email($data);
-			*/
+			
 			
 			$response = [
 				'status' => 200,
@@ -225,7 +225,7 @@ class OrderController extends Controller
 			$notification->message = '#'.$order_id.' order placed by '.$consumer_name.' on '.$order_date;
 			$notification->save();
 			
-			/*
+			
 			//-----send mail ---
 				//Retailer email
 				$get_email = get_email(7);
@@ -244,7 +244,8 @@ class OrderController extends Controller
 					'toEmails' => array($consumer_email),
 				];
 				send_email($data);
-			*/
+			//\Log::info($retailer[0]->email);
+			//\Log::info($consumer_email);
 			
 			$response = [
 				'status' => 200,

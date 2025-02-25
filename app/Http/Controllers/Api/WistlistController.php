@@ -87,7 +87,7 @@ class WistlistController extends Controller
 			$notification->message = '#'.$order_id.' wishlist create by '.$consumer_name.' on '.$order_date;
 			$notification->save();
 			
-			/*
+			
 			//-----send mail ---
 				//Retailer email
 				$get_email = get_email(9);
@@ -106,7 +106,7 @@ class WistlistController extends Controller
 					'toEmails' => array($consumer_email),
 				];
 				send_email($data);
-			*/
+			
 				
 			$response = [
 				'status' => 200,

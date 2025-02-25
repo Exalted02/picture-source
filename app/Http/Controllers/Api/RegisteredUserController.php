@@ -123,7 +123,7 @@ class RegisteredUserController extends Controller
 					
 					if ($model->save()) {
 						$authUser = $model;
-						/*
+						
 						//-----send mail ---
 							$get_email = get_email(6);
 							$data = [
@@ -131,7 +131,7 @@ class RegisteredUserController extends Controller
 							'body' => str_replace(array("[USERNAME]", "[PASSWORD]"), array($email, $default_password), $get_email->message),
 							'toEmails' => array($request->email),
 						];
-						send_email($data);*/
+						send_email($data);
 					}
 				} catch (\Exception $exception) {
 					// Redirect to homepage with error
@@ -241,13 +241,13 @@ class RegisteredUserController extends Controller
 			//-----send mail ---
 				$get_email = get_email(3);
 				$data = [
-				'subject' => $get_email->message_subject,
-				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
-				'toEmails' => array($request->email),
-				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
-				// 'ccEmails' => array('exaltedsol04@gmail.com'),
-				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
-			];
+					'subject' => $get_email->message_subject,
+					'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+					'toEmails' => array($request->email),
+					// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+					// 'ccEmails' => array('exaltedsol04@gmail.com'),
+					// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+				];
 			send_email($data);
 			/*try {
     			$get_email = get_email(2);
