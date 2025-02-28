@@ -38,7 +38,7 @@ class HomeController extends Controller
 					'id' => $val->id,
 					'name' => $val->name,
 					'featured' => $val->is_feature==1 ? true : false,
-					'image' => $media ? $APP_URL.'/uploads/category/'. $val->id .'/gallery/thumbs/'.$media->image : null, // Handle cases where no media is found
+					'image' => $media ? $APP_URL.'/uploads/category/'. $val->id .'/gallery/thumbs/'.$media->image : $APP_URL.'/noimage.png', // Handle cases where no media is found
 				];
 			}
 
@@ -72,7 +72,7 @@ class HomeController extends Controller
 				$data[] = [
 						'artist_id' => $val->id,
 						'name' => $val->name,
-						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : null,
+						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : $APP_URL.'/noimage.png',
 					];
 				}
 
