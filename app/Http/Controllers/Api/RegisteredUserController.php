@@ -784,4 +784,21 @@ class RegisteredUserController extends Controller
 		return $response;
 		
 	}
+    public function retailer_list(Request $request)
+    {
+		$retailer_data = User::where('user_type', '!=', 1);
+		$data = [];
+		foreach($retailer_data as $retailer)
+		{
+			$data[] = [
+				'id' => $retailer->id,
+				'name' => $retailer->name,
+			];
+		}
+		$response = [
+			'status' => 200,
+			'data' => $data,
+		];
+		return $response;
+    }
 }
