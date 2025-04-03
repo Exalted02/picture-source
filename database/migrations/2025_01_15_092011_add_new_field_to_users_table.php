@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
            $table->string('profile_image')->nullable()->after('otp');
+           $table->bigInteger('referring_retailer')->nullable()->after('profile_image');
         });
     }
 

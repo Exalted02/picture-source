@@ -38,7 +38,7 @@ Route::post('store-retailer', [RegisteredUserController::class, 'store_retailer'
 Route::post('forgot-password', [RegisteredUserController::class, 'forgotPassword'])->name('forgot-password');
 Route::post('forgot-password-verify-otp', [RegisteredUserController::class, 'forget_password_verify_otp'])->name('forgot-password-verify-otp');
 Route::post('reset-password', [RegisteredUserController::class, 'resetpassword'])->name('reset-password');
-Route::get('/retailer_list',[RegisteredUserController::class, 'retailer_list']);
+Route::get('/retailer_list',[RegisteredUserController::class, 'all_retailer_list']);
 
 Route::post('register-verify-otp', [RegisteredUserController::class, 'register_verify_otp'])->name('register-verify-otp');
 

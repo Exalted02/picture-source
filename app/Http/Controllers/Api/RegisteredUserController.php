@@ -228,6 +228,7 @@ class RegisteredUserController extends Controller
 		$model->state = $request->state ?? null;
 		$model->zipcode = $request->zipcode ?? null;
 		$model->phone_number = $request->phone_number ?? null;
+		$model->referring_retailer = $request->retailer ?? null;
 		$model->status = 1;
 		$model->user_type = 1 ?? null; // customer
 
@@ -784,16 +785,23 @@ class RegisteredUserController extends Controller
 		return $response;
 		
 	}
-    public function retailer_list(Request $request)
+    public function all_retailer_list(Request $request)
     {
-		$retailer_data = User::where('user_type', '!=', 1);
+		$retailer_data = User::where('user_type', '!=', 1)->get();
 		$data = [];
-		foreach($retailer_data as $retailer)
+		foreach($retailer_data as $k=>$retailer)
 		{
-			$data[] = [
-				'id' => $retailer->id,
-				'name' => $retailer->name,
-			];
+			if($k == 0){
+				$data[] = [
+					'id' => 1,
+					'name' => env('APP_NAME'),
+				];
+			}else{
+				$data[] = [
+					'id' => $retailer->id,
+					'name' => $retailer->name,
+				];
+			}
 		}
 		$response = [
 			'status' => 200,
