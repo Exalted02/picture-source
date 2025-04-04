@@ -13,7 +13,7 @@ use File;
 
 class CountryStateController extends Controller
 {
-    public function country_list(Request $request)
+    public function country_list_bkp(Request $request)
     {
 		$country_data = Countries::all();
 		$data = [];
@@ -29,6 +29,24 @@ class CountryStateController extends Controller
 			'data' => $data,
 		];
 		return $response;
+    }
+    public function country_list(Request $request)
+    {
+		$country_data = Countries::query()
+			->orderByRaw("id = 231 DESC, name ASC")
+			->get();
+
+		$data = $country_data->map(function ($country) {
+			return [
+				'id' => $country->id,
+				'name' => $country->name,
+			];
+		});
+
+		return response()->json([
+			'status' => 200,
+			'data' => $data,
+		]);
     }
 	
 	public function state_list(Request $request)
