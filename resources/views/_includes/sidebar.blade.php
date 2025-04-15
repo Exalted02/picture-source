@@ -84,6 +84,9 @@
 				<li class="{{ request()->routeIs('user.email-settings') ? 'active' : '' }}">
 					<a href="{{ route('user.email-settings') }}"><i class="fa-regular fa-envelope"></i> <span> {{ __('email_settings') }} </span></a>
 				</li>
+				<li class="{{ request()->routeIs('home-settings') ? 'active' : '' }}">
+					<a href="{{ route('home-settings') }}"><i class="fa-solid fa-house"></i> <span> {{ __('home_settings') }} </span></a>
+				</li>
 				
 				<li class="{{ request()->routeIs('logout') ? 'active' : '' }}">
 					<a href="{{ route('logout') }}"><i class="fa-solid fa-shop-lock"></i> <span> {{ __('logout') }} </span></a>

@@ -8,6 +8,7 @@ use App\Models\Artists;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Media;
+use App\Models\Home_gallery_images;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
@@ -85,6 +86,40 @@ class HomeController extends Controller
 			$response = [
 				'response' => 'No records found',
 				'status' => 400,
+			];
+		}
+
+		return $response;
+	}
+	public function home_image_list(Request $request)
+	{
+		$APP_URL = env('APP_URL');
+		$data = [];
+		
+		$exists = Home_gallery_images::exists();
+		if($exists)
+		{
+			$artists = Home_gallery_images::get();
+			foreach ($artists as $val) {
+				$data[] = [
+					'name' => $val->name,
+					'image' => $val->name ? $APP_URL.'/uploads/home/'.$val->name : $APP_URL.'/noimage.png',
+				];
+			}
+
+			$response = [
+				'data' => $data,
+				'status' => 200,
+			];
+		}
+		else{
+			$data[] = [
+				'name' => 'noimage.png',
+				'image' => $APP_URL.'/noimage.png',
+			];
+			$response = [
+				'data' => $data,
+				'status' => 200,
 			];
 		}
 

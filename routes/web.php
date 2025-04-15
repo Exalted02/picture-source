@@ -11,6 +11,7 @@ use App\Http\Controllers\SubcategoryController;
 
 use App\Http\Controllers\EmailManagementController;
 use App\Http\Controllers\EmailSettingsController;
+use App\Http\Controllers\HomeSettingsController;
 use App\Http\Controllers\MyProfileController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
@@ -77,6 +78,11 @@ Route::middleware('auth')->group(function () {
 	//EmailSettings
 	Route::get('/email-settings', [EmailSettingsController::class, 'index'])->name('user.email-settings');
 	Route::post('/email-settings', [EmailSettingsController::class, 'save_data'])->name('email-settings-save');
+	
+	//EmailSettings
+	Route::get('/home-settings', [HomeSettingsController::class, 'index'])->name('home-settings');
+	Route::post('/home-settings', [HomeSettingsController::class, 'save_data'])->name('home-settings-save');
+	Route::post('/delete-home-settings', [HomeSettingsController::class, 'delete_home_image'])->name('delete-home-image');
 	
 	// category 
 	Route::get('/category', [CategoryController::class, 'index'])->name('user.category');

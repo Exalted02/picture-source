@@ -49,6 +49,7 @@ Route::post('get-artist-list',[ArtistController::class, 'get_artist_list']);
 Route::post('single-product',[ProductController::class, 'get_single_product']);
 Route::post('product-search',[ProductController::class, 'get_product_search']);
 
+Route::get('home-image-list',[HomeController::class, 'home_image_list']);
 Route::get('home-category-list',[HomeController::class, 'category_list']);
 Route::get('home-artist-list',[HomeController::class, 'artist_list']);
 Route::post('view-profile',[ProfileController::class, 'view_profile']);

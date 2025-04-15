@@ -48,6 +48,9 @@
 	"tls":"TLS",
 	"save_and_update":"Save & update",
 	
+	"//":"for Home page.",
+	"home_settings":"Home Settings",
+	
 	"//":"for Email Management.",
 	"email_management":"Email Management",
 	"email_subject":"Email Subject",
