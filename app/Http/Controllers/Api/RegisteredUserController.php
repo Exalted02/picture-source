@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Email_settings;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -335,14 +336,26 @@ class RegisteredUserController extends Controller
 			$muser->save();
 			
 			//-----send mail ---
-				$get_email = get_email(3);
-				$data = [
+			$get_email = get_email(3);
+			$data = [
 				'subject' => $get_email->message_subject,
 				'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
 				'toEmails' => array($request->email),
 				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
 				// 'ccEmails' => array('exaltedsol04@gmail.com'),
 				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+			];
+			send_email($data);
+			//-----send mail ---
+			$settings = Email_settings::find(1);
+			$get_email = get_email(11);
+			$data = [
+				'subject' => $get_email->message_subject,
+				'body' => str_replace(array("[USER_NAME]","[USER_EMAIL]"), array($model->name, $model->email), $get_email->message),
+				'toEmails' => array($settings->admin_email),
+				// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+				// 'ccEmails' => array('exaltedsol04@gmail.com'),
+				'files' => [public_path('uploads/retailer/').$filename,],
 			];
 			send_email($data);
 			

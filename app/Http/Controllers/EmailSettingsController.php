@@ -17,6 +17,7 @@ class EmailSettingsController extends Controller
     {
 		// dd($request->all());
       $request->validate([
+          'admin_email' => 'required|email',
           'email_from_address' => 'required|email',
           'emails_from_name' => 'required|string',
           'smtp_host' => 'required|string',
@@ -29,6 +30,7 @@ class EmailSettingsController extends Controller
 
 
       $emailSettings =  Email_settings::find(1);
+      $emailSettings->admin_email = $request->admin_email;
       $emailSettings->email_from_address = $request->email_from_address;
       $emailSettings->emails_from_name = $request->emails_from_name;
       $emailSettings->smtp_host = $request->smtp_host;

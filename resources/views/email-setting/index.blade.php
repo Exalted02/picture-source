@@ -82,6 +82,16 @@
                             </div>
                         </div>--}}
                     </div>
+                    <h4 class="page-title m-t-30">{{ __('admin_email_settings') }}</h4>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-block mb-3">
+                                <label class="col-form-label">{{ __('admin_email') }}</label>
+                                <input class="form-control" type="email" id="admin_email" name="admin_email" value="{{$email->admin_email ?? ''}}">
+								<div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="submit-section">
                         <button class="btn btn-primary save-update" type="button" >{{ __('save_and_update') }}</button>
                     </div>
