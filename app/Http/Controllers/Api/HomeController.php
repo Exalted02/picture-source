@@ -91,7 +91,7 @@ class HomeController extends Controller
 
 		return $response;
 	}
-	public function home_image_list(Request $request)
+	/*public function home_image_list(Request $request)
 	{
 		$APP_URL = env('APP_URL');
 		$data = [];
@@ -124,5 +124,35 @@ class HomeController extends Controller
 		}
 
 		return $response;
+	}*/
+	public function home_image_list(Request $request)
+	{
+		$APP_URL = env('APP_URL');
+		$data = [];
+
+		// Get up to 9 images from DB
+		$images = Home_gallery_images::take(9)->get();
+
+		foreach ($images as $val) {
+			$data[] = [
+				'name' => $val->name,
+				'image' => $val->name ? $APP_URL . '/uploads/home/' . $val->name : $APP_URL . '/noimage.png',
+			];
+		}
+
+		// If less than 9, fill the rest with noimage
+		$remaining = 9 - count($data);
+		for ($i = 0; $i < $remaining; $i++) {
+			$data[] = [
+				'name' => 'noimage.png',
+				'image' => $APP_URL . '/noimage.png',
+			];
+		}
+
+		return [
+			'data' => $data,
+			'status' => 200,
+		];
 	}
+
 }
