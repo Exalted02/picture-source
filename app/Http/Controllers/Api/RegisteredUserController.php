@@ -486,6 +486,9 @@ class RegisteredUserController extends Controller
             return response()->json(['status' => 400, 'message' => 'Invalid OTP']);
         }
         $user->otp = null;
+		if($user->email_verified_at == null){
+			$user->email_verified_at = Now();
+		}
         $user->save();
     
         return response()->json(['status' => 200, 'message' => 'OTP verified successfully']);

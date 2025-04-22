@@ -64,5 +64,21 @@
 @endsection 
 @section('scripts')
 <script src="{{ url('front-assets/js/page/email_management.js') }}"></script>
-<script src="{{ url('front-assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
+<!--<script src="{{ url('front-assets/plugins/summernote/summernote-bs4.min.js') }}"></script>-->
+<link href="{{ url('front-assets/summernote/summernote-lite.min.css') }}" rel="stylesheet">
+    <script src="{{ url('front-assets/summernote/summernote-lite.min.js') }}"></script>
+	<script>
+		$('.summernote').summernote({
+			toolbar: [
+				['style', ['style']],
+				['font', ['bold', 'italic', 'underline']],
+				['fontsize', ['fontsize']],
+				['style', ['fontname', 'color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['height', ['height']],
+				['insert', ['link', 'picture', 'video']],
+				['view', ['codeview']],
+			]
+		});
+	</script>
 @endsection
