@@ -13,6 +13,7 @@ use App\Models\Media;
 use App\Models\Wistlists;
 use App\Models\Wishlist_items;
 use App\Models\User;
+use App\Models\Email_settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
@@ -114,11 +115,13 @@ class OrderController extends Controller
 			
 			//-----send mail ---
 				//Retailer email
+				$settings = Email_settings::find(1);
 				$get_email = get_email(7);
 				$data = [
 					'subject' => $get_email->message_subject,
 					'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
 					'toEmails' => array($retailer[0]->email),
+					'ccEmails' => array($settings->admin_email),
 				];
 				send_email($data);
 				
@@ -228,11 +231,13 @@ class OrderController extends Controller
 			
 			//-----send mail ---
 				//Retailer email
+				$settings = Email_settings::find(1);
 				$get_email = get_email(7);
 				$data = [
 					'subject' => $get_email->message_subject,
 					'body' => str_replace(array("[ORDER_ID]", "[CONSUMER_NAME]", "[ORDER_DATE]"), array($order_id, $consumer_name, $order_date), $get_email->message),
 					'toEmails' => array($retailer[0]->email),
+					'ccEmails' => array($settings->admin_email),
 				];
 				send_email($data);
 				
@@ -692,6 +697,8 @@ class OrderController extends Controller
 			$orderdata = [];
 			$orderImage = [];
 			$wishlistImage = [];
+			$myordercount = $myWishlistcount = 0;
+			$APP_URL = env('APP_URL');
 			
 			// my order 
 			$exists = Orders::where('user_id',$user_id)->exists();
@@ -712,6 +719,8 @@ class OrderController extends Controller
 						}
 					}
 				}
+			}else{
+				$orderImage[] = [$APP_URL.'/noimage.png'];
 			}
 			
 			$data['my_order'] = [
@@ -740,6 +749,8 @@ class OrderController extends Controller
 						}
 					}
 				}
+			}else{
+				$wishlistImage[] = [$APP_URL.'/noimage.png'];
 			}
 			//echo "<pre>";print_r($wishlistImage);die;
 			$data['my_wishlist'] = [

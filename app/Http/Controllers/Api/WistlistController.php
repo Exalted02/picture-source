@@ -9,6 +9,7 @@ use App\Models\Wishlist_items;
 use App\Models\Products;
 use App\Models\Notifications;
 use App\Models\User;
+use App\Models\Email_settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
@@ -90,11 +91,13 @@ class WistlistController extends Controller
 			
 			//-----send mail ---
 				//Retailer email
+				$settings = Email_settings::find(1);
 				$get_email = get_email(9);
 				$data = [
 					'subject' => $get_email->message_subject,
 					'body' => str_replace(array("[CONSUMER_NAME]", "[ORDER_DATE]", "[ORDER_ID]"), array($consumer_name, $order_date, $order_id), $get_email->message),
 					'toEmails' => array($request->email_address),
+					'ccEmails' => array($settings->admin_email),
 				];
 				send_email($data);
 				
