@@ -39,7 +39,23 @@ class RegisteredUserController extends Controller
 				$response['message']="Password are not matched";
 			}
 			else if($user->email_verified_at == null)
-			{
+			{				
+				$otp = mt_rand(1000, 9999);
+				$user->otp = $otp;
+				$user->save();
+				
+				//-----send mail ---
+				$get_email = get_email(3);
+				$data = [
+					'subject' => $get_email->message_subject,
+					'body' => str_replace(array("[OTP]"), array($otp), $get_email->message),
+					'toEmails' => array($user->email),
+					// 'bccEmails' => array('exaltedsol06@gmail.com','exaltedsol04@gmail.com'),
+					// 'ccEmails' => array('exaltedsol04@gmail.com'),
+					// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
+				];
+				send_email($data);
+				
 				$response['status']=400;
 				$response['message']="User is not verified";
 			}
