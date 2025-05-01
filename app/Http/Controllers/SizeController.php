@@ -48,9 +48,9 @@ class sizeController extends Controller
 	public function save_size(Request $request)
 	{
 		$request->validate([
-            'size' => 'required'
-            'height' => 'required|numeric'
-            'width' => 'required|numeric'
+            'size' => 'required',
+            'height' => 'required|numeric',
+            'width' => 'required|numeric',
         ]);
 		
 		$existingStage = Size::where('size', $request->post('size'))->where('status', '!=', 2)
