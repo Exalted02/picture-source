@@ -225,6 +225,34 @@ class ProductController extends Controller
               $my_rating = $my_review_details->rating ?? 0;
               $my_review = $my_review_details->comment ?? '';
             }
+			
+			/*$width = $product->get_size[0]->width * 2.5;
+			$height = $product->get_size[0]->height * 2.5;			
+			if($width > 300){
+				$width_ratio = $width / 300;
+				$final_height = $height / $width_ratio;
+				$final_width = 300;
+			}else if($height > 400 || $final_height > 400){
+				$height_ratio = $height / 400;
+				$final_width = $width / $height_ratio;
+				$final_height = 400;
+			}else{
+				$final_width = $width;
+				$final_height = $height;
+			}*/
+			$width = $product->get_size[0]->width * 2.5;
+			$height = $product->get_size[0]->height * 2.5;
+
+			$max_width = 300;
+			$max_height = 400;
+
+			$width_ratio = $width / $max_width;
+			$height_ratio = $height / $max_height;
+			$scale_ratio = max($width_ratio, $height_ratio, 1); // never scale up
+
+			$final_width = $width / $scale_ratio;
+			$final_height = $height / $scale_ratio;
+			
 			$data = [
 				'product_id' => $product->id,
 				'category_id' => $product->get_category[0]->id,
@@ -235,8 +263,10 @@ class ProductController extends Controller
 				'artist_name' => $product->get_artist[0]->name,
 				'size_id' => $product->get_size[0]->id,
 				'size_name' => $product->get_size[0]->size,
-				'size_height' => $product->get_size[0]->height,
-				'size_width' => $product->get_size[0]->width,
+				// 'size_height' => $product->get_size[0]->height,
+				// 'size_width' => $product->get_size[0]->width,
+				'size_height' => $final_height,
+				'size_width' => $final_width,
 				'color_id' => $product->get_color[0]->id,
 				'color_name' => $product->get_color[0]->color,
 				'name' => $product->name,
