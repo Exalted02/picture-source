@@ -40,6 +40,20 @@
 								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('size')}}.</div>
 							</div>
 						</div>
+						<div class="col-sm-6">
+							<div class="input-block mb-3">
+								<label class="col-form-label">{{ __('height') }}{{ __('cm') }}<span class="text-danger">*</span></label>
+								<input class="form-control" type="text" name="height" id="height" required>
+								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('height')}}.</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="input-block mb-3">
+								<label class="col-form-label">{{ __('width') }}{{ __('cm') }}<span class="text-danger">*</span></label>
+								<input class="form-control" type="text" name="width" id="width" required>
+								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('width')}}.</div>
+							</div>
+						</div>
 					</div>
 					
 					<div class="submit-section">

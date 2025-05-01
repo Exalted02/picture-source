@@ -47,6 +47,12 @@ class sizeController extends Controller
     }
 	public function save_size(Request $request)
 	{
+		$request->validate([
+            'size' => 'required'
+            'height' => 'required|numeric'
+            'width' => 'required|numeric'
+        ]);
+		
 		$existingStage = Size::where('size', $request->post('size'))->where('status', '!=', 2)
         ->when($request->post('id'), function ($query) use ($request) {
 			if($request->post('id') !='')
@@ -67,11 +73,15 @@ class sizeController extends Controller
 		{
 			$model= Size::find($request->post('id'));
 			$model->size		=	$request->post('size');
+			$model->height		=	$request->post('height');
+			$model->width		=	$request->post('width');
 			$model->save();
 		}
 		else{
 			$model=new Size();
 			$model->size		=	$request->post('size');
+			$model->height		=	$request->post('height');
+			$model->width		=	$request->post('width');
 			$model->status		=	1;
 			$model->save();
 		}
@@ -89,6 +99,8 @@ class sizeController extends Controller
 		$data = array();
 		$data['id']  = $size->id ;
 		$data['size']  = $size->size ;
+		$data['height']  = $size->height ;
+		$data['width']  = $size->width ;
 		return $data;
 	}
 	public function delete_size(Request $request)

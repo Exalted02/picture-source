@@ -118,6 +118,10 @@
 	"color_created_successfully": "Color Created Successfully",
 	"from_your_account": "from your Account",
 	
+	"height": "Height",
+	"width": "Width",
+	"cm": "cm",
+	
 	"product": "Product",
 	"product_code": "Product Code",
 	"product_name": "Product Name",

@@ -235,6 +235,8 @@ class ProductController extends Controller
 				'artist_name' => $product->get_artist[0]->name,
 				'size_id' => $product->get_size[0]->id,
 				'size_name' => $product->get_size[0]->size,
+				'size_height' => $product->get_size[0]->height,
+				'size_width' => $product->get_size[0]->width,
 				'color_id' => $product->get_color[0]->id,
 				'color_name' => $product->get_color[0]->color,
 				'name' => $product->name,

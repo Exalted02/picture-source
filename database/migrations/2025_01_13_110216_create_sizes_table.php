@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('sizes', function (Blueprint $table) {
             $table->id();
 			$table->string('size');
+			$table->double('height', 8, 2)->nullable();
+			$table->double('width', 8, 2)->nullable();
 			$table->tinyInteger('status')->comment('0=inactive,1=active,2=delete');
             $table->timestamps();
         });
