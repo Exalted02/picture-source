@@ -244,7 +244,7 @@ class ProductController extends Controller
 			$height = $product->get_size[0]->height * 2.5;
 
 			$max_width = 300;
-			$max_height = 400;
+			$max_height = 300;
 
 			$width_ratio = $width / $max_width;
 			$height_ratio = $height / $max_height;

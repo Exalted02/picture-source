@@ -38,6 +38,15 @@ use App\Models\Followup_remarks;
 
 // use File;
 	
+//Product orientation Data
+    function get_product_orientation(){
+		$data = array(
+			1 => 'Portrait',
+			2 => 'Landscape',
+			3 => 'Square',
+		);
+        return $data;
+    }
 //Get referral model Data
     function get_referral_model(){
 		$data = Referral::where('status', 1)->orderBy('created_at', 'DESC')->get();

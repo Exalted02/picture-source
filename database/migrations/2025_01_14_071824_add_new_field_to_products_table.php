@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->integer('size')->nullable()->after('subcategory');
 			$table->integer('color')->nullable()->after('size');
+			$table->integer('orientation')->nullable()->after('color')->comment('1=Portrait, 2=Landscape, 3=Square');
+			$table->integer('length')->nullable()->after('orientation');
+			$table->integer('width')->nullable()->after('length');
+			$table->integer('depth')->nullable()->after('width');
         });
     }
 

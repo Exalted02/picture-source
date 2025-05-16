@@ -61,6 +61,10 @@ class ProductController extends Controller
 		{
 			$dataArr->where('size', 'like', '%' . $request->search_size . '%');
 		}
+		if($request->search_orientation)
+		{
+			$dataArr->where('orientation', 'like', '%' . $request->search_orientation . '%');
+		}
 		
 		if($request->search_color)
 		{
@@ -114,8 +118,12 @@ class ProductController extends Controller
 			$model->image				=	 '';
 			$model->description			=	$request->post('description') ?? '';
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
-			$model->size		=	$request->post('size') ?? '';
+			$model->size		=	$request->post('size') ?? 0;
 			$model->color		=	$request->post('color') ?? '';
+			$model->orientation		=	$request->post('orientation') ?? '';
+			$model->length		=	$request->post('length') ?? '';
+			$model->width		=	$request->post('width') ?? '';
+			$model->depth		=	$request->post('depth') ?? '';
 			$model->price		=	$request->post('price') ?? '';
 			$model->save();
 			
@@ -154,8 +162,12 @@ class ProductController extends Controller
 			$model->description			=	$request->post('description') ?? '';
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
 			$model->status				=	1;
-			$model->size				=	$request->post('size') ?? '';
+			$model->size				=	$request->post('size') ?? 0;
 			$model->color				=	$request->post('color') ?? '';
+			$model->orientation		=	$request->post('orientation') ?? '';
+			$model->length		=	$request->post('length') ?? '';
+			$model->width		=	$request->post('width') ?? '';
+			$model->depth		=	$request->post('depth') ?? '';
 			$model->price				=	$request->post('price') ?? '';
 			$model->save();
 			$lastId = $model->id;
@@ -206,6 +218,10 @@ class ProductController extends Controller
 		$data['moulding_description']  = $Product->moulding_description;
 		$data['size']  = $Product->size;
 		$data['color']  = $Product->color;
+		$data['orientation']		=	$Product->orientation;
+		$data['length']		=	$Product->length;
+		$data['width']		=	$Product->width;
+		$data['depth']		=	$Product->depth;
 		$data['price']  = $Product->price;
 		
 		

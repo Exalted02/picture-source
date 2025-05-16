@@ -29,9 +29,9 @@
 				<li class="{{ request()->routeIs('user.category') ? 'active' : '' }}">
 					<a href="{{ route('user.category')}}"><i class="fa-solid fa-brain"></i> <span> {{ __('category') }} </span></a>
 				</li>
-				<li class="{{ request()->routeIs('size') ? 'active' : '' }}">
+				{{--<li class="{{ request()->routeIs('size') ? 'active' : '' }}">
 					<a href="{{ route('size')}}"><i class="fa-solid fa-ruler"></i> <span> {{ __('size') }} </span></a>
-				</li>
+				</li>--}}
 				<li class="{{ request()->routeIs('color') ? 'active' : '' }}">
 					<a href="{{ route('color')}}"><i class="fa-solid fa-palette"></i> <span> {{ __('color') }} </span></a>
 				</li>

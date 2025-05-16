@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
 				$response['status']=400;
 				$response['message']="Password are not matched";
 			}
-			else if($user->email_verified_at == null)
+			/*else if($user->email_verified_at == null) // Comment for otp logic is off now
 			{				
 				$otp = mt_rand(1000, 9999);
 				$user->otp = $otp;
@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
 				
 				$response['status']=400;
 				$response['message']="User is not verified";
-			}
+			}*/
 			else if($user->status != 1)
 			{
 				$response['status']=400;
@@ -250,6 +250,7 @@ class RegisteredUserController extends Controller
 		$model->user_type = 1 ?? null; // customer
 
 		if ($model->save()) {
+			/* // Comment for otp logic is off now
 			$lastid = $model->id;
 			$otp = mt_rand(1000, 9999);
 			$muser = User::find($lastid);
@@ -267,6 +268,7 @@ class RegisteredUserController extends Controller
 					// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
 				];
 			send_email($data);
+			*/
 			/*try {
     			$get_email = get_email(2);
     			$data = [
@@ -345,6 +347,7 @@ class RegisteredUserController extends Controller
 		
         //echo  "<pre>";print_r($request->all());die;
 		if ($model->save()) {
+			/* // Comment for otp logic is off now
 			$lastid = $model->id;
 			$otp = mt_rand(1000, 9999);
 			$muser = User::find($lastid);
@@ -361,7 +364,7 @@ class RegisteredUserController extends Controller
 				// 'ccEmails' => array('exaltedsol04@gmail.com'),
 				// 'files' => [public_path('images/logo.jpg'), public_path('css/app.css'),],
 			];
-			send_email($data);
+			send_email($data);*/
 			//-----send mail ---
 			$settings = Email_settings::find(1);
 			$get_email = get_email(11);

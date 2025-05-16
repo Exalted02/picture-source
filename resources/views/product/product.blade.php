@@ -64,12 +64,22 @@
 						</select>
 					 </div>
 				</div>
-				<div class="col-xl-3">  
+				{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						<select class="select form-control" name="search_size">
 						<option value="">{{ __('please_select') }} {{ __('size') }}</option>
 						@foreach($sizes as $size)
 							<option value="{{ $size->id }}" {{ old('search_size', request('search_size')) == (string) $size->id ? 'selected' : '' }}>{{ $size->size }}</option>
+						@endforeach
+						</select>
+					 </div>
+				</div>--}}
+				<div class="col-xl-3">  
+					 <div class="input-block">
+						<select class="select form-control" name="search_orientation">
+						<option value="">{{ __('please_select') }} {{ __('orientation') }}</option>
+						@foreach(get_product_orientation() as $o_id=>$orientation)
+							<option value="{{ $o_id }}" {{ old('search_orientation', request('search_orientation')) == $o_id ? 'selected' : '' }}>{{ $orientation }}</option>
 						@endforeach
 						</select>
 					 </div>

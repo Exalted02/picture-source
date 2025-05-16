@@ -5,7 +5,10 @@ Version      : 4.0
 */
 
 $(document).ready(function() {
-	
+	$(document).on('input', '.number-only', function () {
+		this.value = this.value.replace(/[^0-9.]/g, '');         // Allow digits and dots
+		this.value = this.value.replace(/(\..*)\./g, '$1');      // Allow only one dot
+	});
 	$(document).on('click','.save-product', function(){
 		var isValid = true;
 		
@@ -85,6 +88,10 @@ $(document).on('click','.edit-product', function(){
 			$('#artist_id').val(response.artist_id).trigger('change');
 			$('#category').val(response.category).trigger('change');
 			$('#size').val(response.size).trigger('change');
+			$('#orientation').val(response.orientation).trigger('change');
+			$('#length').val(response.length);
+			$('#width').val(response.width);
+			$('#depth').val(response.depth);
 			$('#color').val(response.color).trigger('change');
 			$('#price').val(response.price);
 			//$('#subcategory').val(response.subcategory).trigger('change');
