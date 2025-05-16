@@ -75,8 +75,10 @@ class ProductController extends Controller
 						'subcategory_name' => $val->get_subcategory[0]->sub_category_name,
 						'artist_id' => $val->get_artist[0]->id,
 						'artist_name' => $val->get_artist[0]->name,
-						'size_id' => $val->get_size[0]->id,
-						'size_name' => $val->get_size[0]->size,
+						// 'size_id' => $val->get_size[0]->id,
+						// 'size_name' => $val->get_size[0]->size,
+						'size_id' => '',
+						'size_name' => '',
 						'color_id' => $val->get_color[0]->id,
 						'color_name' => $val->get_color[0]->color,
 						'name' => $val->name,
@@ -240,8 +242,10 @@ class ProductController extends Controller
 				$final_width = $width;
 				$final_height = $height;
 			}*/
-			$width = $product->get_size[0]->width * 2.5;
-			$height = $product->get_size[0]->height * 2.5;
+			// $width = $product->get_size[0]->width * 2.5;
+			// $height = $product->get_size[0]->height * 2.5;
+			$width = $product->width * 2.5;
+			$height = $product->length * 2.5;
 
 			$max_width = 300;
 			$max_height = 300;
@@ -253,6 +257,15 @@ class ProductController extends Controller
 			$final_width = $width / $scale_ratio;
 			$final_height = $height / $scale_ratio;
 			
+			$orientation = '';
+			if($product->orientation == 1){
+				$orientation = 'Portrait';
+			}else if($product->orientation == 2){
+				$orientation = 'Landscape';
+			}else if($product->orientation == 3){
+				$orientation = 'Square';
+			}
+			
 			$data = [
 				'product_id' => $product->id,
 				'category_id' => $product->get_category[0]->id,
@@ -261,8 +274,12 @@ class ProductController extends Controller
 				//'subcategory_name' => $product->get_subcategory[0]->sub_category_name,
 				'artist_id' => $product->get_artist[0]->id,
 				'artist_name' => $product->get_artist[0]->name,
-				'size_id' => $product->get_size[0]->id,
-				'size_name' => $product->get_size[0]->size,
+				// 'size_id' => $product->get_size[0]->id,
+				'size_id' => '',
+				// 'size_name' => $product->get_size[0]->size,
+				'size_name' => '',
+				'orientation' => $orientation,
+				'adjust_size' => $product->length.'cm x '.$product->width.'cm x '.$product->depth.'cm',
 				// 'size_height' => $product->get_size[0]->height,
 				// 'size_width' => $product->get_size[0]->width,
 				'size_height' => $final_height,
@@ -374,7 +391,8 @@ class ProductController extends Controller
 				'artist_id' => $product->get_artist[0]->id,
 				'artist_name' => $product->get_artist[0]->name,
 				//'size_id' => $product->get_size[0]->id,
-				'size_name' => $product->get_size[0]->size,
+				// 'size_name' => $product->get_size[0]->size,
+				'size_name' => '',
 				//'color_id' => $product->get_color[0]->id,
 				'color_name' => $product->get_color[0]->color,
 				'name' => $product->name,
