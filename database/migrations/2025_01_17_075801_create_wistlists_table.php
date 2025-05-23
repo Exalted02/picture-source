@@ -21,6 +21,7 @@ return new class extends Migration
 			$table->double('final_amount', 10, 2)->nullable();
 			$table->tinyInteger('order_type')->comment('0=normal order,1=wistlist')->nullable();
 			$table->string('email_address')->nullable();
+			$table->string('phone_no')->nullable();
 			$table->string('relationship')->nullable();
 			$table->date('birthdate')->nullable();
 			$table->date('aniversary')->nullable();

@@ -97,21 +97,21 @@
 						</div>
 						<div class="col-sm-6">
 							<div class="input-block mb-3">
-								<label class="col-form-label">Length (cm)<span class="text-danger">*</span></label>
+								<label class="col-form-label">Length (inch)<span class="text-danger">*</span></label>
 								<input class="form-control number-only" type="text" name="length" id="length" required>
 								<div class="invalid-feedback">{{ __('please_enter') }} Length.</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="input-block mb-3">
-								<label class="col-form-label">Width (cm)<span class="text-danger">*</span></label>
+								<label class="col-form-label">Width (inch)<span class="text-danger">*</span></label>
 								<input class="form-control number-only" type="text" name="width" id="width" required>
 								<div class="invalid-feedback">{{ __('please_enter') }} Width.</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="input-block mb-3">
-								<label class="col-form-label">Depth (cm)<span class="text-danger">*</span></label>
+								<label class="col-form-label">Depth (inch)<span class="text-danger">*</span></label>
 								<input class="form-control number-only" type="text" name="depth" id="depth" required>
 								<div class="invalid-feedback">{{ __('please_enter') }} Depth.</div>
 							</div>

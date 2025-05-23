@@ -12,6 +12,7 @@ class Wistlists extends Model
         'user_id',
         'order_id',
         'email_address',
+        'phone_no',
         'relationship',
         'birthdate',
         'aniversary',
