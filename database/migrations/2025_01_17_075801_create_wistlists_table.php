@@ -25,6 +25,9 @@ return new class extends Migration
 			$table->string('relationship')->nullable();
 			$table->date('birthdate')->nullable();
 			$table->date('aniversary')->nullable();
+			$table->string('facebook_address')->nullable();
+			$table->string('instagram_address')->nullable();
+			$table->string('tiktok_address')->nullable();
 			$table->tinyInteger('status')->default(1)->comment('0=inactive,1=active');
             $table->timestamps();
         });

@@ -46,8 +46,11 @@ class WistlistController extends Controller
 					$ordermodel->email_address = $contact_val['email'] ?? null;
 					$ordermodel->phone_no = $contact_val['phone'] ?? null;
 					$ordermodel->relationship = $contact_val['relation']  ?? null;
-					$ordermodel->birthdate = isset($request->birthdate) && $request->birthdate != null ? date('Y-m-d', strtotime($request->birthdate)) : null;
-					$ordermodel->aniversary = isset($request->aniversary) && $request->aniversary != null ? date('Y-m-d', strtotime($request->aniversary)) : null;
+					$ordermodel->birthdate = isset($contact_val['birthday']) && $contact_val['birthday'] != null ? date('Y-m-d', strtotime($contact_val['birthday'])) : null;
+					$ordermodel->aniversary = isset($contact_val['anniversary']) && $contact_val['anniversary'] != null ? date('Y-m-d', strtotime($contact_val['anniversary'])) : null;
+					$ordermodel->facebook_address = $contact_val['facebook'] ?? null;
+					$ordermodel->instagram_address = $contact_val['instagram'] ?? null;
+					$ordermodel->tiktok_address = $contact_val['tiktok'] ?? null;
 					$ordermodel->status = 1; // default active
 					$ordermodel->created_at = now();
 					$ordermodel->save();
