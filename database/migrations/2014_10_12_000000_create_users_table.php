@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('user_type')->default(1)->comment('0=Admin');
+            $table->tinyInteger('user_type')->default(1)->comment('0=Admin, 1=Customer, 2=Retailer');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

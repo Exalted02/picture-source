@@ -11,7 +11,14 @@ $(document).ready(function() {
 	});
 	$(document).on('click','.save-product', function(){
 		var isValid = true;
+		const selected = $('#category').val();
 		
+		if (!selected || selected.length === 0) {
+			isValid = false;
+			$('#category').addClass('is-invalid');
+		}else{
+			$('#category').removeClass('is-invalid');
+		}
 		$('#frmproductcode [required]').each(function () {
 			if ($(this).val().trim() === '') {
 				isValid = false;
@@ -86,7 +93,11 @@ $(document).on('click','.edit-product', function(){
 			$('#name').val(response.name);
 			$('#product_code').val(response.product_code);
 			$('#artist_id').val(response.artist_id).trigger('change');
-			$('#category').val(response.category).trigger('change');
+			
+			var selectedCategoriesArray = response.category.split(',').map(function(item) {
+				return item.trim(); // removes any extra space
+			});
+			$('#category').val(selectedCategoriesArray).trigger('change');
 			$('#size').val(response.size).trigger('change');
 			$('#orientation').val(response.orientation).trigger('change');
 			$('#length').val(response.length);
@@ -112,11 +123,11 @@ $(document).on('click','.edit-product', function(){
 				}, 100); // Check every 100ms
 			}
 
-			waitForDropdownToLoad('#category', response.category, function() {
+			/*waitForDropdownToLoad('#category', response.category, function() {
 				waitForDropdownToLoad('#subcategory', response.subcategory, function() {
 					//console.log('Category and subcategory loaded successfully.');
 				});
-			});
+			});*/
 
 			
 			

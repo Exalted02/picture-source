@@ -112,7 +112,7 @@ class ProductController extends Controller
 			$model= Products::find($request->post('id'));
 			$model->product_code		=	$request->post('product_code') ?? '';
 			$model->artist_id			=	$request->post('artist_id') ?? '';
-			$model->category			=	$request->post('category') ?? null;
+			$model->category			=	$request->has('category') ? implode(", ",$request->post('category')) : '';
 			$model->subcategory			=	$request->post('subcategory') ?? null;
 			$model->name				=	$request->post('name') ?? '';
 			$model->image				=	 '';
@@ -155,7 +155,7 @@ class ProductController extends Controller
 			$model=new Products();
 			$model->product_code		=	$request->post('product_code') ?? '';
 			$model->artist_id			=	$request->post('artist_id') ?? '';
-			$model->category			=	$request->post('category') ?? null;
+			$model->category			=	$request->has('category') ? implode(", ",$request->post('category')) : '';
 			$model->subcategory			=	$request->post('subcategory') ?? null;
 			$model->name				=	$request->post('name') ?? '';
 			$model->image				=	 '';

@@ -36,7 +36,7 @@
 						<div class="col-sm-12">
 							<div class="input-block mb-3">
 								<label class="col-form-label">{{ __('category') }}<span class="text-danger">*</span></label>
-								<select class="select form-control" name="category" id="category" data-url="{{ route('get-subcategory')}}" required>
+								<select class="select form-control" name="category[]" id="category" data-url="{{ route('get-subcategory')}}" multiple="multiple">
 									<option value="">{{ __('please_select') }}</option>
 									@foreach($categories as $val)
 										<option value="{{ $val->id }}">{{ $val->name ?? ''}}</option>
