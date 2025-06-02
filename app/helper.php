@@ -13,6 +13,7 @@ use App\Models\Outsources;
 use App\Models\Product_code;
 use App\Models\Rolepermission;
 use App\Models\Leads;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -282,6 +283,15 @@ use App\Models\Followup_remarks;
 		return iconv('UTF-8', 'ASCII//TRANSLIT', $string);
 	}
 	
+	function generate_unique_retailer_id(){
+		$lastRecord = User::orderBy('id', 'desc')->where('user_type', 2)->first();
+		if(!$lastRecord) {
+			$newId = 100;
+		}else{
+			$newId = $lastRecord->retailer_id + 1;
+		}
+		return $newId;
+	}
 	function generate_unique_id($model, $column, $type, $prefix = ''){
 		// Get the last record
 		if($type == 4){

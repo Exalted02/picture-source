@@ -47,7 +47,9 @@ class OrderController extends Controller
 		{
 			$dataArr->where('status', 'like', '%' . $request->search_status . '%');
 		}
-		
+		if(auth()->user()->user_type == 2){
+			$dataArr->where('retailer_id', auth()->user()->id);
+		}
 		$dataArr->where('order_type',0);
 		//$dataArr->groupBy('user_id');
 		$orders = $dataArr->get();

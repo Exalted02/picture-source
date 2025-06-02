@@ -343,6 +343,7 @@ class RegisteredUserController extends Controller
 		$model->phone_number = $request->phone_number ?? null;
 		$model->user_type = 2 ?? null; // retailer
 		$model->upload_tax_lisence = $filename ?? null;
+		$model->retailer_id = generate_unique_retailer_id();
 		$model->status = 0;
 		
         //echo  "<pre>";print_r($request->all());die;

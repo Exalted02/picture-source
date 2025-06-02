@@ -23,6 +23,7 @@
 				<li class="menu-title"> 
 					<span>Main</span>
 				</li>
+				@if(auth()->user()->user_type == 0)
 				<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 					<a href="{{ route('dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
@@ -66,9 +67,11 @@
 							<li><a href="{{ route('user.subcategory')}}" class="{{ request()->routeIs('user.subcategory') ? 'menu-active' : '' }}"><span>{{ __('sub_category') }}</span></a></li>
 					</ul>
 				</li>--}}
+				@endif
 				<li class="{{ request()->routeIs('order','view-order') ? 'active' : '' }}">
 					<a href="{{ route('order')}}"><i class="fa fa-money-bill-wave"></i> <span> {{ __('order') }} </span></a>
 				</li>
+				@if(auth()->user()->user_type == 0)
 				<li class="{{ request()->routeIs('order-wistlist','view-order-wistlist') ? 'active' : '' }}">
 					<a href="{{ route('order-wistlist')}}"><i class="fa fa-box"></i> <span> {{ __('order_wistlist') }} </span></a>
 				</li>
@@ -87,7 +90,7 @@
 				<li class="{{ request()->routeIs('home-settings') ? 'active' : '' }}">
 					<a href="{{ route('home-settings') }}"><i class="fa-solid fa-house"></i> <span> {{ __('home_settings') }} </span></a>
 				</li>
-				
+				@endif
 				<li class="{{ request()->routeIs('logout') ? 'active' : '' }}">
 					<a href="{{ route('logout') }}"><i class="fa-solid fa-shop-lock"></i> <span> {{ __('logout') }} </span></a>
 				</li>
