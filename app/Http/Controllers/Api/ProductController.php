@@ -30,7 +30,8 @@ class ProductController extends Controller
 			$exists = Products::where('status', '=', 1)
 				->where(function ($query) use ($request) {
 					$query->when(!empty($request->category_id), function ($query) use ($request) {
-						$query->Where('category', $request->category_id);
+						// $query->Where('category', $request->category_id);
+						$query->whereRaw("FIND_IN_SET(?, category)", [$request->category_id]);
 					})
 					->when(!empty($request->artist_id), function ($query) use ($request) {
 						$query->Where('artist_id', $request->artist_id);
@@ -48,7 +49,8 @@ class ProductController extends Controller
 				$products = Products::where('status', '=', 1)
 				->where(function ($query) use ($request) {
 					$query->when(!empty($request->category_id), function ($query) use ($request) {
-						$query->Where('category', $request->category_id);
+						// $query->Where('category', $request->category_id);
+						$query->whereRaw("FIND_IN_SET(?, category)", [$request->category_id]);
 					})
 					->when(!empty($request->artist_id), function ($query) use ($request) {
 						$query->Where('artist_id', $request->artist_id);
@@ -338,7 +340,8 @@ class ProductController extends Controller
 		}
 		if($request->category_id)
 		{
-			$dataArr->where('category', $request->category_id);
+			// $dataArr->where('category', $request->category_id);
+			$dataArr->whereRaw("FIND_IN_SET(?, category)", [$request->category_id]);
 		}
 		if($request->artist_id)
 		{
