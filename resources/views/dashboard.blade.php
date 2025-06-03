@@ -27,7 +27,11 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="page-title">Welcome Admin!</h3>
+                        <h3 class="page-title">Welcome 
+						@if(auth()->check())
+							{{ auth()->user()->name }}
+						@endif
+						</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ul>
@@ -49,6 +53,7 @@
                         </div>
                     </div>
                 </div>
+				@if(auth()->user()->user_type == 0)
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
@@ -61,6 +66,7 @@
                         </div>
                     </div>
                 </div>
+				@endif
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
@@ -73,17 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                    <div class="card dash-widget">
-                        <div class="card-body">
-                            <span class="dash-widget-icon"><i class="fa-solid fa-people-pulling"></i></span>
-                            <div class="dash-widget-info">
-                                <h3>3</h3>
-                                <span>Review</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				@if(auth()->user()->user_type == 0)
 				<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
@@ -95,6 +91,7 @@
                         </div>
                     </div>
                 </div>
+				@endif
 				<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="card dash-widget">
                         <div class="card-body">
@@ -106,6 +103,17 @@
                         </div>
                     </div>
                 </div>
+                {{--<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="card dash-widget">
+                        <div class="card-body">
+                            <span class="dash-widget-icon"><i class="fa-solid fa-people-pulling"></i></span>
+                            <div class="dash-widget-info">
+                                <h3>3</h3>
+                                <span>Review</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>--}}
             </div>
         
         </div>

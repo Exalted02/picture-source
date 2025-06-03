@@ -23,10 +23,10 @@
 				<li class="menu-title"> 
 					<span>Main</span>
 				</li>
-				@if(auth()->user()->user_type == 0)
 				<li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
 					<a href="{{ route('dashboard')}}"><i class="fa-solid fa-gauge"></i> <span> {{ __('dashboard') }} </span></a>
 				</li>
+				@if(auth()->user()->user_type == 0)
 				<li class="{{ request()->routeIs('user.category') ? 'active' : '' }}">
 					<a href="{{ route('user.category')}}"><i class="fa-solid fa-brain"></i> <span> {{ __('category') }} </span></a>
 				</li>
