@@ -38,7 +38,7 @@ class CategoryController extends Controller
 		$exists = Category::where('status', '=', 1)->exists();
 		if($exists)
 		{
-			$categories = Category::where('status', '=', 1)->skip($offset)->take($interval)->get();
+			$categories = Category::where('status', '=', 1)->orderBy('name', 'ASC')->skip($offset)->take($interval)->get();
           
 			foreach ($categories as $val) {
 				// Retrieve a random media associated with the current category

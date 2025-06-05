@@ -26,7 +26,7 @@ class HomeController extends Controller
 		if($exists)
 		{
 			//$categories = Category::where('status', '=', 1)->get();
-			$categories = Category::where('status', '=', 1)
+			$categories = Category::where('status', '=', 1)->orderBy('name', 'ASC')
 			->limit($interval)->get();
 			foreach ($categories as $val) {
 				// Retrieve a random media associated with the current category
@@ -68,7 +68,7 @@ class HomeController extends Controller
 		$exists = Artists::where('status', '=', 1)->exists();
 		if($exists)
 		{
-			$artists = Artists::where('status', '=', 1)->limit($interval)->get();
+			$artists = Artists::where('status', '=', 1)->orderBy('name', 'ASC')->limit($interval)->get();
 			foreach ($artists as $val) {
 				$data[] = [
 						'artist_id' => $val->id,

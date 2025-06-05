@@ -22,7 +22,7 @@ class ArtistController extends Controller
 		$exists = Artists::where('status', '=', 1)->exists();
 		if($exists)
 		{
-			$artists = Artists::where('status', '=', 1)->skip($offset)->take($interval)->get();
+			$artists = Artists::where('status', '=', 1)->orderBy('name', 'ASC')->skip($offset)->take($interval)->get();
 			foreach ($artists as $val) {
 				$data[] = [
 						'artist_id' => $val->id,
