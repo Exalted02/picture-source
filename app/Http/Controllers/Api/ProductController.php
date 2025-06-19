@@ -246,11 +246,11 @@ class ProductController extends Controller
 			}*/
 			// $width = $product->get_size[0]->width * 2.5;
 			// $height = $product->get_size[0]->height * 2.5;
-			$width = $product->width * 2.5;
-			$height = $product->length * 2.5;
+			$width = $product->width * 5;
+			$height = $product->length * 5;
 
-			$max_width = 300;
-			$max_height = 300;
+			$max_width = 375;
+			$max_height = 375;
 
 			$width_ratio = $width / $max_width;
 			$height_ratio = $height / $max_height;
@@ -327,40 +327,45 @@ class ProductController extends Controller
 		$size_ids = $request->sizes != '' ? explode(',', $request->sizes) : [];
 		$color_ids = $request->colors != '' ? explode(',', $request->colors) : [];
 		
-		//\Log::info(json_encode($request->all())); 
+		// \Log::info(json_encode($request->all())); 
 			
 		$data = [];
 		$APP_URL = env('APP_URL');
 		$page = $request->page ?? 1;
       	$offset = ($page - 1) * $interval;
 		$dataArr = Products::query();
-		if($request->keyword)
-		{
-			$dataArr->where('name', 'like', '%' . $request->keyword . '%');
-		}
-		if($request->category_id)
-		{
-			// $dataArr->where('category', $request->category_id);
+		if($request->keyword != null || $request->category_id != 0 || $request->artist_id != 0 || $request->colors != null || $request->sizes != null){
+			if($request->keyword)
+			{
+				$dataArr->where('name', 'like', '%' . $request->keyword . '%');
+			}
+			if($request->category_id)
+			{
+				// $dataArr->where('category', $request->category_id);
+				$dataArr->whereRaw("FIND_IN_SET(?, category)", [$request->category_id]);
+			}
+			if($request->artist_id)
+			{
+				$dataArr->where('artist_id', $request->artist_id);
+			}
+			
+			if(!empty($size_ids))
+			{
+				$dataArr->whereIn('size', $size_ids);
+			}
+			
+			if(!empty($color_ids))
+			{
+				$dataArr->whereIn('color', $color_ids);
+			}
+			
+			$dataArr->where('status', '=', 1);
+			$dataArr->orderBy('name', 'ASC'); 
+			$productdata = $dataArr->skip($offset)->take($interval)->get();
+		}else{
 			$dataArr->whereRaw("FIND_IN_SET(?, category)", [$request->category_id]);
+			$productdata = $dataArr->skip($offset)->take($interval)->get();
 		}
-		if($request->artist_id)
-		{
-			$dataArr->where('artist_id', $request->artist_id);
-		}
-		
-		if(!empty($size_ids))
-		{
-			$dataArr->whereIn('size', $size_ids);
-		}
-		
-		if(!empty($color_ids))
-		{
-			$dataArr->whereIn('color', $color_ids);
-		}
-		
-		$dataArr->where('status', '=', 1);
-		$dataArr->orderBy('name', 'ASC'); 
-		$productdata = $dataArr->skip($offset)->take($interval)->get();
 		//$productdata = $dataArr->limit($paginate,$interval)->get();
 		//$productdata = $dataArr->get();
 		//echo "<pre>";print_r($productdata);die;
