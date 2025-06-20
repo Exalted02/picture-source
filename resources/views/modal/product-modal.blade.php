@@ -133,9 +133,9 @@
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="input-block mb-3">
-								<label class="col-form-label">{{ __('product_code') }}<span class="text-danger">*</span></label>
+								<label class="col-form-label">{{ __('part') }}<span class="text-danger">*</span></label>
 								<input class="form-control" type="text" name="product_code" id="product_code" required>
-								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('product')}}.</div>
+								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('part')}}.</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
@@ -222,6 +222,37 @@
 	</div>
 </div>
 <!-- /Add product code -->
+<!-- Import product code -->
+<div id="import_product" class="modal custom-modal fade" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ __('import_product') }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="frmproductcodeImport" action="{{ route('user.import-product') }}" method="POST" enctype="multipart/form-data">
+				@csrf
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-block mb-3">
+								<label class="col-form-label">{{ __('import_file') }}<span class="text-danger">*</span></label>
+								<input class="form-control" type="file" name="excel_file" id="excel_file" required>
+								<div class="invalid-feedback">{{ __('please_select') }} {{ __('import_file')}}.</div>
+							</div>
+						</div>
+					</div>
+					<div class="submit-section">
+						<button class="btn btn-primary submit-btn import-product" type="button">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Import product code -->
 
 <!--- edit product code -->
 {{--<div id="edit_product_code" class="modal custom-modal fade" role="dialog">

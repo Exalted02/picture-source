@@ -125,6 +125,7 @@
 	
 	"product": "Product",
 	"product_code": "Product Code",
+	"part": "Part",
 	"product_name": "Product Name",
 	"product_image": "Image",
 	"product_desc": "Description",
@@ -132,6 +133,8 @@
 	"product_moulding_description": "Moulding Description",
 	"product_dimension": "Dimension",
 	"add_product": "Add Product",
+	"import_product": "Import Product",
+	"import_file": "Import File",
 	"add_new_product": "Add New Product",
 	"edit_new_product": "Edit New Product",
 	"product_created_successfully": "Product Created Successfully",

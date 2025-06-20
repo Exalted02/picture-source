@@ -40,6 +40,15 @@ use App\Http\Controllers\OrderController;
 /*Route::get('/', function () {
     return view('welcome');
 });*/
+Route::get('clear-cache1', function () {
+    \Artisan::call('config:clear');
+    \Artisan::call('cache:clear');
+	\Artisan::call('route:clear');
+    \Artisan::call('view:clear');
+    \Artisan::call('config:cache');
+	Log::info('Clear all cache');
+    dd("Cache is cleared");
+});
 Route::get('clear-cache', function () {
     \Artisan::call('config:cache');
     \Artisan::call('cache:clear');
@@ -167,6 +176,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('products', [ProductController::class,'index'])->name('products');
 	//Route::post('products', [ProductController::class,'index'])->name('user.products');
 	Route::post('/save-product', [ProductController::class, 'save_product'])->name('user.save-product');
+	Route::post('/import-product', [ProductController::class, 'import_product'])->name('user.import-product');
 	Route::post('/product-update-status',[ProductController::class,'update_status'])->name('product-update-status');
 	Route::post('/edit-product',[ProductController::class,'edit_product'])->name('edit-product');
 	Route::post('/getDeleteArtist',[ProductController::class,'delete_product'])->name('getDeleteArtist');

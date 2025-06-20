@@ -87,7 +87,7 @@ class ProductController extends Controller
 						'product_code' => $val->product_code,
 						'price' => $val->price,
 						'moulding_description' => strip_tags($val->moulding_description),
-						'image' => $media ? $APP_URL.'/uploads/product/'. $val->id .'/gallery/thumbs/'.$media->image : null,
+						'image' => $media ? $APP_URL.'/uploads/product/'. $media->image : null,
 					];
 				}
 
@@ -139,7 +139,7 @@ class ProductController extends Controller
 				$imageArr[] = 
 				[
 					'id'    =>  (string) $media->id,
-					'file_path' => $APP_URL.'/uploads/product/'. $request->product_id .'/gallery/thumbs/'.$media->image,
+					'file_path' => $APP_URL.'/uploads/product/'. $media->image,
 				];
 			}
 			
@@ -385,7 +385,7 @@ class ProductController extends Controller
 						->where('media_type', 3)->inRandomOrder()
 					->first();
 			if(isset($medias->image) && $medias->image != null){
-				$image_name = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$medias->image;
+				$image_name = $APP_URL.'/uploads/product/'. $medias->image;
 			}else{
 				$image_name = $APP_URL.'/noimage.png';
 			}

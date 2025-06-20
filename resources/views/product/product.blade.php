@@ -23,6 +23,7 @@
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
 						<a href="#" class="btn add-btn add_product" data-bs-toggle="modal" data-bs-target="#add_product"><i class="la la-plus-circle"></i> {{ __('add_product') }}</a>
+						<a href="#" class="btn add-btn import_product" data-bs-toggle="modal" data-bs-target="#import_product"><i class="la la-plus-circle"></i> {{ __('import_product') }}</a>
 					</div>
 				</div>
 			</div>
@@ -140,7 +141,7 @@
 								</th>
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
-								<th>{{ __('product_code') }}</th>
+								<th>{{ __('part') }}</th>
 								<th>{{ __('name') }}</th>
 								<th>{{ __('price') }}</th>
 								<th>{{ __('created_date') }}</th>

@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
 
+use App\Jobs\ImportProductExcelJob;
+
 class ProductController extends Controller
 {
     public function index(Request $request)
@@ -141,7 +143,7 @@ class ProductController extends Controller
 			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
 			
 			$sourceDirectory = public_path('uploads/').'/product/tmp/'.$request->post('unique_number').'/';
-			$destinationDirectory = public_path('uploads/').'/product/'.$request->post('id').'/';
+			$destinationDirectory = public_path('uploads/').'/product/';
 			// $sourceDirectory = '/source/directory';
 			// $destinationDirectory = '/destination/directory';
 			$this->copyDirectory($sourceDirectory, $destinationDirectory);
@@ -186,7 +188,7 @@ class ProductController extends Controller
 			Temp_media_galleries::where('unique_id', $request->post('unique_number'))->delete();
 			
 			$sourceDirectory = public_path('uploads/').'/product/tmp/'.$request->post('unique_number').'/';
-			$destinationDirectory = public_path('uploads/').'/product/'.$lastId.'/';
+			$destinationDirectory = public_path('uploads/').'/product/';
 			// $sourceDirectory = '/source/directory';
 			// $destinationDirectory = '/destination/directory';
 			$this->copyDirectory($sourceDirectory, $destinationDirectory);
@@ -201,6 +203,21 @@ class ProductController extends Controller
 			'success' => true,
 			'message' => 'Products saved successfully.'
 		]);
+	}
+	public function import_product(Request $request)
+	{
+		$request->validate([
+			'excel_file' => 'required|file|mimes:csv,xlsx,xls',
+		]);
+		
+		/*$file = $request->file('excel_file');
+        $filePath = $file->getPathname();
+        ImportProductExcelJob::dispatch($filePath);*/
+		$path = $request->file('excel_file')->store('temp');
+
+        ImportProductExcelJob::dispatch(storage_path('app/' . $path));
+		
+		// dd($request->all());
 	}
 	public function edit_Product(Request $request)
 	{
@@ -264,14 +281,14 @@ class ProductController extends Controller
 		//echo "<pre>";print_r($image);die;
 		$unique_number = $request->unique_number;
 	
-		$dest_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/';
-		$dest_thumb_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/thumbs/';
-		$details_path = public_path('uploads/').'product/tmp/'.$unique_number.'/details/';
+		$dest_path = public_path('uploads/').'product/tmp/'.$unique_number.'/';
+		//$dest_thumb_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/thumbs/';
+		//$details_path = public_path('uploads/').'product/tmp/'.$unique_number.'/details/';
 		
 		$width 				= '360';
 		$height  			= '270';
 		
-		$imageName = uploadResizeImage($details_path, $dest_path, $dest_thumb_path, $width, $height, $image);
+		$imageName = uploadResizeImage('', $dest_path, '', $width, $height, $image);
 		
 		$galley = new Temp_media_galleries();
 		$galley->unique_id =  $unique_number;
@@ -318,10 +335,10 @@ class ProductController extends Controller
 		$product_id = $request->product_id;
 		
 		$imageName = $request->image_name;
-		$imagePath = public_path('uploads/product/' . $request->product_id . '/gallery/' . $imageName);
+		$imagePath = public_path('uploads/product/' . $imageName);
 		
-		$imagePaththumbs = public_path('uploads/product/' . $request->product_id . '/gallery/thumbs/' . $imageName);
-		$imagedetails = public_path('uploads/product/' . $request->product_id . '/details/' . $imageName);
+		//$imagePaththumbs = public_path('uploads/product/' . $request->product_id . '/gallery/thumbs/' . $imageName);
+		//$imagedetails = public_path('uploads/product/' . $request->product_id . '/details/' . $imageName);
 
    
 		if(file_exists($imagePath)) {
@@ -335,13 +352,13 @@ class ProductController extends Controller
 			return response()->json(['message' => 'Image not found.'], 404);
 		}
 		
-		if(file_exists($imagePaththumbs)) {
+		/*if(file_exists($imagePaththumbs)) {
 			unlink($imagePaththumbs);
 		}
 		
 		if(file_exists($imagedetails)) {
 			unlink($imagedetails);
-		}
+		}*/
 		
 		//-------------------------------------
 		Media::where('id',$request->id)->delete();

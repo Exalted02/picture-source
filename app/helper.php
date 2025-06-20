@@ -260,10 +260,12 @@ use App\Models\Followup_remarks;
 		$original_img = $img = $manager->read($takeimage);
 		$img->save($dest_path.$imageName);
 		// $img = $img->resize($width,$height);
-		$img->resize($width, $height, function ($constraint) {
-			// $constraint->aspectRatio();
-		});
-		$img->save($dest_thumb_path.$imageName);
+		if($dest_thumb_path != ''){
+			$img->resize($width, $height, function ($constraint) {
+				// $constraint->aspectRatio();
+			});
+			$img->save($dest_thumb_path.$imageName);
+		}
 		if($details_path != ''){
 			if(!File::isDirectory($details_path)){
 				File::makeDirectory($details_path, 0777, true, true);
