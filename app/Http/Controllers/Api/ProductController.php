@@ -280,7 +280,7 @@ class ProductController extends Controller
 				'size_id' => '',
 				// 'size_name' => $product->get_size[0]->size,
 				'size_name' => '',
-				'orientation' => $orientation,
+				'orientation' => $product->get_orientation->name,
 				'adjust_size' => $product->length.'inch x '.$product->width.'inch x '.$product->depth.'inch',
 				// 'size_height' => $product->get_size[0]->height,
 				// 'size_width' => $product->get_size[0]->width,

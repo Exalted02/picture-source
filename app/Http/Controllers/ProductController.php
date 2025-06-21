@@ -366,7 +366,7 @@ class ProductController extends Controller
 		$data['medias']  = Media::where('media_source_id',$product_id)->where('media_type',3)->get();
 		$category_image_count = Media::where('media_source_id',$product_id)->where('media_type',3)->count();
 		
-		$data['category_remain']  = 12 - $category_image_count;
+		$data['category_remain']  = 1 - $category_image_count;
 		return $data;
 	}
 	public function view_product($id='')

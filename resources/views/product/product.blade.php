@@ -79,13 +79,13 @@
 					 <div class="input-block">
 						<select class="select form-control" name="search_orientation">
 						<option value="">{{ __('please_select') }} {{ __('orientation') }}</option>
-						@foreach(get_product_orientation() as $o_id=>$orientation)
-							<option value="{{ $o_id }}" {{ old('search_orientation', request('search_orientation')) == $o_id ? 'selected' : '' }}>{{ $orientation }}</option>
+						@foreach(get_product_orientation() as $orientation)
+							<option value="{{ $orientation->id }}" {{ old('search_orientation', request('search_orientation')) == $orientation->name ? 'selected' : '' }}>{{ $orientation->name }}</option>
 						@endforeach
 						</select>
 					 </div>
 				</div>
-				<div class="col-xl-3">  
+				{{--<div class="col-xl-3">  
 					 <div class="input-block">
 						<select class="select form-control" name="search_color">
 						<option value="">{{ __('please_select') }} {{ __('color') }}</option>
@@ -94,7 +94,7 @@
 						@endforeach
 						</select>
 					 </div>
-				</div>
+				</div>--}}
 				<div class="col-xl-3">  
 					 <div class="input-block">
 						 <select class="select" name="search_status">
@@ -143,7 +143,7 @@
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('part') }}</th>
 								<th>{{ __('name') }}</th>
-								<th>{{ __('price') }}</th>
+								<th>{{ __('retail_price') }}</th>
 								<th>{{ __('created_date') }}</th>
 								<th>{{ __('status') }}</th>
 								<th class="text-end">Action</th>

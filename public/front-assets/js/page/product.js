@@ -138,7 +138,8 @@ $(document).on('click','.edit-product', function(){
 		data: {id:id, _token: csrfToken},
 		dataType: 'json',
 		success: function(response) {
-			var remaining_upload = parseInt(12) - parseInt(response.category_image_count)
+			console.log(response);
+			var remaining_upload = parseInt(1) - parseInt(response.category_image_count)
 			if (Dropzone.instances.length > 0) {
 				// Assuming the first Dropzone instance is the one you want to update
 				var dropzoneInstance = Dropzone.instances[0];
@@ -155,9 +156,13 @@ $(document).on('click','.edit-product', function(){
 			$('#product_code').val(response.product_code);
 			$('#artist_id').val(response.artist_id).trigger('change');
 			
-			var selectedCategoriesArray = response.category.split(',').map(function(item) {
-				return item.trim(); // removes any extra space
-			});
+			var selectedCategoriesArray = '';
+			console.log(response.category);
+			if(response.category){
+				var selectedCategoriesArray = response.category.split(',').map(function(item) {
+					return item.trim(); // removes any extra space
+				});
+			}
 			$('#category').val(selectedCategoriesArray).trigger('change');
 			$('#size').val(response.size).trigger('change');
 			$('#orientation').val(response.orientation).trigger('change');

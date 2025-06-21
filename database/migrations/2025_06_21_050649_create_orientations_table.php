@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->double('price', 15, 2)->nullable()->after('name');
-            $table->double('wholesale_price', 15, 2)->nullable()->after('price');
+        Schema::create('orientations', function (Blueprint $table) {
+            $table->id();
+			$table->string('name')->nullable();
+			$table->tinyInteger('status')->comment('0=inactive,1=active,2=delete')->default(1);
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('orientations');
     }
 };

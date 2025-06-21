@@ -30,6 +30,7 @@ use App\Models\Religion;
 use App\Models\Marital_status;
 use App\Models\Gender;
 use App\Models\Resources;
+use App\Models\Orientation;
 
 use App\Models\Countries;
 use App\Models\Cities;
@@ -41,11 +42,12 @@ use App\Models\Followup_remarks;
 	
 //Product orientation Data
     function get_product_orientation(){
-		$data = array(
+		/*$data = array(
 			1 => 'Portrait',
 			2 => 'Landscape',
 			3 => 'Square',
-		);
+		);*/
+		$data = Orientation::where('status', 1)->orderBy('created_at', 'DESC')->get();
         return $data;
     }
 //Get referral model Data

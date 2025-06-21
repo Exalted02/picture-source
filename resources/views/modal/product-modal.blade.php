@@ -37,7 +37,6 @@
 							<div class="input-block mb-3">
 								<label class="col-form-label">{{ __('category') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="category[]" id="category" data-url="{{ route('get-subcategory')}}" multiple="multiple">
-									<option value="">{{ __('please_select') }}</option>
 									@foreach($categories as $val)
 										<option value="{{ $val->id }}">{{ $val->name ?? ''}}</option>
 									@endforeach
@@ -88,8 +87,8 @@
 								<label class="col-form-label">{{ __('orientation') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="orientation" id="orientation" required>
 									<option value="">{{ __('please_select') }}</option>
-									@foreach(get_product_orientation() as $o_id=>$val)
-										<option value="{{ $o_id }}">{{ $val ?? ''}}</option>
+									@foreach(get_product_orientation() as $val)
+										<option value="{{ $val->id }}">{{ $val->name ?? ''}}</option>
 									@endforeach
 								</select>
 								<div class="invalid-feedback">{{ __('please_select') }} {{ __('orientation')}}.</div>
@@ -117,7 +116,7 @@
 							</div>
 						</div>
 					
-						<div class="col-sm-6">
+						{{--<div class="col-sm-6">
 							<div class="input-block mb-3">
 								<label class="col-form-label">{{ __('color') }}<span class="text-danger">*</span></label>
 								<select class="select form-control" name="color" id="color" required>
@@ -128,7 +127,7 @@
 								</select>
 								<div class="invalid-feedback">{{ __('please_select') }} {{ __('color')}}.</div>
 							</div>
-						</div>
+						</div>--}}
 					</div>
 					<div class="row">
 						<div class="col-sm-6">
@@ -149,7 +148,7 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<div class="input-block mb-3">
-								<label class="col-form-label">{{ __('price') }}<span class="text-danger">*</span></label>
+								<label class="col-form-label">{{ __('retail_price') }}<span class="text-danger">*</span></label>
 								<input class="form-control" type="text" name="price" id="price" required>
 								<div class="invalid-feedback">{{ __('please_enter') }} {{ __('price')}}.</div>
 							</div>
@@ -186,7 +185,7 @@
 								@csrf
 								<input type="hidden" name="unique_number" value="{{ $unique_number }}">
 								<div>
-									<h3><span id="text_show">12</span>  {{ __('image_gallery_only') }},  {{ __('image_gallery_img_box') }}</h3>
+									<h3><span id="text_show">1</span>  {{ __('image_gallery_only') }},  {{ __('image_gallery_img_box') }}</h3>
 								</div>
 								
 							</form>

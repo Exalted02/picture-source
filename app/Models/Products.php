@@ -20,6 +20,7 @@ class Products extends Model
         'depth',
 		'name',
 		'price',
+		'wholesale_price',
         'image',
         'description',
         'moulding_description',
@@ -37,6 +38,10 @@ class Products extends Model
 	public function get_artist()
 	{
 		return $this->hasMany(Artists::class, 'id','artist_id');
+	}
+	public function get_orientation()
+	{
+		return $this->hasOne(Orientation::class, 'id','orientation');
 	}
 	public function get_size()
 	{
