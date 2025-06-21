@@ -28,7 +28,8 @@ class CategoryController extends Controller
 		return $response;*/ 
       
 		$interval = config('custom.API_CATEGORY_INTERVAL');
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		//$paginate = $request->page ==1 ? ($request->page-1) : $request->page;
       	$page = $request->page ?? 1;
       	$offset = ($page - 1) * $interval;
@@ -74,7 +75,8 @@ class CategoryController extends Controller
 	public function get_subcategory_list(Request $request)
 	{
 		//echo 'helllo '.$request->category_id;die;
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$category_id = $request->category_id;
 		if($category_id != '')
 		{

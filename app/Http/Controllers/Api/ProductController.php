@@ -22,7 +22,8 @@ class ProductController extends Controller
     public function get_product_list(Request $request)
 	{
 		//echo "<pre>";print_r($request->all());die;
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 
 		if($request->category_id !='' || $request->subcategory_id!='' || $request->artist_id !='')
@@ -68,7 +69,8 @@ class ProductController extends Controller
 						->where('media_type', 3)
 						->inRandomOrder()
 						->first();
-
+					$imagePath = public_path('uploads/product/' . $media->image);
+					
 					$data[] = [
 						'product_id' => $val->id,
 						'category_id' => $val->get_category[0]->id,
@@ -87,7 +89,7 @@ class ProductController extends Controller
 						'product_code' => $val->product_code,
 						'price' => $val->price,
 						'moulding_description' => strip_tags($val->moulding_description),
-						'image' => $media ? $APP_URL.'/uploads/product/'. $media->image : null,
+						'image' => $media && File::exists($imagePath) ? $APP_URL.'/uploads/product/'. $media->image : $APP_URL . '/noimage.png',
 					];
 				}
 
@@ -115,7 +117,8 @@ class ProductController extends Controller
 	}
 	public function get_single_product(Request $request)
 	{
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 		$responseData = [];
 		//echo $request->input('product_id'); die;
@@ -136,10 +139,13 @@ class ProductController extends Controller
 			
 			foreach($medias as $media)
 			{
+				$imagePath = public_path('uploads/product/' . $media->image);
+				
 				$imageArr[] = 
 				[
 					'id'    =>  (string) $media->id,
-					'file_path' => $APP_URL.'/uploads/product/'. $media->image,
+					// 'file_path' => $APP_URL.'/uploads/product/'. $media->image,
+					'file_path' => $media && File::exists($imagePath) ? $APP_URL.'/uploads/product/'. $media->image : $APP_URL . '/noimage.png',
 				];
 			}
 			
@@ -286,8 +292,10 @@ class ProductController extends Controller
 				// 'size_width' => $product->get_size[0]->width,
 				'size_height' => round($final_height),
 				'size_width' => round($final_width),
-				'color_id' => $product->get_color[0]->id,
-				'color_name' => $product->get_color[0]->color,
+				// 'color_id' => $product->get_color[0]->id,
+				// 'color_name' => $product->get_color[0]->color,
+				'color_id' => 0,
+				'color_name' => '',
 				'name' => $product->name,
 				'product_code' => $product->product_code,
 				'price' => '$ '.$product->price,
@@ -330,7 +338,8 @@ class ProductController extends Controller
 		// \Log::info(json_encode($request->all())); 
 			
 		$data = [];
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$page = $request->page ?? 1;
       	$offset = ($page - 1) * $interval;
 		$dataArr = Products::query();
@@ -385,7 +394,12 @@ class ProductController extends Controller
 						->where('media_type', 3)->inRandomOrder()
 					->first();
 			if(isset($medias->image) && $medias->image != null){
-				$image_name = $APP_URL.'/uploads/product/'. $medias->image;
+				$imagePath = public_path('uploads/product/' . $medias->image);
+				if(File::exists($imagePath)){
+					$image_name = $APP_URL.'/uploads/product/'. $medias->image;
+				}else{
+					$image_name = $APP_URL.'/noimage.png';
+				}				
 			}else{
 				$image_name = $APP_URL.'/noimage.png';
 			}
@@ -402,7 +416,8 @@ class ProductController extends Controller
 				// 'size_name' => $product->get_size[0]->size,
 				'size_name' => '',
 				//'color_id' => $product->get_color[0]->id,
-				'color_name' => $product->get_color[0]->color,
+				// 'color_name' => $product->get_color[0]->color,
+				'color_name' => '',
 				'name' => $product->name,
 				'product_code' => $product->product_code,
 				'price' => $product->price,

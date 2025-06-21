@@ -18,7 +18,8 @@ class HomeController extends Controller
     
 	public function category_list(Request $request)
 	{
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$interval = config('custom.API_HOME_CATEGORY_INTERVAL');
 		$data = [];
 		$peginate = ($request->peginate -1);
@@ -61,7 +62,8 @@ class HomeController extends Controller
 	}
 	public function artist_list(Request $request)
 	{
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 		$interval = config('custom.API_HOME_ARTIST_INTERVAL');
 		
@@ -127,7 +129,8 @@ class HomeController extends Controller
 	}*/
 	public function home_image_list(Request $request)
 	{
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 
 		// Get up to 9 images from DB

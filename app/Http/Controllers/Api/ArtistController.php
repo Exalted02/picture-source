@@ -14,7 +14,8 @@ class ArtistController extends Controller
     public function get_artist_list(Request $request)
 	{
 		$interval = config('custom.API_ARTIST_INTERVAL');
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 		$page = $request->page ?? 1;
       	$offset = ($page - 1) * $interval;
