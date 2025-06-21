@@ -279,7 +279,8 @@ class OrderController extends Controller
 			$offset = ($page - 1) * $interval;
 		
 			$myOrder = [];
-			$APP_URL = env('APP_URL');
+			// $APP_URL = env('APP_URL');
+			$APP_URL = url('');
 			$pimage = '';
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
@@ -334,7 +335,8 @@ class OrderController extends Controller
 		{
 			$myOrder = [];
 			$myOrderDtls = [];
-			$APP_URL = env('APP_URL');
+			// $APP_URL = env('APP_URL');
+			$APP_URL = url('');
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$order_id = $request->order_id;
@@ -394,7 +396,8 @@ class OrderController extends Controller
 			$offset = ($page - 1) * $interval;
 			
 			$myOrder = [];
-			$APP_URL = env('APP_URL');
+			// $APP_URL = env('APP_URL');
+			$APP_URL = url('');
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$user_email_id = Auth::guard('sanctum')->user()->email;
@@ -451,7 +454,8 @@ class OrderController extends Controller
 			$myOrder = [];
 			$myOrderDtls = [];
 			$myOrderWistlist = [];
-			$APP_URL = env('APP_URL');
+			// $APP_URL = env('APP_URL');
+			$APP_URL = url('');
 			
 			$user_id = Auth::guard('sanctum')->user()->id;
 			$order_id = $request->order_id;
@@ -698,7 +702,8 @@ class OrderController extends Controller
 			$orderImage = [];
 			$wishlistImage = [];
 			$myordercount = $myWishlistcount = 0;
-			$APP_URL = env('APP_URL');
+			// $APP_URL = env('APP_URL');
+			$APP_URL = url('');
 			
 			// my order 
 			$exists = Orders::where('user_id',$user_id)->exists();

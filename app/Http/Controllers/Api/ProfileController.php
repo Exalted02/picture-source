@@ -23,7 +23,8 @@ class ProfileController extends Controller
 	{
 		//Auth::guard('sanctum')->check()
 		
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 		$myOrder = [];
 		$myWistlist = [];
@@ -130,7 +131,8 @@ class ProfileController extends Controller
 	}
 	public function profile_image_upload(Request $request)
 	{
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
       	\Log::info($APP_URL);
 		
 		if (Auth::guard('sanctum')->check()) {

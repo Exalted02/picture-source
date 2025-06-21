@@ -19,7 +19,8 @@ class NotificationController extends Controller
 		//\Log::info(json_encode($request->all()));
 		
 		$interval = config('custom.API_NOTIFICATION_INTERVAL');
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$data = [];
 		$allData  = [];
 		$readData  = [];

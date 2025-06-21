@@ -122,7 +122,7 @@ class ProductController extends Controller
 			$model->description			=	$request->post('description') ?? '';
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
 			$model->size		=	$request->post('size') ?? 0;
-			$model->color		=	$request->post('color') ?? '';
+			$model->color		=	$request->post('color') ?? null;
 			$model->orientation		=	$request->post('orientation') ?? '';
 			$model->length		=	$request->post('length') ?? '';
 			$model->width		=	$request->post('width') ?? '';
@@ -166,7 +166,7 @@ class ProductController extends Controller
 			$model->moulding_description		=	$request->post('moulding_description') ?? '';
 			$model->status				=	1;
 			$model->size				=	$request->post('size') ?? 0;
-			$model->color				=	$request->post('color') ?? '';
+			$model->color				=	$request->post('color') ?? null;
 			$model->orientation		=	$request->post('orientation') ?? '';
 			$model->length		=	$request->post('length') ?? '';
 			$model->width		=	$request->post('width') ?? '';
@@ -242,7 +242,8 @@ class ProductController extends Controller
 		
 		
 		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',3)->get();
-		$data['app_url'] = env('APP_URL');
+		// $data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');;
 		
 		$data['category_image_count'] = Media::where('media_source_id',$request->id)->where('media_type',3)->count();
 		return $data;
@@ -361,7 +362,7 @@ class ProductController extends Controller
 		
 		//-------------------------------------
 		Media::where('id',$request->id)->delete();
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		$data['medias']  = Media::where('media_source_id',$product_id)->where('media_type',3)->get();
 		$category_image_count = Media::where('media_source_id',$product_id)->where('media_type',3)->count();
 		

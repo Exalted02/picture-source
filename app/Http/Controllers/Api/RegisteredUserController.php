@@ -185,7 +185,8 @@ class RegisteredUserController extends Controller
 	protected function authResponse($user, $msg){
         $token = $user->createToken('API Token')->plainTextToken;
         //echo "<pre>";print_r($user);die;
-		$APP_URL = env('APP_URL');
+		// $APP_URL = env('APP_URL');
+		$APP_URL = url('');
 		$upload_tax_lisence = null;
 		$profile_image = null;
 		if(!empty($user->upload_tax_lisence))

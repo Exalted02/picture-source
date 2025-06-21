@@ -136,7 +136,7 @@ class ArtistController extends Controller
 		$data['id']  = $artist->id ;
 		$data['name']  = $artist->name ;
 		$data['photo']  = $artist->image ;
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		return $data;
 	}
 	public function delete_artist(Request $request)

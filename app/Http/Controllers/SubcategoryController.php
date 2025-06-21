@@ -155,7 +155,7 @@ class SubcategoryController extends Controller
 		
 		$data['medias'] = Media::where('media_source_id', $request->id)->where('media_type',2)->get();
 		//echo "<pre>";print_r($medias);die;
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		
 		$data['subcategory_image_count'] = Media::where('media_source_id',$request->id)->where('media_type',2)->count();
 		return $data;
@@ -242,7 +242,7 @@ class SubcategoryController extends Controller
 		
 		//-------------------------------------
 		Media::where('id',$request->id)->delete();
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		$data['medias']  = Media::where('media_source_id',$subcategory_id)->where('media_type',2)->get();
 		$subcategory_image_count = Media::where('media_source_id',$subcategory_id)->where('media_type',2)->count();
 		

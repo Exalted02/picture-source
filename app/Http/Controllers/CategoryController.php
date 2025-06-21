@@ -142,7 +142,7 @@ class CategoryController extends Controller
 		$data['name']  = $category->name;
 		$data['is_feature']  = $category->is_feature;
 		$data['medias']  = Media::where('media_source_id', $request->id)->where('media_type',1)->get();
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		
 		$data['category_image_count'] = Media::where('media_source_id',$request->id)->where('media_type',1)->count();
 		return $data;
@@ -229,7 +229,7 @@ class CategoryController extends Controller
 		
 		//-------------------------------------
 		Media::where('id',$request->id)->delete();
-		$data['app_url'] = env('APP_URL');
+		$data['app_url'] = url('');
 		$data['medias']  = Media::where('media_source_id',$category_id)->where('media_type',1)->get();
 		$category_image_count = Media::where('media_source_id',$category_id)->where('media_type',1)->count();
 		
