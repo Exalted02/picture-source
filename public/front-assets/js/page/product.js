@@ -91,7 +91,8 @@ $(document).ready(function() {
 					if (!response.success) {
 						//
 					} else {
-						$('#success_msg').modal('show');
+						$('.success_import').text(response.message);
+						$('#success_import').modal('show');
 						setTimeout(() => {
 							window.location.reload();
 						}, "2000");

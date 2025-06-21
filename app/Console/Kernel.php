@@ -12,9 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-		$schedule->command('app:send-customer-notifications')->dailyAt('00:00');
-		// $schedule->command('app:send-customer-notifications')->everyMinute();
+        $schedule->command('queue:work --timeout=1200 --tries=5 --stop-when-empty')->everyMinute();
     }
 
     /**

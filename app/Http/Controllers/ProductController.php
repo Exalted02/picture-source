@@ -17,7 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
 
-use App\Jobs\ImportProductExcelJob;
+use App\Imports\ProductImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -210,14 +211,12 @@ class ProductController extends Controller
 			'excel_file' => 'required|file|mimes:csv,xlsx,xls',
 		]);
 		
-		/*$file = $request->file('excel_file');
-        $filePath = $file->getPathname();
-        ImportProductExcelJob::dispatch($filePath);*/
-		$path = $request->file('excel_file')->store('temp');
-
-        ImportProductExcelJob::dispatch(storage_path('app/' . $path));
+		Excel::queueImport(new ProductImport, $request->file('excel_file'));
 		
-		// dd($request->all());
+		return response()->json([
+			'success' => true,
+			'message' => 'Import started in background!'
+		]);
 	}
 	public function edit_Product(Request $request)
 	{

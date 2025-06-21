@@ -9,6 +9,7 @@ use App\Services\OrientationService;
 use App\Services\CategoryService;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
@@ -26,7 +27,8 @@ class ProductImport implements
     WithStartRow, 
     WithCalculatedFormulas, 
     WithValidation, 
-    SkipsOnFailure
+    SkipsOnFailure,
+	ShouldQueue
 {
     use SkipsFailures;
 
@@ -113,8 +115,7 @@ class ProductImport implements
     public function rules(): array
     {
         return [
-            '0' => 'nullable|string',         // image path
-            '1' => 'nullable|string',         // product_code
+            '0' => 'nullable|string',        // product_code
             '2' => 'nullable|string',         // name
             '3' => 'nullable|string',         // description
             '4' => 'nullable|string',         // artist

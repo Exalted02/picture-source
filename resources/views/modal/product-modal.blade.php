@@ -300,6 +300,21 @@
 		</div>
 	</div>
 </div>
+<!-- Success Import -->
+<div class="modal custom-modal fade" id="success_import" role="dialog">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="success-message text-center">
+					<div class="success-popup-icon">
+						<i class="la la-plus"></i>
+					</div>
+					<h3 class="success_import">{{ __('data_created_successfully') }}!!!</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- Success Contact -->
 <div class="modal custom-modal fade" id="data_already_use" role="dialog">
 	<div class="modal-dialog modal-dialog-centered">
