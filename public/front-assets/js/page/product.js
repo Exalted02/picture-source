@@ -126,6 +126,68 @@ $(document).ready(function() {
 			});
 		}
 	});
+	$(document).on('click','.import-product-images', function(){
+		var isValid = true;
+		$('#frmproductImageImport [required]').each(function () {
+			if ($(this).val().trim() === '') {
+				isValid = false;
+				$(this).addClass('is-invalid'); // Add Bootstrap invalid class
+			} else {
+				$(this).removeClass('is-invalid'); // Remove invalid class if valid
+			}
+		});
+		if (isValid) {
+			var form = $("#frmproductImageImport")[0];
+			var formData = new FormData(form);
+			
+			var URL = $('#frmproductImageImport').attr('action');
+			$.ajax({
+				url: URL,
+				type: "POST",
+				data: formData,
+				processData: false, // Required for FormData
+				contentType: false,
+				//dataType: 'json',
+				success: function(response) {
+					console.log(response);
+					if (!response.success) {
+						//
+					} else {
+						$('.success_import').text(response.message);
+						$('#success_import').modal('show');
+						setTimeout(() => {
+							window.location.reload();
+						}, "2000");
+					}
+				},
+				error: function (xhr) {
+					if (xhr.status === 422) {
+						const errors = xhr.responseJSON.errors;
+						$('.invalid-feedback').hide();
+						$('.form-control').removeClass('is-invalid');
+
+						// Loop through errors and apply them to the respective fields
+						$.each(errors, function(key, value) {
+							if ($('#'+key).length) { // Which have id
+								let field = $('#' + key.replace('.', '\\.'));
+								field.addClass('is-invalid');
+								field.next('.invalid-feedback').show().text(value[0]);
+							}else{ // Which have not any id
+								var fieldName = key.split('.')[0]; // Get the base field name (e.g., product_sale_price)
+								var index = key.split('.').pop();
+								var inputField = $('input[name="' + fieldName + '[]"]').eq(index);
+								inputField.addClass('is-invalid');
+								inputField.next('.invalid-feedback').show().text(value[0]);
+							}	
+						});
+						
+					} else {
+						alert('An unexpected error occurred.');
+					}
+				}
+			});
+		}
+	});
 	
 
 

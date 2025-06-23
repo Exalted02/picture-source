@@ -177,6 +177,7 @@ Route::middleware('auth')->group(function () {
 	//Route::post('products', [ProductController::class,'index'])->name('user.products');
 	Route::post('/save-product', [ProductController::class, 'save_product'])->name('user.save-product');
 	Route::post('/import-product', [ProductController::class, 'import_product'])->name('user.import-product');
+	Route::post('/import-product-image', [ProductController::class, 'import_product_image'])->name('user.import-product-image');
 	Route::post('/product-update-status',[ProductController::class,'update_status'])->name('product-update-status');
 	Route::post('/edit-product',[ProductController::class,'edit_product'])->name('edit-product');
 	Route::post('/getDeleteArtist',[ProductController::class,'delete_product'])->name('getDeleteArtist');

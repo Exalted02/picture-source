@@ -252,6 +252,37 @@
 	</div>
 </div>
 <!-- /Import product code -->
+<!-- Import product image -->
+<div id="import_product_images" class="modal custom-modal fade" role="dialog">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ __('product_images') }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="frmproductImageImport" action="{{ route('user.import-product-image') }}" method="POST" enctype="multipart/form-data">
+				@csrf
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="input-block mb-3">
+								<label class="col-form-label">{{ __('import_image') }}<span class="text-danger">*</span></label>
+								<input class="form-control" type="file" name="files[]" id="files" multiple="multiple" required>
+								<div class="invalid-feedback">{{ __('please_select') }} {{ __('import_image')}}.</div>
+							</div>
+						</div>
+					</div>
+					<div class="submit-section">
+						<button class="btn btn-primary submit-btn import-product-images" type="button">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Import product image -->
 
 <!--- edit product code -->
 {{--<div id="edit_product_code" class="modal custom-modal fade" role="dialog">

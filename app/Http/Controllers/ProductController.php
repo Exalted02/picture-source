@@ -218,6 +218,31 @@ class ProductController extends Controller
 			'message' => 'Import started in background!'
 		]);
 	}
+	public function import_product_image(Request $request)
+	{
+		$files = '';
+		if ($request->hasFile('files')) {
+			foreach ($request->file('files') as $file) {
+				// Define the destination path inside the public folder
+				$destinationPath = public_path('uploads/product');
+				
+				// Ensure the directory exists
+				if (!file_exists($destinationPath)) {
+					mkdir($destinationPath, 0777, true);
+				}
+
+				// Generate a unique file name
+				$fileName = $file->getClientOriginalName();
+				
+				// Move file to public/uploads/chat-files
+				$file->move($destinationPath, $fileName);
+			}
+		}
+		return response()->json([
+			'success' => true,
+			'message' => 'Successfully uploaded image'
+		]);
+	}
 	public function edit_Product(Request $request)
 	{
 		$Product = Products::where('id', $request->id)->first();

@@ -23,7 +23,14 @@
 							<a href="javascript:void(0);" class="list-view btn btn-link" id="filter_search"><i class="las la-filter"></i></a>
 						</div>
 						<a href="#" class="btn add-btn add_product" data-bs-toggle="modal" data-bs-target="#add_product"><i class="la la-plus-circle"></i> {{ __('add_product') }}</a>
-						<a href="#" class="btn add-btn import_product" data-bs-toggle="modal" data-bs-target="#import_product"><i class="la la-plus-circle"></i> {{ __('import_product') }}</a>
+						{{--<a href="#" class="btn add-btn import_product" data-bs-toggle="modal" data-bs-target="#import_product"><i class="la la-plus-circle"></i> {{ __('import_product') }}</a>--}}
+						<div class="btn-group">
+							<button type="button" class="btn action-btn add-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">{{ __('import') }}</button>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#import_product"> {{ __('product_excel') }}</a></li>
+								<li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#import_product_images">{{ __('product_images') }}</a></li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
