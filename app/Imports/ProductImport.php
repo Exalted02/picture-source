@@ -45,7 +45,7 @@ class ProductImport implements
             $category_service = resolve(CategoryService::class);
 
             $category_list = [];
-            for ($i = 6; $i <= 23; $i++) {
+            for ($i = 6; $i <= 24; $i++) {
                 if (!empty($row[$i])) {
                     $category_list[] = $category_service->categoryInsertIfNotExists($row[$i]);
                 }
@@ -71,11 +71,11 @@ class ProductImport implements
                 'artist_id'            => $artistId,
                 'orientation'          => $orientationId,
                 'category'             => implode(",", $category_list),
-                'width'                => $row[24] ?? null,
-                'length'               => $row[25] ?? null,
-                'depth'                => $row[26] ?? null,
-                'wholesale_price'      => $row[27] ?? 0,
-                'price'                => $row[28] ?? 0,
+                'width'                => $row[25] ?? null,
+                'length'               => $row[26] ?? null,
+                'depth'                => $row[27] ?? null,
+                'wholesale_price'      => $row[28] ?? 0,
+                'price'                => $row[29] ?? 0,
                 'status'               => 1,
             ];
 
@@ -120,11 +120,11 @@ class ProductImport implements
             '3' => 'nullable|string',         // description
             '4' => 'nullable|string',         // artist
             '5' => 'nullable|string',         // orientation
-            '24'=> 'nullable|integer',        // width
-            '25'=> 'nullable|integer',        // length
-            '26'=> 'nullable|integer',        // depth
-            '27'=> 'nullable|numeric',        // wholesale_price
-            '28'=> 'nullable|numeric',        // price
+            '25'=> 'nullable|integer',        // width
+            '26'=> 'nullable|integer',        // length
+            '27'=> 'nullable|integer',        // depth
+            '28'=> 'nullable|numeric',        // wholesale_price
+            '29'=> 'nullable|numeric',        // price
         ];
     }
 

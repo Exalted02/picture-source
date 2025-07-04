@@ -264,7 +264,8 @@ use App\Models\Followup_remarks;
 		// $img = $img->resize($width,$height);
 		if($dest_thumb_path != ''){
 			$img->resize($width, $height, function ($constraint) {
-				// $constraint->aspectRatio();
+				$constraint->aspectRatio();
+				$constraint->upsize();
 			});
 			$img->save($dest_thumb_path.$imageName);
 		}

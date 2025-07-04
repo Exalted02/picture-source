@@ -16,6 +16,8 @@ use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 use App\Imports\ProductImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -224,7 +226,7 @@ class ProductController extends Controller
 		if ($request->hasFile('files')) {
 			foreach ($request->file('files') as $file) {
 				// Define the destination path inside the public folder
-				$destinationPath = public_path('uploads/product');
+				$destinationPath = public_path('uploads/product/');
 				
 				// Ensure the directory exists
 				if (!file_exists($destinationPath)) {
@@ -235,7 +237,30 @@ class ProductController extends Controller
 				$fileName = $file->getClientOriginalName();
 				
 				// Move file to public/uploads/chat-files
-				$file->move($destinationPath, $fileName);
+				$manager = new ImageManager(new Driver());
+				$img = $manager->read($file);
+				$width = $img->width();
+				$height = $img->height();
+				$max_width = 375;
+				$max_height = 375;
+
+				$width_ratio = $width / $max_width;
+				$height_ratio = $height / $max_height;
+				$scale_ratio = max($width_ratio, $height_ratio, 1); // never scale up
+
+				$final_width = $width / $scale_ratio;
+				$final_height = $height / $scale_ratio;
+				// dd($final_width.'//'.$final_height);
+				
+				$width 				= $final_width;
+				$height  			= $final_height;
+				$img->resize($width, $height, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				});
+				$img->save($destinationPath.$fileName);
+				
+				// $file->move($destinationPath, $fileName);
 			}
 		}
 		return response()->json([
@@ -310,10 +335,30 @@ class ProductController extends Controller
 		//$dest_thumb_path = public_path('uploads/').'product/tmp/'.$unique_number.'/gallery/thumbs/';
 		//$details_path = public_path('uploads/').'product/tmp/'.$unique_number.'/details/';
 		
-		$width 				= '360';
-		$height  			= '270';
+		$manager = new ImageManager(new Driver());
+		// Create image from uploaded file
+		$img = $manager->read($image);
+		$width = $img->width();
+		$height = $img->height();
 		
-		$imageName = uploadResizeImage('', $dest_path, '', $width, $height, $image);
+		// $width = $width * 5;
+		// $height = $height * 5;
+
+		$max_width = 375;
+		$max_height = 375;
+
+		$width_ratio = $width / $max_width;
+		$height_ratio = $height / $max_height;
+		$scale_ratio = max($width_ratio, $height_ratio, 1); // never scale up
+
+		$final_width = $width / $scale_ratio;
+		$final_height = $height / $scale_ratio;
+		// dd($final_width.'//'.$final_height);
+		
+		$width 				= $final_width;
+		$height  			= $final_height;
+		
+		$imageName = uploadResizeImage('', '', $dest_path, $width, $height, $image);
 		
 		$galley = new Temp_media_galleries();
 		$galley->unique_id =  $unique_number;

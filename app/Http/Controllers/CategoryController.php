@@ -8,6 +8,8 @@ use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use File;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class CategoryController extends Controller
 {
@@ -184,8 +186,28 @@ class CategoryController extends Controller
 		$dest_thumb_path = public_path('uploads/').'category/tmp/'.$unique_number.'/gallery/thumbs/';
 		$details_path = public_path('uploads/').'category/tmp/'.$unique_number.'/details/';
 		
-		$width 				= '360';
-		$height  			= '270';
+		$manager = new ImageManager(new Driver());
+		// Create image from uploaded file
+		$img = $manager->read($image);
+		$width = $img->width();
+		$height = $img->height();
+		
+		// $width = $width * 5;
+		// $height = $height * 5;
+
+		$max_width = 375;
+		$max_height = 375;
+
+		$width_ratio = $width / $max_width;
+		$height_ratio = $height / $max_height;
+		$scale_ratio = max($width_ratio, $height_ratio, 1); // never scale up
+
+		$final_width = $width / $scale_ratio;
+		$final_height = $height / $scale_ratio;
+		// dd($final_width.'//'.$final_height);
+		
+		$width 				= $final_width;
+		$height  			= $final_height;
 		
 		$imageName = uploadResizeImage($details_path, $dest_path, $dest_thumb_path, $width, $height, $image);
 		

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Artists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use File;
 
 class ArtistController extends Controller
@@ -79,7 +81,30 @@ class ArtistController extends Controller
 				$file = $request->file('image');
 				$filename = time() . '.' . $file->getClientOriginalExtension();
 				
-				$file->move($path, $filename);
+				$manager = new ImageManager(new Driver());
+				$img = $manager->read($file);
+				$width = $img->width();
+				$height = $img->height();
+				$max_width = 375;
+				$max_height = 375;
+
+				$width_ratio = $width / $max_width;
+				$height_ratio = $height / $max_height;
+				$scale_ratio = max($width_ratio, $height_ratio, 1); // never scale up
+
+				$final_width = $width / $scale_ratio;
+				$final_height = $height / $scale_ratio;
+				// dd($final_width.'//'.$final_height);
+				
+				$width 				= $final_width;
+				$height  			= $final_height;
+				$img->resize($width, $height, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				});
+				$img->save($path.$filename);
+				
+				// $file->move($path, $filename);
 				
 				$modelimg = Artists::find($request->post('id'));
 				$modelimg->image = $filename;
