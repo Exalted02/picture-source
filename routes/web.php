@@ -204,8 +204,8 @@ Route::middleware('auth')->group(function () {
 	Route::post('change-wishlist-status', [OrderController::class, 'change_wishlist_status'])->name('change.wishlist.status');
 	
 	// account- remove 
-	Route::get('account-remove', [CommonController::class,'account_remove'])->name('account-remove');
-	Route::post('account-remove', [CommonController::class,'save_account_remove'])->name('account-remove');
+	// Route::get('account-remove', [CommonController::class,'account_remove'])->name('account-remove');
+	// Route::post('account-remove', [CommonController::class,'save_account_remove'])->name('account-remove');
 	Route::get('account-remove-list', [CommonController::class,'account_remove_list'])->name('account-remove-list');
 	Route::post('remove-account-update-status', [CommonController::class,'account_remove_update_status'])->name('remove-account-update-status');
 	Route::post('remove-account-delete', [CommonController::class,'remove_account_delete'])->name('remove-account-delete');
@@ -215,6 +215,13 @@ Route::middleware('auth')->group(function () {
 	Route::get('notification-view/{id}', [CommonController::class,'notification_view'])->name('notification-view');
 	
 });
+	// account- remove 
+	Route::get('account-remove', [CommonController::class,'account_remove'])->name('account-remove');
+	Route::post('account-remove', [CommonController::class,'save_account_remove'])->name('account-remove');
+	
+	//privacy-policy
+	Route::get('privacy-policy', [CommonController::class,'privacy_policy'])->name('privacy-policy');
+	
 
 
 

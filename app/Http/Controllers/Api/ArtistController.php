@@ -28,7 +28,7 @@ class ArtistController extends Controller
 				$data[] = [
 						'artist_id' => $val->id,
 						'name' => $val->name,
-						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : $APP_URL.'/noimage.png',
+						'image' => $val->image ? $APP_URL.'/uploads/artist/'. $val->id .'/'.$val->image : $APP_URL.'/no_artist_image.png',
 					];
 				}
 

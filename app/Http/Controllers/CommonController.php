@@ -263,4 +263,9 @@ class CommonController extends Controller
 		$data['result'] = 'delete';
 		echo json_encode($data);
 	}
+	public function privacy_policy()
+	{
+		$data = [];
+		return view('privacy-policy',$data);
+	}
 }

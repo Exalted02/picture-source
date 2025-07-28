@@ -88,8 +88,17 @@ $(document).on('click','.edit-artist', function(){
 					</div>
 				`;
 			
-			$('.image-preview').html(galleriesHtml);
+			}else{
+				galleriesHtml = `
+					<div class="col-md-3 position-relative">
+						<!-- Image -->
+						<img src="${app_url}/no_artist_image.png" 
+							 class="img-thumbnail" 
+							 alt="Gallery Image">
+					</div>
+				`; 
 			}
+			$('.image-preview').html(galleriesHtml);
 			$('#add_artist').modal('show');
 			//alert(JSON.stringify(response));
 			

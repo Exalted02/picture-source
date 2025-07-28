@@ -31,7 +31,7 @@ class RegisteredUserController extends Controller
         $email =  $request->input('email');
         $password = $request->input('password');
  
-        $user = User::where('email',$email)->first();
+        $user = User::where('email',$email)->where('user_type', '!=', 0)->first();
 		//echo "<pre>";print_r($user);die;
         if($user){
 			if(!Hash::check($password, $user->password)){
