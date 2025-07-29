@@ -73,13 +73,13 @@ Route::get('/', [ProfileController::class, 'welcome']);
 Route::get('lang/home', [LangController::class, 'index']);
 Route::get('lang/change', [LangController::class, 'change'])->name('changeLang');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 	
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
 	//ChangePassword
 	Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('change-password');
 	Route::post('/change-password', [ChangePasswordController::class, 'save_data'])->name('change-password-save');

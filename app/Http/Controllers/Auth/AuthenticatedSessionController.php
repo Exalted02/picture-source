@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/admin/login');
     }
 	public function loginWithToken(Request $request)
     {
@@ -68,7 +68,7 @@ class AuthenticatedSessionController extends Controller
             }
         } catch (\Exception $e) {
             // Handle invalid token
-            return redirect('/login')->withErrors('Invalid login token.');
+            return redirect('/admin/login')->withErrors('Invalid login token.');
         }
     }
 }
