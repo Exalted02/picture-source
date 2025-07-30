@@ -8,6 +8,7 @@ vendor/
 node_modules/
 public/build
 copy
+DB
 
 # Storage folder
 storage
