@@ -68,6 +68,7 @@ Route::get('db-seed', function () {
     \Artisan::call('db:seed');
     dd("Database seeded");
 });
+Route::get('', [ProfileController::class, 'index']);
 Route::get('/admin', [ProfileController::class, 'welcome']);
 
 Route::get('lang/home', [LangController::class, 'index']);

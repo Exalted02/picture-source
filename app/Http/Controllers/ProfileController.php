@@ -11,6 +11,10 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+	public function index()
+    {
+		return view('coming-soon');
+    }
 	public function welcome()
     {
 		if(Auth::user()){
