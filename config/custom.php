@@ -9,19 +9,19 @@ return [
 //Email Management id
     'RESOURCE_REGISTRATION' => 1,
 // Api product list	interval
-	'API_PRODUCT_INTERVAL' => 5,
+	'API_PRODUCT_INTERVAL' => 10,
 // Api Home category list	interval
-	'API_HOME_CATEGORY_INTERVAL' => 6,
+	'API_HOME_CATEGORY_INTERVAL' => 10,
 // Api Home artist list	interval
-	'API_HOME_ARTIST_INTERVAL' => 6,
+	'API_HOME_ARTIST_INTERVAL' => 10,
 // Api category list	interval
-	'API_CATEGORY_INTERVAL' => 6,
+	'API_CATEGORY_INTERVAL' => 10,
 // Api artist list	interval
-	'API_ARTIST_INTERVAL' => 6,
+	'API_ARTIST_INTERVAL' => 10,
 // Api notification	interval
 	'API_NOTIFICATION_INTERVAL' => 6,
 // Api order interval
-	'API_ORDER_INTERVAL' => 9,
+	'API_ORDER_INTERVAL' => 6,
 // Api wishlist interval
 	'API_WISHLIST_INTERVAL' => 6,
 ];
