@@ -45,30 +45,10 @@
 
     <h1>Privacy Policy</h1>
 
-    <p>Effective Date: July 28, 2025</p>
-
-    <p>This Privacy Policy describes how we collect, use, and protect your personal information when you use our website.</p>
-
-    <h2>1. Information We Collect</h2>
-    <p>We may collect personal information such as your name, email address, and other details when you interact with our site.</p>
-
-    <h2>2. How We Use Information</h2>
-    <p>We use your information to provide services, improve our website, and communicate with you.</p>
-
-    <h2>3. Sharing of Information</h2>
-    <p>We do not sell or share your personal data with third parties, except when required by law.</p>
-
-    <h2>4. Cookies</h2>
-    <p>We use cookies to improve your experience on our site. You can disable cookies in your browser settings.</p>
-
-    <h2>5. Data Security</h2>
-    <p>We implement appropriate security measures to protect your information.</p>
-
-    <h2>6. Your Rights</h2>
-    <p>You have the right to access, update, or delete your information at any time.</p>
-
-    <h2>7. Contact Us</h2>
-    <p>If you have any questions about this policy, please contact us at: support@example.com</p>
+    <p>Our “View Art On Your Wall” app is free to everyone. However, as manufacturer’s Representatives, we sell to retailers only. Consequently, you will need to key in your zip code to find the retailer nearest you. They will provide an account number that you can use to place secure orders. It is essential that your experience is a positive one, and we need the help of many retailers to provide all customers with help in ordering, and service after the sale.</p>
+	
+    <p>Thanks you for visiting us!</p>
+	
   </div>
 </body>
 </html>
