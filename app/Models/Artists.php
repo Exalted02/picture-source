@@ -13,4 +13,8 @@ class Artists extends Model
         'image',
         'status',
     ];
+	public function products()
+	{
+		return $this->hasMany(Products::class, 'artist_id', 'id');
+	}
 }
