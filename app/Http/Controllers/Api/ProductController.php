@@ -390,13 +390,13 @@ class ProductController extends Controller
 				$imageArr[] = $APP_URL.'/uploads/product/'. $product->id .'/gallery/thumbs/'.$media->image;
 			}*/
 			
-			$medias = Media::where('media_source_id', $product->id)
+			/*$medias = Media::where('media_source_id', $product->id)
 						->where('media_type', 3)->inRandomOrder()
-					->first();
-			if(isset($medias->image) && $medias->image != null){
-				$imagePath = public_path('uploads/product/' . $medias->image);
+					->first();*/
+			if(isset($product->image) && $product->image != null){
+				$imagePath = public_path('uploads/product/' . $product->image);
 				if(File::exists($imagePath)){
-					$image_name = $APP_URL.'/uploads/product/'. $medias->image;
+					$image_name = $APP_URL.'/uploads/product/'. $product->image;
 				}else{
 					$image_name = $APP_URL.'/noimage.png';
 				}				

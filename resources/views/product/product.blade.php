@@ -149,6 +149,7 @@
 							@endif
 								{{--<th>{{ __('sl_no') }}</th>--}}
 								<th>{{ __('part') }}</th>
+								<th>{{ __('image') }}</th>
 								<th>{{ __('name') }}</th>
 								<th>{{ __('retail_price') }}</th>
 								<th>{{ __('created_date') }}</th>
@@ -170,6 +171,13 @@
 								</td>
 								@endif
 								<td>{{ $val->product_code ?? ''}}</td>
+								<td class="{{$val->id}}">
+									@if(isset($val->image) && $val->image != null)
+										<img src="{{ url('uploads/product/' . $val->image) }}" height="50">
+									@else
+										<img src="{{ url('').'/noimage.png' }}" height="50">
+									@endif
+								</td>
 								<td>{{ $val->name ?? ''}}</td>
 								<td>Rs. {{ $val->price ?? ''}}</td>
 								<td>{{ date('d/m/Y', strtotime($val->created_at)) ?? ''}}</td>
